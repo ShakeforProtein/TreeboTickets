@@ -1,0 +1,7 @@
+name: TreeboTickets
+version: ${project.version}
+main: me.shakeforprotein.treebotickets.TreeboTickets
+prefix: TreeboTickets
+authors: [ShakeforProtein]
+description: Light weight ticket plugin
+website: http://treebomc.com
