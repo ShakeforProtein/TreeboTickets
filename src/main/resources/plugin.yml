@@ -5,3 +5,9 @@ prefix: TreeboTickets
 authors: [ShakeforProtein]
 description: Light weight ticket plugin
 website: http://treebomc.com
+
+
+commands:
+  ticket:
+    description: Submits a ticket for the staff team to look into.
+    usage: /<command> <subcommand>
