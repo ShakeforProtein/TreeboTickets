@@ -7,5 +7,6 @@ table: 'Tickets'
 
 networkName: ''
 
+
 lang:
   title: 'XXXNETWORKNAMEXXX Ticket System'

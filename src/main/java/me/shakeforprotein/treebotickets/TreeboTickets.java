@@ -1,30 +1,34 @@
 package me.shakeforprotein.treebotickets;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import me.shakeforprotein.treebotickets.PlayerInput;
+import me.shakeforprotein.treebotickets.Commands;
 
-public final class TreeboTickets extends JavaPlugin {
+public final class TreeboTickets extends JavaPlugin{
 
     @Override
     public void onEnable() {
         System.out.println("TreeboTickets Started");
-
+        Bukkit.getPluginManager().registerEvents(new PlayerInput(this), this);
+        PlayerInput pi = new PlayerInput(this);
+        Commands cmds = new Commands(this);
         host = getConfig().getString("host");
         port = getConfig().getInt("port");
         database = getConfig().getString("database");
         username = getConfig().getString("username");
         password = getConfig().getString("password");
+        table = getConfig().getString("table");
 
 
-        try {
+ /*       try {
             openConnection();
             Statement statement = connection.createStatement();
         } catch (ClassNotFoundException e) {
@@ -32,6 +36,7 @@ public final class TreeboTickets extends JavaPlugin {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        */
     }
 
 
@@ -45,12 +50,12 @@ public final class TreeboTickets extends JavaPlugin {
     private Connection connection;
     private String host, database, username, password;
     private int port;
-    private String table = getConfig().getString("table");
-    private String unusedColumns = "ID, MODIFIED";
-    private String columns = "UUID, IGNAME, OPENED, MODIFIED, STATUS, STAFF, WORLD, X, Y, Z, TYPE, SEVERITY, DESCRIPTION, USERSTEPS, STAFFSTEPS";
-    private String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
-    private Integer ID, X, Y, Z, SEVERITY = 0;
-    private String OPENED = LocalDateTime.now().toString();
+    public String table = getConfig().getString("table");
+    public String unusedColumns = "ID, MODIFIED";
+    public String columns = "UUID, IGNAME, OPENED, STATUS, STAFF, WORLD, X, Y, Z, TYPE, SEVERITY, DESCRIPTION, USERSTEPS, STAFFSTEPS";
+    public String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
+    public Integer ID, X, Y, Z, SEVERITY = 0;
+    public String OPENED = LocalDateTime.now().toString();
 
 
 
@@ -68,23 +73,40 @@ public final class TreeboTickets extends JavaPlugin {
         }
     }
 
-    private Integer addTicketToDB(Player player, String ticketData){
+    private String addTicketToDB(Player p, String ticketData){
         try {
-            Integer output = connection.createStatement().executeUpdate("INSERT INTO " + table + "(" + columns + ") VALUES (" + ticketData + ");");
-            return output;
+            String output = "" + connection.createStatement().executeUpdate("INSERT INTO " + table + "(" + columns + ") VALUES (" + ticketData + ");");
+            return "Success";
         }
-        catch (SQLException e){return 0;}
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during addTicketToDB()");
+            return "Fail";
+        }
     }
 
-    private void updateTicketInDB(Player player, String ticketData){
+    private void updateTicketInDB(Player p, String ticketData){
         try {
             connection.createStatement().executeQuery("INSERT INTO " + table + "(" + columns + ") VALUES (" + ticketData + ");");
         }
-        catch (SQLException e){}
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during updateTicketInDB()");
+        }
     }
 
-    private void listenToUser(Player p){
-        p.sendMessage(("XXXNETWORKNAMEXXX" + ChatColor.RED+  "Ticket System§").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
-        p.sendMessage("");
+    public String placeholderParser(String input, Player p){
+
+        String output = input.
+                replace("XXXPLAYERXXX", p.getName()).
+                replace("XXXNETWORKNAMEXXX", getConfig().getString("networkName"));
+
+        return output;
     }
+
+    public String assembleTicketData(String input){
+        String output = input + ",";
+        return output;
+    }
+
 }
