@@ -9,9 +9,11 @@ A Simple Tickets Plugin
   
 ### Defaults to False
   tbtickets.delete.any - 'Allows a player to delete any ticket, even if they are open. Defaults False
-  tbtoclets.delete.closed - Allows a player to delete closed tickets.
-  tbtickets.restore - Allows a player to restore a deleted ticket'
-  tbtickets.view - Allows a player to see the list of blocked items'
+           .delete.closed - Allows a player to delete closed tickets.
+           .close.own - Allows a player to close thier own ticket.
+           .close.any - Allows a player to close any ticket.
+           .restore - Allows a player to restore a deleted ticket'
+           .view - Allows a player to see the list of blocked items'
 ```
 
 ## Commands
