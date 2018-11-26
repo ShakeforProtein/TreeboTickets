@@ -34,7 +34,7 @@ public class PlayerInput implements Listener {
         p.sendMessage(" - " + p.getName());
         p.sendMessage(" - " + p.getUniqueId());
         p.sendMessage(" - " + p.getUniqueId().toString());
-        p.sendMessage("Player get successful");
+        p.sendMessage("Player get successful ");
         usersToListenTo.add(usersToListenTo.size(),p.getUniqueId().toString());
     }
 
