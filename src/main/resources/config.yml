@@ -1,0 +1,12 @@
+host:
+port:
+username:
+password:
+database:
+table: 'Tickets'
+
+networkName: 'Example Network'
+
+
+lang:
+  title: 'XXXNETWORKNAMEXXX Ticket System'

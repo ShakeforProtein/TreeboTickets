@@ -10,7 +10,7 @@ website: http://treebomc.com
 commands:
   tbTicket:
     description: Submits a ticket for the staff team to look into.
-    usage: /<command> <subcommand>
+    usage: /<command>
   tbTicketAdmin:
     description: Submits a ticket for the staff team to look into.
     usage: /<command> <subcommand>

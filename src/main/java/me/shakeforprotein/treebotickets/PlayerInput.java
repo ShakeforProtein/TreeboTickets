@@ -5,22 +5,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.util.Consumer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.UUID;
 
 public class PlayerInput implements Listener {
 
+
+
     private TreeboTickets pl;
-
-    public PlayerInput(TreeboTickets pl) {
+    private Commands cmds;
+    public PlayerInput(TreeboTickets pl, Commands cmds){
         this.pl = pl;
+        this.cmds = cmds;
     }
-
+    public PlayerInput(){}
 
     public ArrayList usersToListenTo;
     public Integer ticketState = 0;
@@ -28,7 +29,13 @@ public class PlayerInput implements Listener {
     public String staffsteps = "";
 
     public void listenTo(Player p) {
-        usersToListenTo.add(p.getUniqueId().toString());
+        p.sendMessage("Player get successful");
+        p.sendMessage(" - "+ p);
+        p.sendMessage(" - " + p.getName());
+        p.sendMessage(" - " + p.getUniqueId());
+        p.sendMessage(" - " + p.getUniqueId().toString());
+        p.sendMessage("Player get successful");
+        usersToListenTo.add(usersToListenTo.size(),p.getUniqueId().toString());
     }
 
     public void stopListeningTo(Player p) {
@@ -36,10 +43,8 @@ public class PlayerInput implements Listener {
     }
 
 
-    Map<UUID, Consumer<String>> map = new HashMap<>();
-
     @EventHandler
-    public void AsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
+    public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
         String m = e.getMessage();
 

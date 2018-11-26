@@ -7,19 +7,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-import me.shakeforprotein.treebotickets.PlayerInput;
-import me.shakeforprotein.treebotickets.Commands;
 
 public final class TreeboTickets extends JavaPlugin{
 
+
+
+    private PlayerInput pl = new PlayerInput();
+    private Commands cmds = new Commands(this, pl);
+
+    public TreeboTickets(){TreeboTickets TT = this;}
+
     @Override
     public void onEnable() {
+        this.getCommand("tbticket").setExecutor(cmds);
         System.out.println("TreeboTickets Started");
-        Bukkit.getPluginManager().registerEvents(new PlayerInput(this), this);
-        PlayerInput pi = new PlayerInput(this);
-        Commands cmds = new Commands(this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInput(), this);
         host = getConfig().getString("host");
         port = getConfig().getInt("port");
         database = getConfig().getString("database");
@@ -108,5 +111,7 @@ public final class TreeboTickets extends JavaPlugin{
         String output = input + ",";
         return output;
     }
+
+
 
 }
