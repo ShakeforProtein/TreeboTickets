@@ -13,16 +13,19 @@ public final class TreeboTickets extends JavaPlugin{
 
 
 
-    private PlayerInput pl = new PlayerInput();
-    private Commands cmds = new Commands(this, pl);
-
-    public TreeboTickets(){TreeboTickets TT = this;}
+    private PlayerInput pi;
+    private Commands cmds;
+    public TreeboTickets(){}
 
     @Override
     public void onEnable() {
+        this.cmds = new Commands(this);
         this.getCommand("tbticket").setExecutor(cmds);
         System.out.println("TreeboTickets Started");
-        Bukkit.getPluginManager().registerEvents(new PlayerInput(), this);
+        getServer().getPluginManager().registerEvents(new PlayerInput(this), this);
+        getConfig().options().copyDefaults(true);
+        getConfig().set("version", this.getDescription().getVersion());
+        saveConfig();
         host = getConfig().getString("host");
         port = getConfig().getInt("port");
         database = getConfig().getString("database");

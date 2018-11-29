@@ -25,7 +25,13 @@ permissions:
   tbtickets.delete.any:
     description: 'Allows a player to delete any ticket, even if they are open.'
     default: false
-  tbtoclets.delete.closed:
+  tbtickets.delete.closed:
+    description: 'Allows a player to delete closed tickets.'
+    default: false
+  tbtickets.close.own:
+    description: 'Allows a player to delete closed tickets.'
+    default: false
+  tbtickets.close.any:
     description: 'Allows a player to delete closed tickets.'
     default: false
   tbtickets.restore:

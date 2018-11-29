@@ -1,12 +1,18 @@
-host:
-port:
-username:
-password:
-database:
+host: ''
+port: ''
+username: ''
+password: ''
+database: ''
 table: 'Tickets'
 
 networkName: 'Example Network'
 
-
 lang:
   title: 'XXXNETWORKNAMEXXX Ticket System'
+
+players:
+  doNotRemove:
+    ticketstate: '5'
+    type: ''
+    description: ''
+    usersteps: ''
