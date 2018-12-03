@@ -258,7 +258,7 @@ public final class TreeboTickets extends JavaPlugin{
                     int tX = response.getInt("X");
                     int tY = response.getInt("Y");
                     int tZ = response.getInt("Z");
-                    String tWorld = response.getString("WORLD")
+                    String tWorld = response.getString("WORLD");
                     String tStatus = response.getString("STATUS");
                     p.sendMessage(ChatColor.WHITE + "" +  tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " +  tX + " " + tY + " " + tZ + "   -   " + tStatus);
                 }
