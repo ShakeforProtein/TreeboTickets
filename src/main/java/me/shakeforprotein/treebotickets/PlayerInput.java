@@ -49,7 +49,7 @@ public class PlayerInput implements Listener {
                     String pname = p.getName();
                     String type = "";
                     String opened = LocalDateTime.now().toString();
-                    String status = "Open";
+                    String status = "OPEN";
                     String staff = "Unassigned";
                     String pworld = p.getWorld().getName();
                     Integer px = (int) p.getLocation().getX();
