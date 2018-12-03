@@ -1,9 +1,11 @@
 package me.shakeforprotein.treebotickets;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
@@ -27,6 +29,7 @@ public class Commands implements CommandExecutor {
             //TBTICKET Logic
             if (cmd.getName().equalsIgnoreCase("tbTicket")) {
                 // TBTICKET COMMAND - With no arguments
+
                 if (args.length == 0) {
                     p.sendMessage(ChatColor.RED + "Incorrect usage. Please try one of the following.");
                     p.sendMessage(ChatColor.GOLD + "/tbticket open  -  Creates a new ticket");
@@ -38,17 +41,23 @@ public class Commands implements CommandExecutor {
                     if (args[0].equalsIgnoreCase("open") && p.hasPermission("tbtickets.create")) {
                         pl.startTicketLogic(p);
                     }
+                    else if(args[0].equalsIgnoreCase("open") && !p.hasPermission("tbtickets.create")){p.sendMessage(ChatColor.RED+ "You lack the required permission to create a new ticket");}
                     //TBTICKEWT COMMAND - LIST OWN Logic
                     else if (args[0].equalsIgnoreCase("list") && (p.hasPermission("tbtickets.view.own"))) {
                         String fullData = pl.listTickets(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE IGNAME='" + p.getName() + "'");
                     }
+                    else if (args[0].equalsIgnoreCase("list") && !p.hasPermission("tbtickets.view.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to list tickets");}
 
                     //TBTICKET COMMAND - INCOMPLETE COMMANDS
                     else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.view.own")) {
                         p.sendMessage(ChatColor.RED + "Please include the ticket number at the end of the command. Eg. /tbticket view 274");
-                    } else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.close.own")) {
+                    }
+                    else if (args[0].equalsIgnoreCase("view") && !p.hasPermission("tbtickets.view.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to view tickets");}
+                    else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.close.own")) {
                         p.sendMessage(ChatColor.RED + "Please include the ticket number at the end of the command. Eg. /tbticket close 274");
                     }
+                    else if (args[0].equalsIgnoreCase("view") && !p.hasPermission("tbtickets.close.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to close a ticket");}
+
                 } else if (args.length == 2) {
                     // Make sure second argumentt is a valid integer.
                     Integer ticketNumber = -1;
@@ -58,10 +67,13 @@ public class Commands implements CommandExecutor {
 
                     if (ticketNumber != -1) {
                         //TBTICKET COMMAND - VIEW SPECIFIC TICKET LOGIC
-                        if (args[0].equalsIgnoreCase("view")) {
+                        if(args[0].equalsIgnoreCase("view") && !p.hasPermission("tbtickets.view.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to view tickets");}
+                        else if(args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.close.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to view tickets");}
+
+                        else if (args[0].equalsIgnoreCase("view")) {
                             pl.getTicket(p, ticketNumber);
                         }
-                        if (args[0].equalsIgnoreCase("close")) {
+                        else if (args[0].equalsIgnoreCase("close")) {
                             pl.closeTicket(p, ticketNumber);
                         }
                     }
@@ -75,7 +87,8 @@ public class Commands implements CommandExecutor {
                     p.sendMessage(ChatColor.GOLD + "/tbta list <assigned|unnassigned|open|closed>  -  Lists all tickets assigned to you");
                     p.sendMessage(ChatColor.GOLD + "/tbta view <ticket_number>  -  Displays details on specific ticket");
                     p.sendMessage(ChatColor.GOLD + "/tbta close <ticket_number>  -  Close ticket with id");
-                    p.sendMessage(ChatColor.GOLD + "/tbta  <ticket_number>  -  Displays details on ticket assigned to ");
+                    p.sendMessage(ChatColor.GOLD + "/tbta tp <ticket_number>  -  Teleport to location of ticket number");
+
 
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("list")){
@@ -97,6 +110,11 @@ public class Commands implements CommandExecutor {
                     }
                     else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.view.any")){
                         pl.staffViewTicket(p, Integer.parseInt(args[1]));
+                    }
+                    else if (args[0].equalsIgnoreCase("tp")) {
+                        if (isNumeric(args[1])) {
+                            pl.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "'", Integer.parseInt(args[1]));
+                        }
                     }
                 }
             }
