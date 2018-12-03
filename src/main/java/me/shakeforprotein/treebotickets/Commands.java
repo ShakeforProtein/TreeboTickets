@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class Commands implements CommandExecutor {
@@ -34,21 +35,13 @@ public class Commands implements CommandExecutor {
                     p.sendMessage(ChatColor.GOLD + "/tbtickets list  -  Lists all tickets you've created");
                 }
 
-                if (args.length == 1) {
+                else if (args.length == 1) {
                     // TBTICKET COMMAND - OPEN NEW TICKET LOGIC
                     if (args[0].equalsIgnoreCase("open") && p.hasPermission("tbtickets.create")) {
-                        p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
-                        p.sendMessage("Please enter");
-                        p.sendMessage(ChatColor.GOLD + "1 " + ChatColor.RESET + "-" + ChatColor.RED + " For Server related issues");
-                        p.sendMessage(ChatColor.GOLD + "2 " + ChatColor.RESET + "-" + ChatColor.RED + " For Griefer related issues");
-                        p.sendMessage(ChatColor.GOLD + "3 " + ChatColor.RESET + "-" + ChatColor.RED + " For Other issues");
-                        p.sendMessage("or enter 'cancel' at any time to stop creating a ticket");
-                        pl.getConfig().set("players." + p.getName() + ".ticketstate", 1);
-                        pl.saveConfig();
+                        pl.startTicketLogic(p);
                     }
                     //TBTICKEWT COMMAND - LIST OWN Logic
                     else if (args[0].equalsIgnoreCase("list") && p.hasPermission("tbtickets.view.own")) {
-                    //Todo Fill command details for /tbticket list
                         String fullData = pl.listTickets(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE IGNAME='" + p.getName() + "'");
                     }
 
@@ -61,8 +54,6 @@ public class Commands implements CommandExecutor {
                     }
                 }
 
-
-
                 else if (args.length == 2){
                 // Make sure second argumentt is a valid integer.
                     Integer ticketNumber = -1;
@@ -73,7 +64,7 @@ public class Commands implements CommandExecutor {
                     if(ticketNumber != -1){
                     //TBTICKET COMMAND - VIEW SPECIFIC TICKET LOGIC
                     if (args[0].equalsIgnoreCase("view")){
-                        getTicket(p, ticketNumber);
+                        pl.getTicket(p, ticketNumber);
                     }
                     if (args[0].equalsIgnoreCase("close")){
                         closeTicket(p,ticketNumber);
@@ -104,36 +95,16 @@ public class Commands implements CommandExecutor {
     }
 
 
-    public String getTicket(Player p, Integer t){
-        String fullData = pl.genericQuery(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE IGNAME='" + p.getName() + "'");
-        return fullData;
-    }
+
 
 
     public String closeTicket (Player p, Integer t){
         //TODO Close ticket logic
+
         return "";
     }
 
-    public void dislpayTicket (Player p, Integer t){
-        String  ticket = getTicket(p, t);
-        p.sendMessage(ticket);
-        String tId = "";
-        String tPlayer = "";
-        String tCoords = "";
-        String tDesc = "";
-        String tStaffA = "";
-        if(p.hasPermission("tbtickets.view.any")){
 
-        }
-        else if(p.hasPermission("tbtickets.view.own")){
-
-        }
-
-
-        p.sendMessage("");
-        //TODO
-    }
 
     public String closeTicket (Integer t){
 

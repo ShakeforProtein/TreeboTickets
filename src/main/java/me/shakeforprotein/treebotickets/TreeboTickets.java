@@ -144,6 +144,92 @@ public final class TreeboTickets extends JavaPlugin{
     }
 
 
+    public void startTicketLogic(Player p){
+        p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+        p.sendMessage("Please enter");
+        p.sendMessage(ChatColor.GOLD + "1 " + ChatColor.RESET + "-" + ChatColor.RED + " For Server related issues");
+        p.sendMessage(ChatColor.GOLD + "2 " + ChatColor.RESET + "-" + ChatColor.RED + " For Griefer related issues");
+        p.sendMessage(ChatColor.GOLD + "3 " + ChatColor.RESET + "-" + ChatColor.RED + " For Other issues");
+        p.sendMessage("or enter 'cancel' at any time to stop creating a ticket");
+        getConfig().set("players." + p.getName() + ".ticketstate", 1);
+        saveConfig();
+    }
+
+
+    public void getTicket(Player p, Integer t){
+        int tId = -1;
+        String tPlayer = "";
+        String tCoords = "";
+        String tDesc = "";
+        String tStaffS = "";
+        String tUserS = "";
+        String tStatus = "";
+        String tOpened = "";
+        String tModified = "";
+
+        ResultSet response;
+        try {
+            response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            while (response.next()){
+                tId = response.getInt("ID");
+                tPlayer = response.getString("IGNAME");
+                if(tPlayer.equalsIgnoreCase(p.getName())){
+                    tCoords = (response.getString("X") + " " + response.getString("Y") + response.getString("Z"));
+                    tDesc = response.getString("DESCRIPTION");
+                    tStaffS = response.getString("STAFFSTEPS");
+                    tUserS = response.getString("USERSTEPS");
+                    tStatus = response.getString("STATUS");
+                    tOpened = response.getDate("OPENED").toString();
+                    tModified = response.getDate("MODIFIED").toString();
+
+                    p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+                    p.sendMessage(ChatColor.GREEN + "Ticket ID; " + ChatColor.WHITE + tId);
+                    p.sendMessage(ChatColor.GREEN + "Opened by Player; " + ChatColor.WHITE + tPlayer);
+                    p.sendMessage(ChatColor.GREEN + "Opened at; " + ChatColor.WHITE + tOpened);
+                    p.sendMessage(ChatColor.GREEN + "Last Updated; " + ChatColor.WHITE + tModified);
+                    p.sendMessage(ChatColor.GREEN + "At Coordinates; " + ChatColor.GOLD + tCoords);
+                    p.sendMessage("");
+                    p.sendMessage(ChatColor.GREEN + "User Description; " + ChatColor.WHITE + tDesc);
+                    p.sendMessage("");
+                    p.sendMessage(ChatColor.BLUE + "Steps taken by user; " + ChatColor.WHITE + tUserS);
+                    p.sendMessage("");
+                    p.sendMessage(ChatColor.RED + "Staff comments / actions; " + ChatColor.WHITE + tStaffS);
+                }
+                else{
+                    p.sendMessage(ChatColor.RED + "Sorry but that ticket does not belong to you.");
+                }
+            }
+        }
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during getTicket()");
+        }
+    }
+
+    public void closeTicket(Player p, Integer t){
+        int tId = -1;
+        String tPlayer = "";
+
+        ResultSet response;
+        try {
+            response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            while (response.next()){
+                tId = response.getInt("ID");
+                tPlayer = response.getString("IGNAME");
+                if(tPlayer.equalsIgnoreCase(p.getName())){
+                    connection.createStatement().executeUpdate("UPDATE  `tickets` SET STATUS =  'CLOSED' WHERE ID =" + t);
+                }
+                else{
+                    p.sendMessage("This is not your ticket to close");
+                }
+            }
+        }
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during getTicket()");
+        }
+    }
+
 
 
 }
