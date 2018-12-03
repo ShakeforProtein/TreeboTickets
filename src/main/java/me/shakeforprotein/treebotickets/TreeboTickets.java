@@ -357,7 +357,7 @@ public final class TreeboTickets extends JavaPlugin{
             response = connection.createStatement().executeQuery(query);
             while(response.next()){
                 String tPlayer = response.getString("IGNAME");
-                if(p.hasPermission("treebotickets.view.any")){
+                if(p.hasPermission("tbtickets.view.any")){
                     int tId = response.getInt("ID");
                     int tX = response.getInt("X");
                     int tY = response.getInt("Y");
@@ -371,7 +371,6 @@ public final class TreeboTickets extends JavaPlugin{
                     Bukkit.dispatchCommand(console, command);
                 }
             }
-            p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
         }
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
