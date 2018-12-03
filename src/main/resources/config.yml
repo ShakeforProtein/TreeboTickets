@@ -1,9 +1,9 @@
-host: ''
-port: ''
-username: ''
-password: ''
-database: ''
-table: 'Tickets'
+host: 'Host'
+port: '1234'
+username: 'ABC'
+password: 'XYZ'
+database: 'Database'
+table: 'tickets'
 
 networkName: 'Example Network'
 

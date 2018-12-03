@@ -22,11 +22,8 @@ permissions:
   tbtickets.create:
     description: 'Allows a player to create a new ticket'
     default: true
-  tbtickets.delete.any:
-    description: 'Allows a player to delete any ticket, even if they are open.'
-    default: false
-  tbtickets.delete.closed:
-    description: 'Allows a player to delete closed tickets.'
+  tbtickets.view.own:
+    description: 'Allows a player to see their own tickets'
     default: false
   tbtickets.close.own:
     description: 'Allows a player to delete closed tickets.'
@@ -34,9 +31,15 @@ permissions:
   tbtickets.close.any:
     description: 'Allows a player to delete closed tickets.'
     default: false
+  tbtickets.delete.any:
+    description: 'Allows a player to delete any ticket, even if they are open.'
+    default: false
+  tbtickets.delete.closed:
+    description: 'Allows a player to delete closed tickets.'
+    default: false
   tbtickets.restore:
     description: 'Allows a player to restore a deleted ticket'
     default: false
-  tbtickets.view:
-    description: 'Allows a player to see the list of blocked items'
+  tbtickets.view.any:
+    description: 'Allows a player to see all tickets'
     default: false

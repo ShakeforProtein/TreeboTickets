@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 public final class TreeboTickets extends JavaPlugin{
@@ -34,7 +35,7 @@ public final class TreeboTickets extends JavaPlugin{
         table = getConfig().getString("table");
 
 
- /*       try {
+       try {
             openConnection();
             Statement statement = connection.createStatement();
         } catch (ClassNotFoundException e) {
@@ -42,7 +43,7 @@ public final class TreeboTickets extends JavaPlugin{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        */
+
     }
 
 
@@ -58,10 +59,11 @@ public final class TreeboTickets extends JavaPlugin{
     private int port;
     public String table = getConfig().getString("table");
     public String unusedColumns = "ID, MODIFIED";
-    public String columns = "UUID, IGNAME, OPENED, STATUS, STAFF, WORLD, X, Y, Z, TYPE, SEVERITY, DESCRIPTION, USERSTEPS, STAFFSTEPS";
+    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`";
     public String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
     public Integer ID, X, Y, Z, SEVERITY = 0;
     public String OPENED = LocalDateTime.now().toString();
+    public String baseInsert = "INSERT INTO `" + table + "`(" + columns + ") VALUES (XXXVALUESPLACEHOLDERXXX);";
 
 
 
@@ -79,9 +81,9 @@ public final class TreeboTickets extends JavaPlugin{
         }
     }
 
-    private String addTicketToDB(Player p, String ticketData){
+    public String addTicketToDB(Player p, String ticketData){
         try {
-            String output = "" + connection.createStatement().executeUpdate("INSERT INTO " + table + "(" + columns + ") VALUES (" + ticketData + ");");
+            String output = "" + connection.createStatement().executeUpdate(baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
             return "Success";
         }
         catch (SQLException e){
@@ -91,14 +93,45 @@ public final class TreeboTickets extends JavaPlugin{
         }
     }
 
-    private void updateTicketInDB(Player p, String ticketData){
+    public String genericQuery(Player p, String query){
+        ResultSet response;
+        String output = "";
         try {
-            connection.createStatement().executeQuery("INSERT INTO " + table + "(" + columns + ") VALUES (" + ticketData + ");");
+            response = connection.createStatement().executeQuery(query);
         }
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during updateTicketInDB()");
+            System.out.println("Encountered " + e.toString() + " during genericQuery()");
         }
+        return output;
+    }
+
+    public String listTickets(Player p, String query){
+        ResultSet response;
+        String output = "";
+        p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+        p.sendMessage(ChatColor.AQUA + "Id  -   Player  -   Coordinates -   Status");
+
+        try {
+            response = connection.createStatement().executeQuery(query);
+            while(response.next()){
+                String tPlayer = response.getString("IGNAME");
+                    if(tPlayer.equalsIgnoreCase(p.getName())){
+                        int tId = response.getInt("ID");
+                        int tX = response.getInt("X");
+                        int tY = response.getInt("Y");
+                        int tZ = response.getInt("Z");
+                        String tStatus = response.getString("STATUS");
+                        p.sendMessage(ChatColor.WHITE + "" +  tId + "  -   " + tPlayer + "    -   " +  tX + " " + tY + " " + tZ + "   -   " + tStatus);
+                    }
+                    p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
+                }
+            }
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during genericQuery()");
+        }
+        return output;
     }
 
     public String placeholderParser(String input, Player p){
@@ -110,10 +143,6 @@ public final class TreeboTickets extends JavaPlugin{
         return output;
     }
 
-    public String assembleTicketData(String input){
-        String output = input + ",";
-        return output;
-    }
 
 
 
