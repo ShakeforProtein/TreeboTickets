@@ -6,7 +6,7 @@
 
     <groupId>me.ShakeforProtein</groupId>
     <artifactId>TreeboTickets</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>TreeboTickets</name>
@@ -45,6 +45,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>io.github.leonardosnt.bungeechannelapi</pattern>
+                            <shadedPattern>me.shakeforprotein.treebotickets.libs.bungeechannelapi</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -63,9 +84,18 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>io.github.leonardosnt</groupId>
+            <artifactId>bungeechannelapi</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>

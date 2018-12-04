@@ -1,10 +1,21 @@
+#host: 'Host'  -  Web address or IP address of your MySQL Server
+#port: '3306'  -  MySQL port number
+#username: 'ABC'  -  MySQL username
+#password: 'XYZ'  -  MySQL password
+#database: 'Database'  -  Database Name
+#table: 'tickets'  -  Database table for your tickets
+#serverName: 'Test'  -  The Bungee name of the Spigot server this plugin is installed on
+#networkName: 'Example Network'  -  You minecraft network name, eg TreeboMC
+#lang: title: 'XXXNETWORKNAMEXXX Ticket System'  - XXXNETWORKNAME will automatically be changed to the value in networkName. There is no need to change this.
+
 host: 'Host'
-port: '1234'
+port: '3306'
 username: 'ABC'
 password: 'XYZ'
 database: 'Database'
 table: 'tickets'
 
+serverName: 'Test'
 networkName: 'Example Network'
 
 lang:

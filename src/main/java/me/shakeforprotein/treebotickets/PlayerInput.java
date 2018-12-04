@@ -45,6 +45,7 @@ public class PlayerInput implements Listener {
                 if ((p.getName().equalsIgnoreCase(item)) && (pl.getConfig().getInt("players." + p.getName() + ".ticketstate") > 0)) {
                     e.setCancelled(true);
                     ticketState = pl.getConfig().getInt("players." + p.getName() + ".ticketstate");
+                    String tServer = pl.api.getServer().toString();
                     UUID puuid = p.getUniqueId();
                     String pname = p.getName();
                     String type = "";
@@ -52,6 +53,7 @@ public class PlayerInput implements Listener {
                     String status = "OPEN";
                     String staff = "Unassigned";
                     String pworld = p.getWorld().getName();
+                    String pServer = pl.getConfig().getString("serverName");
                     Integer px = (int) p.getLocation().getX();
                     Integer py = (int) p.getLocation().getY();
                     Integer pz = (int) p.getLocation().getZ();
@@ -114,13 +116,13 @@ public class PlayerInput implements Listener {
                         description = pl.getConfig().getString("players." + p.getName() + ".description");
                         usersteps = pl.getConfig().getString("players." + p.getName() + ".usersteps");
                         Integer severity = 0;
-                        String ticketData = "\"" + puuid + "\",\"" + p.getName() + "\",\"" + opened + "\",\"" + status + "\",\"" + staff + "\",\"" + pworld + "\",\"" + px + "\",\"" + py + "\",\"" + pz + "\",\"" + type + "\",\"" + severity + "\",\"" + description + "\",\"" + usersteps + "\",\"" + staffsteps +"\"";
+                        String ticketData = "\"" + puuid + "\",\"" + p.getName() + "\",\"" + opened + "\",\"" + status + "\",\"" + staff + "\",\"" + pServer + "\",\"" + pworld + "\",\"" + px + "\",\"" + py + "\",\"" + pz + "\",\"" + type + "\",\"" + severity + "\",\"" + description + "\",\"" + usersteps + "\",\"" + staffsteps +"\"";
                         pl.getConfig().set("players." + p.getName() + "lastQuery", pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
                         pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
-                        pl.addTicketToDB(p, ticketData);
+                        pl.saveConfig();
+                        p.sendMessage(pl.addTicketToDB(p, ticketData));
                         p.sendMessage(ChatColor.GREEN + "Your ticket has been successfully submitted");
 
-                        pl.saveConfig();
                     }
                 }
             }

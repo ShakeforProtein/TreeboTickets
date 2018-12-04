@@ -1,15 +1,14 @@
 package me.shakeforprotein.treebotickets;
 
-import org.apache.commons.lang.ObjectUtils;
+import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 public final class TreeboTickets extends JavaPlugin{
@@ -19,6 +18,7 @@ public final class TreeboTickets extends JavaPlugin{
     private PlayerInput pi;
     private Commands cmds;
     public TreeboTickets(){}
+    public BungeeChannelApi api = BungeeChannelApi.of(this);
 
     @Override
     public void onEnable() {
@@ -26,7 +26,6 @@ public final class TreeboTickets extends JavaPlugin{
         this.getCommand("tbticket").setExecutor(cmds);
         this.getCommand("tbta").setExecutor(cmds);
         this.getCommand("tbticketadmin").setExecutor(cmds);
-        System.out.println("TreeboTickets Started");
         getServer().getPluginManager().registerEvents(new PlayerInput(this), this);
         getConfig().options().copyDefaults(true);
         getConfig().set("version", this.getDescription().getVersion());
@@ -39,7 +38,7 @@ public final class TreeboTickets extends JavaPlugin{
         table = getConfig().getString("table");
 
 
-       try {
+        try {
             openConnection();
             Statement statement = connection.createStatement();
         } catch (ClassNotFoundException e) {
@@ -48,6 +47,7 @@ public final class TreeboTickets extends JavaPlugin{
             e.printStackTrace();
         }
 
+        System.out.println("TreeboTickets Started");
     }
 
 
@@ -63,7 +63,7 @@ public final class TreeboTickets extends JavaPlugin{
     private int port;
     public String table = getConfig().getString("table");
     public String unusedColumns = "ID, MODIFIED";
-    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`";
+    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `SERVER`,`WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`";
     public String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
     public Integer ID, X, Y, Z, SEVERITY = 0;
     public String OPENED = LocalDateTime.now().toString();
@@ -126,6 +126,8 @@ public final class TreeboTickets extends JavaPlugin{
                         int tY = response.getInt("Y");
                         int tZ = response.getInt("Z");
                         String tStatus = response.getString("STATUS");
+                        if(tStatus.equalsIgnoreCase("OPEN")){tStatus = ChatColor.GREEN + tStatus + ChatColor.WHITE;}
+                        if (tStatus.equalsIgnoreCase("closed")){tStatus = ChatColor.RED + tStatus + ChatColor.WHITE;}
                         String tWorld = response.getString("WORLD");
                         p.sendMessage(ChatColor.WHITE + "" +  tId + "  -   " + tPlayer + "    -   " +tWorld + "     -   " +  tX + " " + tY + " " + tZ + "   -   " + tStatus);
                     }
@@ -171,6 +173,7 @@ public final class TreeboTickets extends JavaPlugin{
         String tStatus = "";
         String tOpened = "";
         String tModified = "";
+        String tServer = "";
         String tWorld = "";
 
         ResultSet response;
@@ -324,10 +327,16 @@ public final class TreeboTickets extends JavaPlugin{
                     try {
                         tModified = response.getDate("MODIFIED").toString();
                     }
-                    catch(NullPointerException e){tModified = "BLANK VALUE";
+                    catch(NullPointerException e){tModified = "BLANK VALUE";}
 
                     p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
                     p.sendMessage(ChatColor.GREEN + "Ticket ID: " + ChatColor.WHITE + tId);
+                    if(tStatus.equalsIgnoreCase("OPEN")){p.sendMessage(ChatColor.GREEN + "Ticket Status: " + ChatColor.GOLD + tStatus);
+                    }
+                    else if (tStatus.equalsIgnoreCase("closed")){p.sendMessage(ChatColor.GREEN + "Ticket Status: " + ChatColor.BLUE + tStatus);
+                    }
+                    else{p.sendMessage(ChatColor.GREEN + "Ticket Status: " + ChatColor.WHITE + tStatus);
+                    }
                     p.sendMessage(ChatColor.GREEN + "Opened by Player: " + ChatColor.WHITE + tPlayer);
                     p.sendMessage(ChatColor.GREEN + "Opened at: " + ChatColor.WHITE + tOpened);
                     p.sendMessage(ChatColor.GREEN + "Last Updated: " + ChatColor.WHITE + tModified);
@@ -341,7 +350,7 @@ public final class TreeboTickets extends JavaPlugin{
                     p.sendMessage(ChatColor.RED + "Staff comments / actions: " + ChatColor.WHITE + tStaffS);
                 }
             }
-        }
+
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during getTicket()");
@@ -352,7 +361,6 @@ public final class TreeboTickets extends JavaPlugin{
 
     public void staffTP(Player p, String query, int t){
         ResultSet response;
-        p.sendMessage("Attempting to send you to location of ticket " + t + ". This will fail if the world is on another server.");
         try {
             response = connection.createStatement().executeQuery(query);
             while(response.next()){
@@ -362,13 +370,17 @@ public final class TreeboTickets extends JavaPlugin{
                     int tX = response.getInt("X");
                     int tY = response.getInt("Y");
                     int tZ = response.getInt("Z");
+                    String tServer = response.getString("SERVER");
                     String tCoords = tX + " " + tY + " " + tZ;
                     String tWorld = response.getString("WORLD");
                     String tStatus = response.getString("STATUS");
-
-                    ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-                    String command = "execute in minecraft:" + tWorld +" run tp " + p.getName() + " " + tCoords;
-                    Bukkit.dispatchCommand(console, command);
+                    if(!tServer.equalsIgnoreCase(getConfig().getString("serverName"))){
+                        p.sendMessage("As you were on the wrong server, you will need to repeat the command.");
+                        p.sendMessage("Changing your server for you now.");
+                        api.connectOther(p.getName(), tServer);
+                    }
+                    else {p.teleport(new Location(Bukkit.getWorld(tWorld), tX,tY,tZ) );
+                    }
                 }
             }
         }
@@ -378,4 +390,64 @@ public final class TreeboTickets extends JavaPlugin{
         }
     }
 
+
+    public void staffClaim(Player p, int t) {
+        if (p.hasPermission("tbtickets.view.any")) {
+            String query = ("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            ResultSet response;
+            int response2 = 0;
+            try {
+                response = connection.createStatement().executeQuery(query);
+                while (response.next()) {
+                    int tId = response.getInt("ID");
+                    String tStaff = response.getString("STAFF");
+                    if (tStaff.equalsIgnoreCase("unassigned")) {
+                        String query2 = ("UPDATE  `tickets` SET  `STAFF` =  '" + p.getName() + "' WHERE  `ID` =" + tId );
+                        try {connection.createStatement().executeUpdate(query2);
+                        }
+                        catch (SQLException e) {
+                            p.sendMessage(ChatColor.RED + "Something went wrong");
+                            System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                        }
+                    }
+                    else {
+                        p.sendMessage(ChatColor.RED + "That ticket is already assigned to " + tStaff);
+                    }
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during staffClaim()");
+            }
+        }
+    }
+
+
+    public void staffUnclaim(Player p, int t){
+        if (p.hasPermission("tbtickets.view.any")) {
+            String query = ("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            ResultSet response;
+            try {
+                response = connection.createStatement().executeQuery(query);
+                while (response.next()) {
+                    int tId = response.getInt("ID");
+                    String tStaff = response.getString("STAFF");
+                    if (tStaff.equalsIgnoreCase(p.getName())) {
+                        String query2 = ("UPDATE  `tickets` SET  `STAFF` =  'UNASSIGNED' WHERE  `ID` =" + tId );
+                        try {connection.createStatement().executeUpdate(query2);
+                        }
+                        catch (SQLException e) {
+                            p.sendMessage(ChatColor.RED + "Something went wrong");
+                            System.out.println("Encountered " + e.toString() + " during staffUnclaim()");
+                        }
+                    }
+                    else {
+                        p.sendMessage(ChatColor.RED + "That ticket is assigned to " + tStaff);
+                    }
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during staffUnclaim()");
+            }
+        }
+    }
 }

@@ -8,8 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 
 public class Commands implements CommandExecutor {
@@ -96,7 +94,7 @@ public class Commands implements CommandExecutor {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "'");
                         }
                         else if (args[1].equalsIgnoreCase("unassigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF=''");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED'");
                         }
                         else if (args[1].equalsIgnoreCase("open")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN'");
@@ -111,9 +109,15 @@ public class Commands implements CommandExecutor {
                     else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.view.any")){
                         pl.staffViewTicket(p, Integer.parseInt(args[1]));
                     }
+                    else if (args[0].equalsIgnoreCase("claim")) {
+                        pl.staffClaim(p, Integer.parseInt(args[1]));
+                    }
+                    else if (args[0].equalsIgnoreCase("unclaim")){
+                        pl.staffUnclaim(p, Integer.parseInt(args[1]));
+                    }
                     else if (args[0].equalsIgnoreCase("tp")) {
                         if (isNumeric(args[1])) {
-                            pl.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "'", Integer.parseInt(args[1]));
+                            pl.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[1] + "'", Integer.parseInt(args[1]));
                         }
                     }
                 }
