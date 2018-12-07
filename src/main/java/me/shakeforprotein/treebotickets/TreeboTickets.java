@@ -18,6 +18,7 @@ public final class TreeboTickets extends JavaPlugin{
     private PlayerInput pi;
     private Commands cmds;
     public TreeboTickets(){}
+    private UpdateChecker uc;
     public BungeeChannelApi api = BungeeChannelApi.of(this);
 
     @Override
@@ -30,6 +31,8 @@ public final class TreeboTickets extends JavaPlugin{
         getConfig().options().copyDefaults(true);
         getConfig().set("version", this.getDescription().getVersion());
         saveConfig();
+        this.uc = new UpdateChecker(this);
+        uc.getCheckDownloadURL();
         host = getConfig().getString("host");
         port = getConfig().getInt("port");
         database = getConfig().getString("database");
@@ -256,7 +259,7 @@ public final class TreeboTickets extends JavaPlugin{
             response = connection.createStatement().executeQuery(query);
             while(response.next()){
                 String tPlayer = response.getString("IGNAME");
-                if(p.hasPermission("treebotickets.view.any")){
+                if(p.hasPermission("tbtickets.view.any")){
                     int tId = response.getInt("ID");
                     int tX = response.getInt("X");
                     int tY = response.getInt("Y");

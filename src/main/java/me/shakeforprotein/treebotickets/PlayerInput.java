@@ -45,6 +45,12 @@ public class PlayerInput implements Listener {
                 if ((p.getName().equalsIgnoreCase(item)) && (pl.getConfig().getInt("players." + p.getName() + ".ticketstate") > 0)) {
                     e.setCancelled(true);
                     ticketState = pl.getConfig().getInt("players." + p.getName() + ".ticketstate");
+                    if (m.equalsIgnoreCase("cancel")) {
+                        ticketState = 0;
+                        pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
+                        pl.saveConfig();
+                        p.sendMessage("Ticket Canceled");
+                    }
                     String tServer = pl.api.getServer().toString();
                     UUID puuid = p.getUniqueId();
                     String pname = p.getName();
@@ -57,12 +63,6 @@ public class PlayerInput implements Listener {
                     Integer px = (int) p.getLocation().getX();
                     Integer py = (int) p.getLocation().getY();
                     Integer pz = (int) p.getLocation().getZ();
-                    if (m.equalsIgnoreCase("cancel")) {
-                        ticketState = 0;
-                        pl.getConfig().set("players." + p.getName(), 0);
-                        pl.saveConfig();
-                        p.sendMessage("Ticket Canceled");
-                    }
 
                     if (ticketState == 1) {
                         if(m.equals("1") || m.equals("2") || m.equals("3")){

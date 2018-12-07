@@ -24,22 +24,22 @@ permissions:
     default: true
   tbtickets.view.own:
     description: 'Allows a player to see their own tickets'
-    default: false
+    default: true
   tbtickets.close.own:
     description: 'Allows a player to delete closed tickets.'
-    default: false
+    default: true
   tbtickets.close.any:
     description: 'Allows a player to delete closed tickets.'
-    default: false
+    default: op
   tbtickets.delete.any:
     description: 'Allows a player to delete any ticket, even if they are open.'
-    default: false
+    default: op
   tbtickets.delete.closed:
     description: 'Allows a player to delete closed tickets.'
-    default: false
+    default: op
   tbtickets.restore:
     description: 'Allows a player to restore a deleted ticket'
-    default: false
+    default: op
   tbtickets.view.any:
     description: 'Allows a player to see all tickets'
-    default: false
+    default: op
