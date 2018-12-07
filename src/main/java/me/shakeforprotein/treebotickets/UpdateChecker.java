@@ -22,7 +22,7 @@ public class UpdateChecker {
         this.pl = pl;
     }
 
-    public String requiredPermission = "stoneores.updatechecker";
+    public String requiredPermission = "tbtickets.updatechecker";
 
     public Boolean getCheckDownloadURL(Player p) {
         // Code courtesy of Spigot user Ftbastler
