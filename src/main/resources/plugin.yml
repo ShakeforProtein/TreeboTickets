@@ -17,6 +17,31 @@ commands:
   tbta:
     description: Submits a ticket for the staff team to look into.
     usage: /<command> <subcommand>
+  survival:
+    description: Takes you to the Survival Server.
+    usage: /<command>
+  hardcore:
+    description: Takes you to the hardcore Server.
+    usage: /<command>
+  creative:
+    description: Takes you to the a Server.
+    usage: /<command>
+  plots:
+    description: Takes you to the a Server.
+    usage: /<command>
+  skyblock:
+    description: Takes you to the a Server.
+    usage: /<command>
+  acidislands:
+    description: Takes you to the a Server.
+    usage: /<command>
+  prison:
+    description: Takes you to the a Server.
+    usage: /<command>
+  test:
+    description: Takes you to the a Server.
+    usage: /<command>
+
 
 permissions:
   tbtickets.create:
@@ -43,3 +68,27 @@ permissions:
   tbtickets.view.any:
     description: 'Allows a player to see all tickets'
     default: op
+  tbtickets.server.survival:
+    description:
+    default: true
+  tbtickets.server.hardcore:
+    description:
+    default: true
+  tbtickets.server.skyblock:
+    description:
+    default: true
+  tbtickets.server.acidislands:
+    description:
+    default: true
+  tbtickets.server.creative:
+    description:
+    default: true
+  tbtickets.server.plots:
+    description:
+    default: true
+  tbtickets.server.prison:
+    description:
+    default: true
+  tbtickets.server.test:
+    description:
+    default: true

@@ -24,7 +24,14 @@ public class Commands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            //TBTICKET Logic
+            if (cmd.getName().equalsIgnoreCase("survival")) {pl.serverSwitch(p, "survival");}
+            if (cmd.getName().equalsIgnoreCase("creative")) {pl.serverSwitch(p, "creative");}
+            if (cmd.getName().equalsIgnoreCase("skyblock")) {pl.serverSwitch(p, "sky");}
+            if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.serverSwitch(p, "sky");}
+            if (cmd.getName().equalsIgnoreCase("hardcore")) {pl.serverSwitch(p, "hardcore");}
+            if (cmd.getName().equalsIgnoreCase("prison")) {pl.serverSwitch(p, "prison");}
+            if (cmd.getName().equalsIgnoreCase("test")) {pl.serverSwitch(p, "test");}
+                //TBTICKET Logic
             if (cmd.getName().equalsIgnoreCase("tbTicket")) {
                 // TBTICKET COMMAND - With no arguments
 

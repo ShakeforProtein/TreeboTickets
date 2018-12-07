@@ -453,4 +453,17 @@ public final class TreeboTickets extends JavaPlugin{
             }
         }
     }
+
+    public void serverSwitch(Player p, String server){
+        if (p.hasPermission("tbtickets.server." + getConfig().getString("serverName"))){
+            if(!server.equalsIgnoreCase(getConfig().getString("serverName"))){
+                p.sendMessage("Attempting to send you to " + server);
+                api.connectOther(p.getName(), server);
+            }
+            else{
+                p.sendMessage("You are already on the " + server + " server.");
+                p.sendMessage("please use /hub to navigate from here");
+            }
+        }
+    }
 }
