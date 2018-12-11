@@ -567,7 +567,7 @@ public final class TreeboTickets extends JavaPlugin{
 
         int response;
         try {
-            response = connection.createStatement().executeUpdate("DELETE* FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            response = connection.createStatement().executeUpdate("DELETE FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
             p.sendMessage("Ticket " + t + " deleted. This action cannot be undone.");
         }
         catch (SQLException e){
