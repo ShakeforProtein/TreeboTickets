@@ -94,6 +94,8 @@ public class Commands implements CommandExecutor {
                     p.sendMessage(ChatColor.GOLD + "/tbta close <ticket_number>  -  Close ticket with id");
                     p.sendMessage(ChatColor.GOLD + "/tbta <claim|unclaim> <ticket_number>  -  Assigns an unassigned ticket to yourself");
                     p.sendMessage(ChatColor.GOLD + "/tbta tp <ticket_number>  -  Teleport to location of ticket number");
+                    p.sendMessage(ChatColor.GOLD + "/tbta update <ticket_number>  <your message> -  Updates a tickets staff steps data.  Remember this can be seen by the ticket submitter");
+
 
 
                 } else if (args.length == 2) {
@@ -151,6 +153,7 @@ public class Commands implements CommandExecutor {
                     p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin assign <ticket_number> <staff_name> -  Displays details on specific ticket");
                     p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin close <ticket_number>  -  Close ticket with id");
                     p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin delete <ticket_number>  -  Assigns an unassigned ticket to yourself");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin update <ticket_number> <your update>  -  Updates the staff steps data for this ticket (This can be seen by anyone who can view the ticket)");
                     p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin stats");
 
 
