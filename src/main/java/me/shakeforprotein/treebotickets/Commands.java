@@ -24,12 +24,18 @@ public class Commands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
+            String w = p.getWorld().getName();
             if (cmd.getName().equalsIgnoreCase("survival")) {pl.serverSwitch(p, "survival");}
             if (cmd.getName().equalsIgnoreCase("creative")) {pl.serverSwitch(p, "creative");}
             if (cmd.getName().equalsIgnoreCase("skyblock")) {pl.serverSwitch(p, "sky");}
+            if (cmd.getName().equalsIgnoreCase("skygrid")) {pl.serverSwitch(p, "sky");}
             if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.serverSwitch(p, "sky");}
             if (cmd.getName().equalsIgnoreCase("hardcore")) {pl.serverSwitch(p, "hardcore");}
             if (cmd.getName().equalsIgnoreCase("prison")) {pl.serverSwitch(p, "prison");}
+            if (!w.equalsIgnoreCase("creative") && !w.equalsIgnoreCase("creative_nether") && !w.equalsIgnoreCase("creative_the_end") && !w.equalsIgnoreCase("plots")){
+                if (cmd.getName().equalsIgnoreCase("plots")) {pl.serverSwitch(p, "creative");}
+            }
+            if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.serverSwitch(p, "plots");}
             if (cmd.getName().equalsIgnoreCase("test")) {pl.serverSwitch(p, "test");}
                 //TBTICKET Logic
             if (cmd.getName().equalsIgnoreCase("tbTicket")) {
@@ -144,6 +150,8 @@ public class Commands implements CommandExecutor {
             if (cmd.getName().equalsIgnoreCase("tbticketadmin")) {
                 if (args.length == 1 && args[0].equalsIgnoreCase("update") && p.hasPermission("tbtickets.admin")){pl.reloadConfig();}
                 else if (args.length == 1 && args[0].equalsIgnoreCase("stats") && p.hasPermission("tbtickets.admin")){pl.adminStats(p);}
+                else if (args.length == 1 && args[0].equalsIgnoreCase("about") && p.hasPermission("tbtickets.admin")){p.sendMessage(pl.getDescription().getVersion());}
+
                 else if (args.length < 2) {
                     p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
                     p.sendMessage(ChatColor.RED + "INCORRECT USAGE. CORRECT USAGE IS AS FOLLOWS");
@@ -190,6 +198,7 @@ public class Commands implements CommandExecutor {
                             pl.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[1] + "'", Integer.parseInt(args[1]));
                         }
                     }
+
                 }
 
                 else if (args.length >= 3 ){
