@@ -13,7 +13,7 @@ A Simple Tickets Plugin
            .close.own - Allows a player to close thier own ticket.
            .close.any - Allows a player to close any ticket.
            .restore - Allows a player to restore a deleted ticket'
-           .view - Allows a player to see the list of blocked items'
+           .view - Allows a player to see the list of blocked items' 
 ```
 
 ## Commands
