@@ -92,6 +92,7 @@ public class Commands implements CommandExecutor {
                     p.sendMessage(ChatColor.GOLD + "/tbta list <assigned|unnassigned|open|closed>  -  Lists all tickets assigned to you");
                     p.sendMessage(ChatColor.GOLD + "/tbta view <ticket_number>  -  Displays details on specific ticket");
                     p.sendMessage(ChatColor.GOLD + "/tbta close <ticket_number>  -  Close ticket with id");
+                    p.sendMessage(ChatColor.GOLD + "/tbta <claim|unclaim> <ticket_number>  -  Assigns an unassigned ticket to yourself");
                     p.sendMessage(ChatColor.GOLD + "/tbta tp <ticket_number>  -  Teleport to location of ticket number");
 
 
@@ -128,11 +129,89 @@ public class Commands implements CommandExecutor {
                         }
                     }
                 }
+                else if (args.length >= 3 && args[0].equalsIgnoreCase("update")){
+                    StringBuilder staffText = new StringBuilder();
+                    for(int i = 2; i < args.length; i++){
+                        staffText.append(args[i] + " ");
+                    }
+
+                    pl.staffUpdate(p, Integer.parseInt(args[1]), staffText.toString());
+                }
+            }
+
+            if (cmd.getName().equalsIgnoreCase("tbticketadmin")) {
+                if (args.length == 1 && args[0].equalsIgnoreCase("update") && p.hasPermission("tbtickets.admin")){pl.reloadConfig();}
+                else if (args.length == 1 && args[0].equalsIgnoreCase("stats") && p.hasPermission("tbtickets.admin")){pl.adminStats(p);}
+                else if (args.length < 2) {
+                    p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
+                    p.sendMessage(ChatColor.RED + "INCORRECT USAGE. CORRECT USAGE IS AS FOLLOWS");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin reload");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin list <assigned|unnassigned|open|closed> - Lists tickets of the selected type");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin staffList <staff_name> - Lists tickets assigned to particular staff member");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin assign <ticket_number> <staff_name> -  Displays details on specific ticket");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin close <ticket_number>  -  Close ticket with id");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin delete <ticket_number>  -  Assigns an unassigned ticket to yourself");
+                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin stats");
+
+
+
+                } else if (args.length == 2) {
+                    if (args[0].equalsIgnoreCase("list")){
+                        if (args[1].equalsIgnoreCase("unassigned")) {
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED'");
+                        }
+                        else if (args[1].equalsIgnoreCase("assigned")) {
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED'");
+                        }
+                        else if (args[1].equalsIgnoreCase("open")) {
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN'");
+                        }
+                        else if (args[1].equalsIgnoreCase("closed")) {
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
+                        }
+                    }
+                    else if(args[0].equalsIgnoreCase("staffList")) {
+                        pl.adminListStaff(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + args[1] + "'", args[1]);
+                    }
+                    else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.admin")){
+                        pl.adminCloseTicket(p, Integer.parseInt(args[1]));
+                    }
+                    else if (args[0].equalsIgnoreCase("delete") && p.hasPermission("tbtickets.admin")){
+                        pl.adminDeleteTicket(p, Integer.parseInt(args[1]));
+                    }
+                    else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.admin")){
+                        pl.staffViewTicket(p, Integer.parseInt(args[1]));
+                    }
+                    else if (args[0].equalsIgnoreCase("tp")) {
+                        if (isNumeric(args[1])) {
+                            pl.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[1] + "'", Integer.parseInt(args[1]));
+                        }
+                    }
+                }
+
+                else if (args.length >= 3 ){
+
+                    if (args[0].equalsIgnoreCase("assign")) {
+                        pl.adminAssign(p, Integer.parseInt(args[1]), args[2]);
+                    }
+
+                    else if(args[0].equalsIgnoreCase("update")) {
+                        StringBuilder staffText = new StringBuilder();
+                        for (int i = 2; i < args.length; i++) {
+                            staffText.append(args[i] + " ");
+                        }
+
+                        pl.adminUpdate(p, Integer.parseInt(args[1]), staffText.toString());
+                    }
+                }
             }
 
         }
         return true;
     }
+
+
+
 
 
         public static boolean isNumeric (String str)

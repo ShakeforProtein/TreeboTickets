@@ -27,6 +27,14 @@ public final class TreeboTickets extends JavaPlugin{
         this.getCommand("tbticket").setExecutor(cmds);
         this.getCommand("tbta").setExecutor(cmds);
         this.getCommand("tbticketadmin").setExecutor(cmds);
+        this.getCommand("survival").setExecutor(cmds);
+        this.getCommand("creative").setExecutor(cmds);
+        this.getCommand("hardcore").setExecutor(cmds);
+        this.getCommand("prison").setExecutor(cmds);
+        this.getCommand("skyblock").setExecutor(cmds);
+        this.getCommand("acidislands").setExecutor(cmds);
+        this.getCommand("test").setExecutor(cmds);
+
         getServer().getPluginManager().registerEvents(new PlayerInput(this), this);
         getConfig().options().copyDefaults(true);
         getConfig().set("version", this.getDescription().getVersion());
@@ -235,7 +243,7 @@ public final class TreeboTickets extends JavaPlugin{
                 tId = response.getInt("ID");
                 tPlayer = response.getString("IGNAME");
                 if(tPlayer.trim().equalsIgnoreCase(p.getName().trim())){
-                    connection.createStatement().executeUpdate("UPDATE `tickets` SET STATUS = 'CLOSED' WHERE ID =" + tId);
+                    connection.createStatement().executeUpdate("UPDATE `" + table + "` SET STATUS = 'CLOSED' WHERE ID =" + tId);
                     p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Closed.");
                 }
                 else{
@@ -280,22 +288,23 @@ public final class TreeboTickets extends JavaPlugin{
 
     public void staffCloseTicket(Player p, int t){
         //TODO CLOSETICKET STAFF
-        int tId = -1;
-        String tPlayer = "";
+        if(p.hasPermission("tbtickets.close.any")) {
+            int tId = -1;
+            String tPlayer = "";
 
-        ResultSet response;
-        try {
-            response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
-            while (response.next()){
-                tId = response.getInt("ID");
-                connection.createStatement().executeUpdate("UPDATE `tickets` SET STATUS = 'CLOSED' WHERE ID =" + tId);
-                p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Closed.");
+            ResultSet response;
+            try {
+                response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+                while (response.next()) {
+                    tId = response.getInt("ID");
+                    connection.createStatement().executeUpdate("UPDATE `" + table + "` SET STATUS = 'CLOSED' WHERE ID =" + tId);
+                    p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Closed.");
 
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during getTicket()");
             }
-        }
-        catch (SQLException e){
-            p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during getTicket()");
         }
     }
 
@@ -405,8 +414,9 @@ public final class TreeboTickets extends JavaPlugin{
                     int tId = response.getInt("ID");
                     String tStaff = response.getString("STAFF");
                     if (tStaff.equalsIgnoreCase("unassigned")) {
-                        String query2 = ("UPDATE  `tickets` SET  `STAFF` =  '" + p.getName() + "' WHERE  `ID` =" + tId );
+                        String query2 = ("UPDATE  `" + table + "` SET  `STAFF` =  '" + p.getName() + "' WHERE  `ID` =" + tId );
                         try {connection.createStatement().executeUpdate(query2);
+                            p.sendMessage("Ticket " + t + " Claimed.");
                         }
                         catch (SQLException e) {
                             p.sendMessage(ChatColor.RED + "Something went wrong");
@@ -435,8 +445,9 @@ public final class TreeboTickets extends JavaPlugin{
                     int tId = response.getInt("ID");
                     String tStaff = response.getString("STAFF");
                     if (tStaff.equalsIgnoreCase(p.getName())) {
-                        String query2 = ("UPDATE  `tickets` SET  `STAFF` =  'UNASSIGNED' WHERE  `ID` =" + tId );
+                        String query2 = ("UPDATE  `" + table + "` SET  `STAFF` =  'UNASSIGNED' WHERE  `ID` =" + tId );
                         try {connection.createStatement().executeUpdate(query2);
+                            p.sendMessage("Ticket " + t + " unclaimed.");
                         }
                         catch (SQLException e) {
                             p.sendMessage(ChatColor.RED + "Something went wrong");
@@ -451,6 +462,216 @@ public final class TreeboTickets extends JavaPlugin{
                 p.sendMessage(ChatColor.RED + "Something went wrong");
                 System.out.println("Encountered " + e.toString() + " during staffUnclaim()");
             }
+        }
+    }
+
+
+    public void staffUpdate(Player p, int t, String staffText) {
+        if (p.hasPermission("tbtickets.view.any")) {
+            String query = ("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            ResultSet response;
+            int response2 = 0;
+            try {
+                response = connection.createStatement().executeQuery(query);
+                while (response.next()) {
+                    int tId = response.getInt("ID");
+                    String tStaff = response.getString("STAFF");
+                    String tStaffSteps = response.getString("STAFFSTEPS");
+                    String newStaffSteps = (tStaffSteps + "\n" + LocalDateTime.now() + " - " + p.getName() + " - " + staffText);
+                    if (tStaff.equalsIgnoreCase(p.getName())) {
+                        String query2 = ("UPDATE  `" + table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + "' WHERE  `ID` =" + tId );
+                        try {connection.createStatement().executeUpdate(query2);
+                            p.sendMessage("Ticket " + t + " updated.");
+                        }
+                        catch (SQLException e) {
+                            p.sendMessage(ChatColor.RED + "Something went wrong");
+                            System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                        }
+                    }
+                    else {
+                        p.sendMessage(ChatColor.RED + "That ticket is assigned to " + tStaff + " so you are not able to update it.");
+                    }
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during staffUpdate()");
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    public String adminListStaff(Player p, String query, String staff){
+            ResultSet response;
+            String output = "";
+        if(p.hasPermission("tbtickets.admin")) {
+            p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+            p.sendMessage(ChatColor.AQUA + "Assigned to " + staff);
+            p.sendMessage(ChatColor.AQUA + "Id  -   Player  -   World   -   Coordinates -   Status");
+
+            try {
+                response = connection.createStatement().executeQuery(query);
+                while (response.next()) {
+                    String tPlayer = response.getString("IGNAME");
+                    int tId = response.getInt("ID");
+                    int tX = response.getInt("X");
+                    int tY = response.getInt("Y");
+                    int tZ = response.getInt("Z");
+                    String tWorld = response.getString("WORLD");
+                    String tStatus = response.getString("STATUS");
+                    p.sendMessage(ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " + tX + " " + tY + " " + tZ + "   -   " + tStatus);
+                }
+
+                p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
+            }
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during genericQuery()");
+        }}
+        return output;
+    }
+
+    public void adminCloseTicket(Player p, int t){
+        if(p.hasPermission("tbtickets.admin")) {
+            int tId = -1;
+            String tPlayer = "";
+
+            ResultSet response;
+            try {
+                response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+                while (response.next()) {
+                    tId = response.getInt("ID");
+                    connection.createStatement().executeUpdate("UPDATE `" + table + "` SET STATUS = 'CLOSED' WHERE ID =" + tId);
+                    p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Closed.");
+
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during adminCloseTicket()");
+            }
+        }
+    }
+
+
+    public void adminDeleteTicket(Player p, int t){
+        if(p.hasPermission("tbticketa.admin")){
+        int tId = -1;
+        String tPlayer = "";
+
+        int response;
+        try {
+            response = connection.createStatement().executeUpdate("DELETE* FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            p.sendMessage("Ticket " + t + " deleted. This action cannot be undone.");
+        }
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during adminDeleteTicket()");
+        }}
+        else {p.sendMessage("You are not a ticket administrator");}
+    }
+
+
+    public void adminAssign(Player p, int t, String staffName) {
+        if (p.hasPermission("tbtickets.admin")) {
+            String query = ("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            ResultSet response;
+            int response2 = 0;
+            try {
+                response = connection.createStatement().executeQuery(query);
+                while (response.next()) {
+                    int tId = response.getInt("ID");
+                    String tStaff = response.getString("STAFF");
+                    if (1 == 1) {
+                        String query2 = ("UPDATE  `" + table + "` SET  `STAFF` =  '" + staffName + "' WHERE  `ID` =" + tId );
+                        try {connection.createStatement().executeUpdate(query2);
+                            p.sendMessage("Ticket " + t + " assigned to " + staffName + ".");
+                        }
+                        catch (SQLException e) {
+                            p.sendMessage(ChatColor.RED + "Something went wrong");
+                            System.out.println("Encountered " + e.toString() + " during adminAssign()");
+                        }
+                    }
+                    else {
+                        p.sendMessage(ChatColor.RED + "That ticket is already assigned to " + tStaff);
+                    }
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during staffClaim()");
+            }
+        }
+    }
+
+
+
+    public void adminUpdate(Player p, int t, String staffText) {
+        if (p.hasPermission("tbtickets.admin")) {
+            String query = ("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            ResultSet response;
+            int response2 = 0;
+            try {
+                response = connection.createStatement().executeQuery(query);
+                while (response.next()) {
+                    int tId = response.getInt("ID");
+                    String tStaff = response.getString("STAFF");
+                    String tStaffSteps = response.getString("STAFFSTEPS");
+                    String newStaffSteps = (tStaffSteps + "\n" + LocalDateTime.now() + " - " + p.getName() + " - " + staffText);
+                    if (1 == 1) {
+                        String query2 = ("UPDATE  `" + table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + "' WHERE  `ID` =" + tId );
+                        try {connection.createStatement().executeUpdate(query2);
+                            p.sendMessage("Ticket " + t + " updated.");
+                        }
+                        catch (SQLException e) {
+                            p.sendMessage(ChatColor.RED + "Something went wrong");
+                            System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                        }
+                    }
+                    else {
+                        p.sendMessage(ChatColor.RED + "That ticket is assigned to " + tStaff + " so you are not able to update it.");
+                    }
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during adminUpdate()");
+            }
+        }
+    }
+
+    public void adminStats(Player p){
+
+        ResultSet response;
+        try {
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE ID!='0'");
+            while (response.next()) {
+            p.sendMessage("Total Tickets:" + response.getInt("TOTAL"));
+            }
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED'");
+            while (response.next()) {
+                p.sendMessage("Assigned Tickets:" + response.getInt("TOTAL"));
+            }
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED'");
+            while (response.next()) {
+                p.sendMessage("UnAssigned Tickets:" + response.getInt("TOTAL"));
+            }
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS!='OPEN'");
+            while (response.next()) {
+                p.sendMessage("Open Tickets:" + response.getInt("TOTAL"));
+            }
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS!='CLOSED'");
+            while (response.next()) {
+                p.sendMessage("Closed Tickets:" + response.getInt("TOTAL"));
+            }
+        }
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during getTicket()");
         }
     }
 

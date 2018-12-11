@@ -68,6 +68,9 @@ permissions:
   tbtickets.view.any:
     description: 'Allows a player to see all tickets'
     default: op
+  tbtickets.admin:
+    description: 'Allows use of all tbTicketAdmin commands'
+    default: false
   tbtickets.server.survival:
     description:
     default: true
