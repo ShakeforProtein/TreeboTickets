@@ -1,11 +1,14 @@
 package me.shakeforprotein.treebotickets;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,11 +19,13 @@ public class PlayerInput implements Listener {
 
 
     private TreeboTickets pl;
+    private UpdateChecker uc;
     private Commands cmds;
 
     public PlayerInput(TreeboTickets main) {
         pl = main;
         this.cmds = cmds;
+        this.uc = new UpdateChecker(pl);
     }
 
 
@@ -126,6 +131,32 @@ public class PlayerInput implements Listener {
                     }
                 }
             }
+    }
+
+
+    @EventHandler
+    private void onPlayerJoin(PlayerJoinEvent e){
+        if (e.getPlayer().hasPermission(uc.requiredPermission)) {
+            if ((pl.getConfig().getString(e.getPlayer().getName()) == null) || ((pl.getConfig().getString(e.getPlayer().getName()) != null) && (pl.getConfig().getString(e.getPlayer().getName()).equalsIgnoreCase("false")))) {
+                uc.getCheckDownloadURL(e.getPlayer());
+                pl.staffStats(e.getPlayer());
+                pl.getConfig().set(e.getPlayer().getName(), "true");
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+                    public void run() {
+                        pl.getConfig().set(e.getPlayer().getName(), "false");
+                    }
+                }, 100L);
+            } else {
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+                    public void run() {
+                        try {
+                            pl.getConfig().set(e.getPlayer().getName(), null);
+                        } catch (NullPointerException e) {
+                        }
+                    }
+                }, 120L);
+            }
+        }
     }
 }
 

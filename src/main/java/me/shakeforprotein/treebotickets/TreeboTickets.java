@@ -644,6 +644,30 @@ public final class TreeboTickets extends JavaPlugin{
         }
     }
 
+    public void staffStats(Player p){
+
+        ResultSet response;
+        try {
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "'");
+            while (response.next()) {
+                p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+                p.sendMessage("Your TOTAL assigned tickets: " + response.getInt("TOTAL"));
+            }
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() +"' AND STATUS='OPEN'");
+            while (response.next()) {
+                p.sendMessage("Your OPEN Tickets: " + response.getInt("TOTAL"));
+            }
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() +"' AND STATUS='CLOSED'");
+            while (response.next()) {
+                p.sendMessage("Your CLOSED Tickets: " + response.getInt("TOTAL"));
+            }
+        }
+        catch (SQLException e){
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during getTicket()");
+        }
+    }
+
     public void adminStats(Player p){
 
         ResultSet response;
@@ -660,11 +684,11 @@ public final class TreeboTickets extends JavaPlugin{
             while (response.next()) {
                 p.sendMessage("UnAssigned Tickets:" + response.getInt("TOTAL"));
             }
-            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS!='OPEN'");
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS='OPEN'");
             while (response.next()) {
                 p.sendMessage("Open Tickets:" + response.getInt("TOTAL"));
             }
-            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS!='CLOSED'");
+            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
             while (response.next()) {
                 p.sendMessage("Closed Tickets:" + response.getInt("TOTAL"));
             }

@@ -44,6 +44,9 @@ commands:
 
 
 permissions:
+  tbtickets.updatechecker:
+    description: 'Notify user if there is an update available'
+    default: op
   tbtickets.create:
     description: 'Allows a player to create a new ticket'
     default: true
