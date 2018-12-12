@@ -1,11 +1,9 @@
 package me.shakeforprotein.treebotickets;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 
@@ -26,19 +24,18 @@ public class Commands implements CommandExecutor {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
             if (cmd.getName().equalsIgnoreCase("survival")) {pl.serverSwitch(p, "survival");}
-            if (cmd.getName().equalsIgnoreCase("creative")) {pl.serverSwitch(p, "creative");}
-            if (cmd.getName().equalsIgnoreCase("skyblock")) {pl.serverSwitch(p, "sky");}
-            if (cmd.getName().equalsIgnoreCase("skygrid")) {pl.serverSwitch(p, "sky");}
-            if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.serverSwitch(p, "sky");}
-            if (cmd.getName().equalsIgnoreCase("hardcore")) {pl.serverSwitch(p, "hardcore");}
-            if (cmd.getName().equalsIgnoreCase("prison")) {pl.serverSwitch(p, "prison");}
-            if (!w.equalsIgnoreCase("creative") && !w.equalsIgnoreCase("creative_nether") && !w.equalsIgnoreCase("creative_the_end") && !w.equalsIgnoreCase("plots")){
-                if (cmd.getName().equalsIgnoreCase("plots")) {pl.serverSwitch(p, "creative");}
-            }
-            if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.serverSwitch(p, "plots");}
-            if (cmd.getName().equalsIgnoreCase("test")) {pl.serverSwitch(p, "test");}
+            else if (cmd.getName().equalsIgnoreCase("lobby")) {pl.serverSwitch(p, "hub");}
+            else if (cmd.getName().equalsIgnoreCase("creative")) {pl.serverSwitch(p, "creative");}
+            else if (cmd.getName().equalsIgnoreCase("skyblock")) {pl.serverSwitch(p, "sky");}
+            else if (cmd.getName().equalsIgnoreCase("skygrid")) {pl.serverSwitch(p, "sky");}
+            else if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.serverSwitch(p, "sky");}
+            else if (cmd.getName().equalsIgnoreCase("hardcore")) {pl.serverSwitch(p, "hardcore");}
+            else if (cmd.getName().equalsIgnoreCase("prison")) {pl.serverSwitch(p, "prison");}
+            else if (cmd.getName().equalsIgnoreCase("plots")) {pl.serverSwitch(p, "creative");}
+            else if (cmd.getName().equalsIgnoreCase("games")) {pl.serverSwitch(p, "games");}
+            else if (cmd.getName().equalsIgnoreCase("test")) {pl.serverSwitch(p, "test");}
                 //TBTICKET Logic
-            if (cmd.getName().equalsIgnoreCase("tbTicket")) {
+            else if (cmd.getName().equalsIgnoreCase("tbTicket")) {
                 // TBTICKET COMMAND - With no arguments
 
                 if (args.length == 0) {
@@ -53,7 +50,7 @@ public class Commands implements CommandExecutor {
                         pl.startTicketLogic(p);
                     }
                     else if(args[0].equalsIgnoreCase("open") && !p.hasPermission("tbtickets.create")){p.sendMessage(ChatColor.RED+ "You lack the required permission to create a new ticket");}
-                    //TBTICKEWT COMMAND - LIST OWN Logic
+                    //TBTICKET COMMAND - LIST OWN Logic
                     else if (args[0].equalsIgnoreCase("list") && (p.hasPermission("tbtickets.view.own"))) {
                         String fullData = pl.listTickets(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE IGNAME='" + p.getName() + "'");
                     }
@@ -79,7 +76,7 @@ public class Commands implements CommandExecutor {
                     if (ticketNumber != -1) {
                         //TBTICKET COMMAND - VIEW SPECIFIC TICKET LOGIC
                         if(args[0].equalsIgnoreCase("view") && !p.hasPermission("tbtickets.view.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to view tickets");}
-                        else if(args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.close.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to view tickets");}
+                        else if(args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.close.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to close tickets");}
 
                         else if (args[0].equalsIgnoreCase("view")) {
                             pl.getTicket(p, ticketNumber);
@@ -148,9 +145,9 @@ public class Commands implements CommandExecutor {
             }
 
             if (cmd.getName().equalsIgnoreCase("tbticketadmin")) {
-                if (args.length == 1 && args[0].equalsIgnoreCase("update") && p.hasPermission("tbtickets.admin")){pl.reloadConfig();}
-                else if (args.length == 1 && args[0].equalsIgnoreCase("stats") && p.hasPermission("tbtickets.admin")){pl.adminStats(p);}
-                else if (args.length == 1 && args[0].equalsIgnoreCase("about") && p.hasPermission("tbtickets.admin")){p.sendMessage(pl.getDescription().getVersion());}
+                if (args.length == 1 && args[0].equalsIgnoreCase("stats") && p.hasPermission("tbtickets.admin")){pl.adminStats(p);}
+                else if (args.length == 1 && args[0].equalsIgnoreCase("version") && p.hasPermission("tbtickets.admin")){p.sendMessage(pl.getConfig().getString("networkName") + " - Version:  " +  pl.getDescription().getVersion());}
+                else if (args.length == 1 && args[0].equalsIgnoreCase("reload") && p.hasPermission("tbtickets.admin")){pl.reloadConfig(); p.sendMessage(pl.getConfig().getString("networkName") +  " plugin config reloaded");}
 
                 else if (args.length < 2) {
                     p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));

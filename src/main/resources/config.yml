@@ -18,6 +18,7 @@ username: 'ABC'
 password: 'XYZ'
 database: 'Database'
 table: 'tickets'
+isLobbyServer: 'false'
 
 serverName: 'Test'
 networkName: 'Example Network'

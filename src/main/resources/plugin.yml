@@ -41,6 +41,12 @@ commands:
   test:
     description: Takes you to the a Server.
     usage: /<command>
+  games:
+    description: Takes you to the a Server.
+    usage: /<command>
+  lobby:
+    description: Takes you to the a Server.
+    usage: /<command>
 
 
 permissions:
@@ -96,5 +102,8 @@ permissions:
     description:
     default: true
   tbtickets.server.test:
+    description:
+    default: true
+  tbtickets.server.lobby:
     description:
     default: true

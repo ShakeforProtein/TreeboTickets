@@ -7,6 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.sql.*;
 import java.time.LocalDateTime;
 
@@ -27,10 +30,13 @@ public final class TreeboTickets extends JavaPlugin{
         this.getCommand("tbticket").setExecutor(cmds);
         this.getCommand("tbta").setExecutor(cmds);
         this.getCommand("tbticketadmin").setExecutor(cmds);
+        this.getCommand("lobby").setExecutor(cmds);
         this.getCommand("survival").setExecutor(cmds);
         this.getCommand("creative").setExecutor(cmds);
+        this.getCommand("plots").setExecutor(cmds);
         this.getCommand("hardcore").setExecutor(cmds);
         this.getCommand("prison").setExecutor(cmds);
+        this.getCommand("games").setExecutor(cmds);
         this.getCommand("skyblock").setExecutor(cmds);
         this.getCommand("acidislands").setExecutor(cmds);
         this.getCommand("test").setExecutor(cmds);
@@ -58,6 +64,7 @@ public final class TreeboTickets extends JavaPlugin{
             e.printStackTrace();
         }
 
+        dbKeepAlive();
         System.out.println("TreeboTickets Started");
     }
 
@@ -82,7 +89,7 @@ public final class TreeboTickets extends JavaPlugin{
 
 
 
-    private void openConnection() throws SQLException, ClassNotFoundException {
+    public void openConnection() throws SQLException, ClassNotFoundException {
         if (connection != null && !connection.isClosed()) {
             return;
         }
@@ -96,19 +103,18 @@ public final class TreeboTickets extends JavaPlugin{
         }
     }
 
-    public String addTicketToDB(Player p, String ticketData){
+    public void addTicketToDB(Player p, String ticketData){
         try {
             String output = "" + connection.createStatement().executeUpdate(baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
-            return "Success";
+            p.sendMessage(ChatColor.GREEN + "Your ticket has been successfully submitted");
         }
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during addTicketToDB()");
-            return "Fail";
         }
     }
 
-    public String genericQuery(Player p, String query){
+    public void genericQuery(Player p, String query){
         ResultSet response;
         String output = "";
         try {
@@ -117,8 +123,20 @@ public final class TreeboTickets extends JavaPlugin{
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            makeLog(e);
         }
-        return output;
+    }
+
+    public void genericQuery(String query){
+        ResultSet response;
+        String output = "";
+        try {
+            response = connection.createStatement().executeQuery(query);
+        }
+        catch (SQLException e){
+            System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            makeLog(e);
+        }
     }
 
     public String listTickets(Player p, String query){
@@ -148,6 +166,7 @@ public final class TreeboTickets extends JavaPlugin{
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            makeLog(e);
         }
         return output;
     }
@@ -210,6 +229,7 @@ public final class TreeboTickets extends JavaPlugin{
                     p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
                     p.sendMessage(ChatColor.GREEN + "Ticket ID: " + ChatColor.WHITE + tId);
                     p.sendMessage(ChatColor.GREEN + "Opened by Player: " + ChatColor.WHITE + tPlayer);
+                    p.sendMessage(ChatColor.GREEN + "Status: " + ChatColor.WHITE + tStatus);
                     p.sendMessage(ChatColor.GREEN + "Opened at: " + ChatColor.WHITE + tOpened);
                     p.sendMessage(ChatColor.GREEN + "Last Updated: " + ChatColor.WHITE + tModified);
                     p.sendMessage(ChatColor.GREEN + "On World: " + ChatColor.WHITE + tWorld);
@@ -227,8 +247,10 @@ public final class TreeboTickets extends JavaPlugin{
             }
         }
         catch (SQLException e){
-            p.sendMessage(ChatColor.RED + "Something went wrong");
+            // p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during getTicket()");
+            getConfig().set("lastStackTrace", e.getStackTrace());
+            makeLog(e);
         }
     }
 
@@ -253,7 +275,8 @@ public final class TreeboTickets extends JavaPlugin{
         }
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during getTicket()");
+            System.out.println("Encountered " + e.toString() + " during closeTicket()");
+            makeLog(e);
         }
     }
 
@@ -280,8 +303,9 @@ public final class TreeboTickets extends JavaPlugin{
             p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
         }
         catch (SQLException e){
-            p.sendMessage(ChatColor.RED + "Something went wrong");
+            p.sendMessage(ChatColor.RED + "Something went wrong getting statistics");
             System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            makeLog(e);
         }
         return output;
     }
@@ -303,7 +327,8 @@ public final class TreeboTickets extends JavaPlugin{
                 }
             } catch (SQLException e) {
                 p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during getTicket()");
+                System.out.println("Encountered " + e.toString() + " during staffCloseTicket()");
+                makeLog(e);
             }
         }
     }
@@ -365,7 +390,8 @@ public final class TreeboTickets extends JavaPlugin{
 
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during getTicket()");
+            System.out.println("Encountered " + e.toString() + " during staffViewTicket()");
+            makeLog(e);
         }
     }else {p.sendMessage(ChatColor.RED + "You lack the sufficient permissions.");}}
 
@@ -399,6 +425,8 @@ public final class TreeboTickets extends JavaPlugin{
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during staffTP()");
+            makeLog(e);
+
         }
     }
 
@@ -430,6 +458,8 @@ public final class TreeboTickets extends JavaPlugin{
             } catch (SQLException e) {
                 p.sendMessage(ChatColor.RED + "Something went wrong");
                 System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                makeLog(e);
+
             }
         }
     }
@@ -461,6 +491,7 @@ public final class TreeboTickets extends JavaPlugin{
             } catch (SQLException e) {
                 p.sendMessage(ChatColor.RED + "Something went wrong");
                 System.out.println("Encountered " + e.toString() + " during staffUnclaim()");
+                makeLog(e);
             }
         }
     }
@@ -486,6 +517,7 @@ public final class TreeboTickets extends JavaPlugin{
                         catch (SQLException e) {
                             p.sendMessage(ChatColor.RED + "Something went wrong");
                             System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                            makeLog(e);
                         }
                     }
                     else {
@@ -495,6 +527,8 @@ public final class TreeboTickets extends JavaPlugin{
             } catch (SQLException e) {
                 p.sendMessage(ChatColor.RED + "Something went wrong");
                 System.out.println("Encountered " + e.toString() + " during staffUpdate()");
+                makeLog(e);
+
             }
         }
     }
@@ -534,6 +568,8 @@ public final class TreeboTickets extends JavaPlugin{
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            makeLog(e);
+
         }}
         return output;
     }
@@ -555,6 +591,7 @@ public final class TreeboTickets extends JavaPlugin{
             } catch (SQLException e) {
                 p.sendMessage(ChatColor.RED + "Something went wrong");
                 System.out.println("Encountered " + e.toString() + " during adminCloseTicket()");
+                makeLog(e);
             }
         }
     }
@@ -573,6 +610,7 @@ public final class TreeboTickets extends JavaPlugin{
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during adminDeleteTicket()");
+            makeLog(e);
         }}
         else {p.sendMessage("You are not a ticket administrator");}
     }
@@ -605,6 +643,7 @@ public final class TreeboTickets extends JavaPlugin{
             } catch (SQLException e) {
                 p.sendMessage(ChatColor.RED + "Something went wrong");
                 System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                makeLog(e);
             }
         }
     }
@@ -640,6 +679,7 @@ public final class TreeboTickets extends JavaPlugin{
             } catch (SQLException e) {
                 p.sendMessage(ChatColor.RED + "Something went wrong");
                 System.out.println("Encountered " + e.toString() + " during adminUpdate()");
+                makeLog(e);
             }
         }
     }
@@ -663,8 +703,9 @@ public final class TreeboTickets extends JavaPlugin{
             }
         }
         catch (SQLException e){
-            p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during getTicket()");
+            // p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during staffStats()");
+            makeLog(e);
         }
     }
 
@@ -695,7 +736,8 @@ public final class TreeboTickets extends JavaPlugin{
         }
         catch (SQLException e){
             p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during getTicket()");
+            System.out.println("Encountered " + e.toString() + " during AdminStats()");
+            makeLog(e);
         }
     }
 
@@ -710,5 +752,30 @@ public final class TreeboTickets extends JavaPlugin{
                 p.sendMessage("please use /hub to navigate from here");
             }
         }
+    }
+
+    private void dbKeepAlive(){
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            public void run() {
+                try {
+
+                    genericQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID!='0'");
+                    dbKeepAlive();
+                } catch (NullPointerException e) {
+                    makeLog(e);
+                }
+            }
+        }, 36000L);
+    }
+
+    private void makeLog(Exception tr){
+        File file = new File(LocalDateTime.now() + ".log");
+       try {
+           PrintStream ps = new PrintStream(file);
+           tr.printStackTrace(ps);
+           ps.close();
+       }
+       catch (FileNotFoundException e){
+       }
     }
 }

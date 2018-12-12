@@ -2,6 +2,7 @@ package me.shakeforprotein.treebotickets;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -121,9 +123,7 @@ public class PlayerInput implements Listener {
                     pl.getConfig().set("players." + p.getName() + "lastQuery", pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
                     pl.saveConfig();
-                    p.sendMessage(pl.addTicketToDB(p, ticketData));
-                    p.sendMessage(ChatColor.GREEN + "Your ticket has been successfully submitted");
-
+                    pl.addTicketToDB(p, ticketData);
                 }
             }
         }
@@ -132,6 +132,26 @@ public class PlayerInput implements Listener {
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent e) {
+        try{pl.openConnection();}
+        catch (SQLException | ClassNotFoundException err){System.out.println("Failed to reconnect to database. This is probably fine.");}
+
+        if((pl.getConfig().getString("isLobbyServer").equalsIgnoreCase("true")) && (!e.getPlayer().hasPlayedBefore())) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+                public void run() {
+                    String command;
+                    Player p = e.getPlayer();
+                    ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                    command = "title " + p.getName() + " times 20 100 20";
+                    Bukkit.dispatchCommand(console, command);
+                    command = "title " + p.getName() + " subtitle [\"\",{\"text\":\"Use\",\"color\":\"green\"},{\"text\":\" \"},{\"text\":\"/hub\",\"color\":\"red\"},{\"text\":\" \"},{\"text\":\"to navigate the server\",\"color\":\"green\"}]";
+                    Bukkit.dispatchCommand(console, command);
+                    command = "title " + p.getName() + " title {\"text\":\"Welcome to TreeboMC\",\"color\":\"green\"}\n";
+                    Bukkit.dispatchCommand(console, command);
+                }
+            }, 200L);
+        }
+
+
 
         if ((pl.getConfig().getString(e.getPlayer().getName()) == null) || ((pl.getConfig().getString(e.getPlayer().getName()) != null) && (pl.getConfig().getString(e.getPlayer().getName()).equalsIgnoreCase("false")))) {
             if (e.getPlayer().hasPermission("tbtickets.view.any")) {
