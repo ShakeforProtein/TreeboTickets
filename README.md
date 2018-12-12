@@ -8,14 +8,14 @@ A Simple Tickets Plugin
   tbtickets.create - Allows a player to create a new ticket.
   tbtickets.view.own - Allows a player to view their own tickets.
   tbtickets.close.own - Allows a player to close their own tickets.
-  tbtickets.survival - Allows use of /survival command (teleport to server with name survival)  ** IMPLEMENTATION INCOMPLETE
-  tbtickets.hardcore - Allows use of /survival command (teleport to server with name hardcore)  **
-  tbtickets.creative - Allows use of /survival command (teleport to server with name creative)  **
-  tbtickets.acidislands - Allows use of /survival command (teleport to server with name sky)  ** 
-  tbtickets.skyblock - Allows use of /survival command (teleport to server with name sky)  **
-  tbtickets.plots - Allows use of /survival command (teleport to server with name creative)  **
-  tbtickets.prison - Allows use of /survival command (teleport to server with name prison)  **
-  tbtickets.test - Allows use of /survival command (teleport to server with name test)
+  tbtickets.survival - Allows use of /survival command (teleport to server with name survival)
+  tbtickets.hardcore - Allows use of /hardcore command (teleport to server with name hardcore)
+  tbtickets.creative - Allows use of /creative command (teleport to server with name creative)
+  tbtickets.acidislands - Allows use of /acidislands command (teleport to server with name sky)
+  tbtickets.skyblock - Allows use of /skyblock command (teleport to server with name sky)
+  tbtickets.plots - Allows use of /plots command (teleport to server with name creative)
+  tbtickets.prison - Allows use of /prison command (teleport to server with name prison)
+  tbtickets.test - Allows use of /test command (teleport to server with name test)
   
 ### Defaults to False
   tbtickets.delete.closed - Allows a player to delete closed tickets.
