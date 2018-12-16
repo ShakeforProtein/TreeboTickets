@@ -102,7 +102,8 @@ public class PlayerInput implements Listener {
                     p.sendMessage("Your response - " + description);
                     p.sendMessage("");
                     p.sendMessage("");
-                    p.sendMessage("Briefly describe what steps you've taken to attempt to fix this issue yourself");
+                    if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")){p.sendMessage("Please list any additional details you'd like to include.");}
+                    else{p.sendMessage("Briefly describe what steps you've taken to attempt to fix this issue yourself");}
                 }
 
                 if (ticketState == 3) {

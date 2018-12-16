@@ -34,6 +34,11 @@ public class Commands implements CommandExecutor {
             else if (cmd.getName().equalsIgnoreCase("plots")) {pl.serverSwitch(p, "creative");}
             else if (cmd.getName().equalsIgnoreCase("games")) {pl.serverSwitch(p, "games");}
             else if (cmd.getName().equalsIgnoreCase("test")) {pl.serverSwitch(p, "test");}
+            else if (cmd.getName().equalsIgnoreCase("idea")){
+                pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
+                pl.getConfig().set("players." + p.getName() + ".type", "Idea");
+                p.sendMessage("In your own words, please give a short explanation of the issue you are suffering. You may enter 'cancel' at any time to cancel");
+            }
                 //TBTICKET Logic
             else if (cmd.getName().equalsIgnoreCase("tbTicket")) {
                 // TBTICKET COMMAND - With no arguments
@@ -92,7 +97,7 @@ public class Commands implements CommandExecutor {
                 if (args.length < 2) {
                     p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
                     p.sendMessage(ChatColor.RED + "INCORRECT USAGE. CORRECT USAGE IS AS FOLLOWS");
-                    p.sendMessage(ChatColor.GOLD + "/tbta list <assigned|unnassigned|open|closed>  -  Lists all tickets assigned to you");
+                    p.sendMessage(ChatColor.GOLD + "/tbta list <assigned|unnassigned|open|closed|idea>  -  Lists all tickets assigned to you");
                     p.sendMessage(ChatColor.GOLD + "/tbta view <ticket_number>  -  Displays details on specific ticket");
                     p.sendMessage(ChatColor.GOLD + "/tbta close <ticket_number>  -  Close ticket with id");
                     p.sendMessage(ChatColor.GOLD + "/tbta <claim|unclaim> <ticket_number>  -  Assigns an unassigned ticket to yourself");
@@ -108,6 +113,9 @@ public class Commands implements CommandExecutor {
                         }
                         else if (args[1].equalsIgnoreCase("unassigned")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED'");
+                        }
+                        else if (args[1].equalsIgnoreCase("idea")) {
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea'");
                         }
                         else if (args[1].equalsIgnoreCase("open")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN'");
@@ -176,6 +184,9 @@ public class Commands implements CommandExecutor {
                         }
                         else if (args[1].equalsIgnoreCase("closed")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
+                        }
+                        else if (args[1].equalsIgnoreCase("idea")) {
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea'");
                         }
                     }
                     else if(args[0].equalsIgnoreCase("staffList")) {

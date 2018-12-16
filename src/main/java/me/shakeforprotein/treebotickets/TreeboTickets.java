@@ -30,6 +30,7 @@ public final class TreeboTickets extends JavaPlugin{
         this.getCommand("tbticket").setExecutor(cmds);
         this.getCommand("tbta").setExecutor(cmds);
         this.getCommand("tbticketadmin").setExecutor(cmds);
+        this.getCommand("idea").setExecutor(cmds);
         this.getCommand("lobby").setExecutor(cmds);
         this.getCommand("survival").setExecutor(cmds);
         this.getCommand("creative").setExecutor(cmds);

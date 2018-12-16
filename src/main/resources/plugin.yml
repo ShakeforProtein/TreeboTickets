@@ -11,14 +11,18 @@ commands:
   tbTicket:
     description: Submits a ticket for the staff team to look into.
     usage: /<command>
+    aliases: ticket
   tbTicketAdmin:
     description: Submits a ticket for the staff team to look into.
     usage: /<command> <subcommand>
   tbta:
     description: Submits a ticket for the staff team to look into.
     usage: /<command> <subcommand>
+  idea:
+    description: Allows a player to use the ticket system to submit ideas
+    usage: /<command>
   survival:
-    description: Takes you to the Survival Server.
+    description: Takes you to the Survival Serv
     usage: /<command>
   hardcore:
     description: Takes you to the hardcore Server.
