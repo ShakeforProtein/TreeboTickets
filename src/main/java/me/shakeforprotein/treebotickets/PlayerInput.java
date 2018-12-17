@@ -103,6 +103,7 @@ public class PlayerInput implements Listener {
                     p.sendMessage("");
                     p.sendMessage("");
                     if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")){p.sendMessage("Please list any additional details you'd like to include.");}
+                    else if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("review")){p.sendMessage("Please list any additional details you'd like to include.");}
                     else{p.sendMessage("Briefly describe what steps you've taken to attempt to fix this issue yourself");}
                 }
 
@@ -115,6 +116,9 @@ public class PlayerInput implements Listener {
                     p.sendMessage("Your response - " + usersteps);
                     p.sendMessage("");
                     p.sendMessage("");
+
+                    if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")){staff = "Robert_Beckley";}
+                    if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("review")){staff = "Builders";}
 
                     type = pl.getConfig().getString("players." + p.getName() + ".type");
                     description = pl.getConfig().getString("players." + p.getName() + ".description");
@@ -155,7 +159,10 @@ public class PlayerInput implements Listener {
 
 
         if ((pl.getConfig().getString(e.getPlayer().getName()) == null) || ((pl.getConfig().getString(e.getPlayer().getName()) != null) && (pl.getConfig().getString(e.getPlayer().getName()).equalsIgnoreCase("false")))) {
-            if (e.getPlayer().hasPermission("tbtickets.view.any")) {
+            if (e.getPlayer().hasPermission("tbtickets.admin")) {
+                pl.adminStats(e.getPlayer());
+            }
+            else if (e.getPlayer().hasPermission("tbtickets.view.any")) {
                 pl.staffStats(e.getPlayer());
             }
             if (e.getPlayer().hasPermission(uc.requiredPermission)) {

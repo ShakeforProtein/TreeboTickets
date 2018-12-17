@@ -21,6 +21,15 @@ commands:
   idea:
     description: Allows a player to use the ticket system to submit ideas
     usage: /<command>
+  review:
+    description: Allows a player to request build review
+    usage: /<command>
+  reviewview:
+    description: Allows a player to use the ticket system to submit ideas
+    usage: /<command> <args>
+  reviewlist:
+    description: Allows a player to use the ticket system to submit ideas
+    usage: /<command>
   survival:
     description: Takes you to the Survival Serv
     usage: /<command>
@@ -57,6 +66,9 @@ permissions:
   tbtickets.updatechecker:
     description: 'Notify user if there is an update available'
     default: op
+  tbtickets.builder:
+    description: 'Lets builders see review tickets'
+    default: false
   tbtickets.create:
     description: 'Allows a player to create a new ticket'
     default: true

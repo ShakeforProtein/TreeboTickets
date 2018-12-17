@@ -37,7 +37,20 @@ public class Commands implements CommandExecutor {
             else if (cmd.getName().equalsIgnoreCase("idea")){
                 pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                 pl.getConfig().set("players." + p.getName() + ".type", "Idea");
-                p.sendMessage("In your own words, please give a short explanation of the issue you are suffering. You may enter 'cancel' at any time to cancel");
+                p.sendMessage("Please give a brief description of your idea.");
+            }
+            else if (cmd.getName().equalsIgnoreCase("review")){
+                pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
+                pl.getConfig().set("players." + p.getName() + ".type", "Review");
+                p.sendMessage("Please give a brief description of your build.");
+            }
+
+            else if (cmd.getName().equalsIgnoreCase("reviewlist") && p.hasPermission("tbtickets.builder")){
+                pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='Builders'");
+            }
+            else if (cmd.getName().equalsIgnoreCase("reviewview") && p.hasPermission("tbtickets.builder")){
+                if(args.length > 0){
+                    pl.builderViewTicket(p, Integer.parseInt(args[0]));}
             }
                 //TBTICKET Logic
             else if (cmd.getName().equalsIgnoreCase("tbTicket")) {
