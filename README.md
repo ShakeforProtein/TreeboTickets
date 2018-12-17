@@ -33,7 +33,6 @@ A Simple Tickets Plugin
 ## Commands
 ```
   /tbTicket - Displays help for tbTicket command
-  Alias /ticket
   /tbTicket open -  Submits a ticket for the staff team to look into.
   /tbTicket close <ticket number> - Closes this ticket number if owned by the player
   /tbTicket view <ticket number> - Views details on this ticket number if owned by the player
@@ -67,5 +66,5 @@ A Simple Tickets Plugin
 
 ## Command Alias
 ```
- 
+ /tbticket - /ticket
 ```
