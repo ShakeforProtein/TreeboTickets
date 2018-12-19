@@ -37,7 +37,9 @@ A Simple Tickets Plugin
   /tbTicket close <ticket number> - Closes this ticket number if owned by the player
   /tbTicket view <ticket number> - Views details on this ticket number if owned by the player
   /tbTicket list - Lists all of this players tickets
-           
+
+
+
   /tbta - Help for tbta commands.
   /tbta list assigned  -  List all tickets assigned to this player if player has permission tbticket.view.any
   /tbta list unassigned - List all tickets not assigned to a player if player has permission tbticket.view.any
@@ -64,5 +66,5 @@ A Simple Tickets Plugin
 
 ## Command Alias
 ```
- 
+ /tbticket - /ticket
 ```
