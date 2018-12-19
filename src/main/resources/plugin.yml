@@ -30,6 +30,9 @@ commands:
   reviewlist:
     description: Allows a player to use the ticket system to submit ideas
     usage: /<command>
+  reviewstats:
+    description: Shows total review tickets.
+    usage: /<command>
   survival:
     description: Takes you to the Survival Serv
     usage: /<command>

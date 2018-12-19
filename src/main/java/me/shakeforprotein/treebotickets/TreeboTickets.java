@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 
 public final class TreeboTickets extends JavaPlugin{
@@ -284,35 +285,35 @@ public final class TreeboTickets extends JavaPlugin{
         }
     }
 
-    public String staffList(Player p, String query){
-        ResultSet response;
-        String output = "";
-        p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
-        p.sendMessage(ChatColor.AQUA + "Id  -   Player  -   World   -   Coordinates -   Status");
+                                                                                                                        public String staffList(Player p, String query){
+                                                                                                                            ResultSet response;
+                                                                                                                            String output = "";
+                                                                                                                            p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+                                                                                                                            p.sendMessage(ChatColor.AQUA + "Id  -   Player  -   World   -   Coordinates -   Status");
 
-        try {
-            response = connection.createStatement().executeQuery(query);
-            while(response.next()){
-                String tPlayer = response.getString("IGNAME");
-                if(p.hasPermission("tbtickets.view.any")){
-                    int tId = response.getInt("ID");
-                    int tX = response.getInt("X");
-                    int tY = response.getInt("Y");
-                    int tZ = response.getInt("Z");
-                    String tWorld = response.getString("WORLD");
-                    String tStatus = response.getString("STATUS");
-                    p.sendMessage(ChatColor.WHITE + "" +  tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " +  tX + " " + tY + " " + tZ + "   -   " + tStatus);
-                }
-            }
-            p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
-        }
-        catch (SQLException e){
-            p.sendMessage(ChatColor.RED + "Something went wrong getting statistics");
-            System.out.println("Encountered " + e.toString() + " during genericQuery()");
-            makeLog(e);
-        }
-        return output;
-    }
+                                                                                                                            try {
+                                                                                                                                response = connection.createStatement().executeQuery(query);
+                                                                                                                                while(response.next()){
+                                                                                                                                    String tPlayer = response.getString("IGNAME");
+                                                                                                                                    if(p.hasPermission("tbtickets.view.any")){
+                                                                                                                                        int tId = response.getInt("ID");
+                                                                                                                                        int tX = response.getInt("X");
+                                                                                                                                        int tY = response.getInt("Y");
+                                                                                                                                        int tZ = response.getInt("Z");
+                                                                                                                                        String tWorld = response.getString("WORLD");
+                                                                                                                                        String tStatus = response.getString("STATUS");
+                                                                                                                                        p.sendMessage(ChatColor.WHITE + "" +  tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " +  tX + " " + tY + " " + tZ + "   -   " + tStatus);
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                                p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
+                                                                                                                            }
+                                                                                                                            catch (SQLException e){
+                                                                                                                                p.sendMessage(ChatColor.RED + "Something went wrong getting statistics");
+                                                                                                                                System.out.println("Encountered " + e.toString() + " during genericQuery()");
+                                                                                                                                makeLog(e);
+                                                                                                                            }
+                                                                                                                            return output;
+                                                                                                                        }
 
     public void staffCloseTicket(Player p, int t){
         //TODO CLOSETICKET STAFF
@@ -849,4 +850,77 @@ public final class TreeboTickets extends JavaPlugin{
                 makeLog(e);
             }
         }else {p.sendMessage(ChatColor.RED + "You lack the sufficient permissions.");}}
+
+        public void builderClose(Player p, String t){
+        if(p.hasPermission("tbtickets.builder")) {
+            int tId = -1;
+            String tPlayer = "";
+
+            ResultSet response;
+            try {
+                response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+                while (response.next()) {
+                    String tstaff = response.getString("STAFF");
+                    if(tstaff.equalsIgnoreCase("Builders")){
+                    tId = response.getInt("ID");
+                    connection.createStatement().executeUpdate("UPDATE `" + table + "` SET STATUS = 'CLOSED' WHERE ID =" + tId);
+                    p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Closed.");
+                    }
+                }
+            }
+            catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during staffCloseTicket()");
+                makeLog(e);
+            }
+        }
+    }
+
+
+
+        public void builderStats(Player p){
+            ResultSet response;
+            try {
+                response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= 'Builders'");
+                while (response.next()) {
+                    p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+                    p.sendMessage("TOTAL Review tickets: " + response.getInt("TOTAL"));
+                }
+                response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= 'Builders' AND STATUS='OPEN'");
+                while (response.next()) {
+                    p.sendMessage("OPEN ReviewTickets: " + response.getInt("TOTAL"));
+                }
+                response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= 'Builders' AND STATUS='CLOSED'");
+                while (response.next()) {
+                    p.sendMessage("CLOSED review Tickets: " + response.getInt("TOTAL"));
+                }
+            }
+            catch (SQLException e){
+                // p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during BuilderStats()");
+                makeLog(e);
+            }
+        }
+
+
+        public void pullBack() {
+            if (getConfig().getString("isLobbyServer") == "false") {
+                for (String player : getConfig().getConfigurationSection("shutdownPlayerList").getKeys(false)) {
+                    api.sendMessage(player, "Now attempting to return you to the " + getConfig().getString("serverName") + " server");
+                    api.connectOther(player, getConfig().getString("serverName"));
+                }
+            }
+        }
+
+        public void pushToLobby(){
+        if(getConfig().getString("isLobbyServer") == "false"){
+            for(Player p: getServer().getOnlinePlayers()){
+                getConfig().set("shutdownPlayerList."+ p.getName(),p.getName());
+                p.sendMessage("This server is restarting.");
+                p.sendMessage("Moving you temporarily to the Lobby");
+                p.sendMessage("You will be automatically moved back when the restart is complete");
+                serverSwitch(p, "hub");
+            }
+        }
+    }
 }

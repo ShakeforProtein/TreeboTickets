@@ -52,6 +52,10 @@ public class Commands implements CommandExecutor {
                 if(args.length > 0){
                     pl.builderViewTicket(p, Integer.parseInt(args[0]));}
             }
+            else if (cmd.getName().equalsIgnoreCase("reviewstats") && p.hasPermission("tbtickets.builder")){
+                if(args.length > 0){
+                    pl.builderStats(p);}
+            }
                 //TBTICKET Logic
             else if (cmd.getName().equalsIgnoreCase("tbTicket")) {
                 // TBTICKET COMMAND - With no arguments

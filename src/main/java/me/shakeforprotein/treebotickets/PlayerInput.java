@@ -165,6 +165,9 @@ public class PlayerInput implements Listener {
             else if (e.getPlayer().hasPermission("tbtickets.view.any")) {
                 pl.staffStats(e.getPlayer());
             }
+            else if (e.getPlayer().hasPermission("tbtickets.builder")) {
+                pl.adminStats(e.getPlayer());
+            }
             if (e.getPlayer().hasPermission(uc.requiredPermission)) {
                 uc.getCheckDownloadURL(e.getPlayer());
                 pl.getConfig().set(e.getPlayer().getName(), "true");
