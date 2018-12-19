@@ -53,8 +53,11 @@ public class Commands implements CommandExecutor {
                     pl.builderViewTicket(p, Integer.parseInt(args[0]));}
             }
             else if (cmd.getName().equalsIgnoreCase("reviewstats") && p.hasPermission("tbtickets.builder")){
+                    pl.builderStats(p);
+            }
+            else if (cmd.getName().equalsIgnoreCase("reviewclose") && p.hasPermission("tbtickets.builder")){
                 if(args.length > 0){
-                    pl.builderStats(p);}
+                    pl.builderClose(p, args[0]);}
             }
                 //TBTICKET Logic
             else if (cmd.getName().equalsIgnoreCase("tbTicket")) {

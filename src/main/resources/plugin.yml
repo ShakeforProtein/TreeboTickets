@@ -33,6 +33,9 @@ commands:
   reviewstats:
     description: Shows total review tickets.
     usage: /<command>
+  reviewclose:
+    description: Closes a build review ticket.
+    usage: /<command>
   survival:
     description: Takes you to the Survival Serv
     usage: /<command>
