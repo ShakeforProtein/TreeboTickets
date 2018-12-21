@@ -1,9 +1,12 @@
 package me.shakeforprotein.treebotickets;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 
@@ -20,6 +23,57 @@ public class Commands implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("remoteexecute")) {
+            if (sender.hasPermission("tbtickets.remoteexecute")) {
+                StringBuilder commandString = new StringBuilder();
+                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                for (int i = 1; i < args.length; i++) {
+                    commandString = commandString.append(args[i] + " ");
+                }
+
+                    pl.api.forward(args[0],"BungeeCord",commandString.toString().getBytes());            }
+
+            else {
+                sender.sendMessage("You do not have permission for that command");
+            }
+        }
+
+        /*if(cmd.getName().equalsIgnoreCase("remotereceive")) {
+            if (sender.hasPermission("tbtickets.remoteexecute")) {
+                if(args[0].equalsIgnoreCase(pl.getConfig().getString("serverName"))){
+                    StringBuilder commandString = new StringBuilder();
+                    ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                for (int i = 1; i < args.length; i++) {
+                    commandString = commandString.append(args[i] + " ");
+                    }
+                Bukkit.dispatchCommand(console, commandString.toString());
+
+                }
+            }
+            else {
+                sender.sendMessage("You do not have permission for that command");
+            }
+        }
+           */
+            if(cmd.getName().equalsIgnoreCase("restarttimed") && args.length == 1 && sender.hasPermission("tbtickets.restart")){
+
+            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+            String command = "restart";
+            Integer timer = Integer.parseInt(args[0]) + 60;
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.pl, new Runnable() {
+                    public void run() {
+                        pl.pushToLobby();
+                        pl.saveConfig();
+                    }
+                }, Integer.parseInt(args[0]));
+
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+                    public void run() {sender.sendMessage("Restarting Now");
+                        Bukkit.dispatchCommand(console, command);
+                    }
+                }, timer);
+            }
+
         if (sender instanceof Player) {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
@@ -42,7 +96,7 @@ public class Commands implements CommandExecutor {
             else if (cmd.getName().equalsIgnoreCase("review")){
                 pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                 pl.getConfig().set("players." + p.getName() + ".type", "Review");
-                p.sendMessage("Please give a brief description of your build.");
+                p.sendMessage("Please give a brief description of your build. You can cancel at any time by entering the word \"cancel\" into chat");
             }
 
             else if (cmd.getName().equalsIgnoreCase("reviewlist") && p.hasPermission("tbtickets.builder")){
@@ -58,6 +112,21 @@ public class Commands implements CommandExecutor {
             else if (cmd.getName().equalsIgnoreCase("reviewclose") && p.hasPermission("tbtickets.builder")){
                 if(args.length > 0){
                     pl.builderClose(p, args[0]);}
+            }
+            else if (cmd.getName().equalsIgnoreCase("reviewtp") && p.hasPermission("tbtickets.builder")){
+                if(args.length > 0){
+                    pl.builderTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[0] + "'", Integer.parseInt(args[0]));
+                    }
+            }
+            else if (cmd.getName().equalsIgnoreCase("reviewupdate") && p.hasPermission("tbtickets.builder")){
+                if(args.length > 0){
+
+                    StringBuilder staffText = new StringBuilder();
+                    for(int i = 1; i < args.length; i++){
+                        staffText.append(args[i] + " ");
+                    }
+
+                    pl.builderUpdate(p, Integer.parseInt(args[0]), staffText.toString());}
             }
                 //TBTICKET Logic
             else if (cmd.getName().equalsIgnoreCase("tbTicket")) {
@@ -129,13 +198,15 @@ public class Commands implements CommandExecutor {
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("list")){
                         if(args[1].equalsIgnoreCase("assigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "'");
+                            if (p.hasPermission("tbtickets.view.any")) {
+                                pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "' AND STATUS='OPEN'");
+                            }
                         }
                         else if (args[1].equalsIgnoreCase("unassigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN'");
                         }
                         else if (args[1].equalsIgnoreCase("idea")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN'");
                         }
                         else if (args[1].equalsIgnoreCase("open")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN'");
@@ -158,7 +229,7 @@ public class Commands implements CommandExecutor {
                     }
                     else if (args[0].equalsIgnoreCase("tp")) {
                         if (isNumeric(args[1])) {
-                            pl.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[1] + "'", Integer.parseInt(args[1]));
+
                         }
                     }
                 }
@@ -194,10 +265,10 @@ public class Commands implements CommandExecutor {
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("list")){
                         if (args[1].equalsIgnoreCase("unassigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN'");
                         }
                         else if (args[1].equalsIgnoreCase("assigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED' AND STATUS='OPEN'");
                         }
                         else if (args[1].equalsIgnoreCase("open")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN'");
@@ -206,7 +277,7 @@ public class Commands implements CommandExecutor {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
                         }
                         else if (args[1].equalsIgnoreCase("idea")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN'");
                         }
                     }
                     else if(args[0].equalsIgnoreCase("staffList")) {

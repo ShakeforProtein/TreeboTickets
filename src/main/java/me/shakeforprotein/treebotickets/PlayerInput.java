@@ -1,7 +1,8 @@
 package me.shakeforprotein.treebotickets;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -9,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -128,7 +128,7 @@ public class PlayerInput implements Listener {
                     pl.getConfig().set("players." + p.getName() + "lastQuery", pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
                     pl.saveConfig();
-                    pl.addTicketToDB(p, ticketData);
+                pl.addTicketToDB(p, ticketData);
                 }
             }
         }
@@ -188,7 +188,6 @@ public class PlayerInput implements Listener {
             }, 120L);
         }
     }
-
 }
 
 

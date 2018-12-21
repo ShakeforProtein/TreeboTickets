@@ -8,6 +8,15 @@ website: http://treebomc.com
 
 
 commands:
+  remoteexecute:
+    description: issues restart command in X ticks
+    usage: /<command> <server> <args>
+  remotereceive:
+    description: issues restart command in X ticks
+    usage: /<command> <command_to_run> <args>w
+  restarttimed:
+    description: issues restart command in X ticks
+    usage: /<command> <args>
   tbTicket:
     description: Submits a ticket for the staff team to look into.
     usage: /<command>
@@ -35,6 +44,12 @@ commands:
     usage: /<command>
   reviewclose:
     description: Closes a build review ticket.
+    usage: /<command>
+  reviewtp:
+    description: Teleports to Builder tickets.
+    usage: /<command>
+  reviewupdate:
+    description: Updates staff entries on a review ticket.
     usage: /<command>
   survival:
     description: Takes you to the Survival Serv
@@ -69,6 +84,12 @@ commands:
 
 
 permissions:
+  tbtickets.remoteexecute:
+    description:
+    default: false
+  tbtickets.restart:
+    description:
+    default: false
   tbtickets.updatechecker:
     description: 'Notify user if there is an update available'
     default: op

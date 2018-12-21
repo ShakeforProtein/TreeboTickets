@@ -4,6 +4,7 @@ import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,6 +40,8 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("reviewlist").setExecutor(cmds);
         this.getCommand("reviewclose").setExecutor(cmds);
         this.getCommand("reviewstats").setExecutor(cmds);
+        this.getCommand("reviewupdate").setExecutor(cmds);
+        this.getCommand("reviewtp").setExecutor(cmds);
         this.getCommand("lobby").setExecutor(cmds);
         this.getCommand("survival").setExecutor(cmds);
         this.getCommand("creative").setExecutor(cmds);
@@ -49,6 +52,8 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("skyblock").setExecutor(cmds);
         this.getCommand("acidislands").setExecutor(cmds);
         this.getCommand("test").setExecutor(cmds);
+        this.getCommand("restarttimed").setExecutor(cmds);
+        this.getCommand("remotereceive").setExecutor(cmds);
 
         getServer().getPluginManager().registerEvents(new PlayerInput(this), this);
         getConfig().options().copyDefaults(true);
@@ -79,14 +84,13 @@ public final class TreeboTickets extends JavaPlugin {
             public void run() {
                 pullBack();
             }
-        }, 100L);
+        }, 200L);
 
     }
 
 
     @Override
     public void onDisable() {
-        pushToLobby();
         saveConfig();
         getPluginLoader().disablePlugin(this);
         System.out.println("TreeboTickets Stopped");
@@ -122,6 +126,12 @@ public final class TreeboTickets extends JavaPlugin {
     public void addTicketToDB(Player p, String ticketData) {
         try {
             String output = "" + connection.createStatement().executeUpdate(baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
+            ResultSet response = connection.createStatement().executeQuery("SELECT * FROM `tickets`WHERE `IGNAME`=\"" + p.getName() +"\" ORDER BY id DESC LIMIT 1");
+            int tID = 0;
+            while (response.next()){
+                tID = response.getInt("ID");
+                p.sendMessage("Your Ticket number is " +tID+ ". Use /ticket view " +tID+ " to view any updates");
+            }
             p.sendMessage(ChatColor.GREEN + "Your ticket has been successfully submitted");
         } catch (SQLException e) {
             p.sendMessage(ChatColor.RED + "Something went wrong");
@@ -296,21 +306,22 @@ public final class TreeboTickets extends JavaPlugin {
         ResultSet response;
         String output = "";
         p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
-        p.sendMessage(ChatColor.AQUA + "Id  -   Player  -   World   -   Coordinates -   Status");
+        p.sendMessage(ChatColor.AQUA + "Id  -   Player  -   World   -   Coordinates -   Assigned    -   Status");
 
         try {
             response = connection.createStatement().executeQuery(query);
             while (response.next()) {
+                String tStaff = response.getString("STAFF");
                 String tPlayer = response.getString("IGNAME");
-                if (p.hasPermission("tbtickets.view.any")) {
+
                     int tId = response.getInt("ID");
                     int tX = response.getInt("X");
                     int tY = response.getInt("Y");
                     int tZ = response.getInt("Z");
                     String tWorld = response.getString("WORLD");
                     String tStatus = response.getString("STATUS");
-                    p.sendMessage(ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " + tX + " " + tY + " " + tZ + "   -   " + tStatus);
-                }
+                    p.sendMessage(ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " + tX + " " + tY + " " + tZ + "   -   " + tStaff + "   -   " + tStatus);
+
             }
             p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
         } catch (SQLException e) {
@@ -353,6 +364,7 @@ public final class TreeboTickets extends JavaPlugin {
             String tCoords = "";
             String tDesc = "";
             String tStaffS = "";
+            String tStaff = "";
             String tUserS = "";
             String tStatus = "";
             String tOpened = "";
@@ -362,6 +374,7 @@ public final class TreeboTickets extends JavaPlugin {
             try {
                 response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
                 while (response.next()) {
+                    tStaff = response.getString("STAFF");
                     tId = response.getInt("ID");
                     tPlayer = response.getString("IGNAME");
 
@@ -387,6 +400,7 @@ public final class TreeboTickets extends JavaPlugin {
                     } else {
                         p.sendMessage(ChatColor.GREEN + "Ticket Status: " + ChatColor.WHITE + tStatus);
                     }
+                    p.sendMessage(ChatColor.GREEN + "Assigned To: " + ChatColor.WHITE + tStaff);
                     p.sendMessage(ChatColor.GREEN + "Opened by Player: " + ChatColor.WHITE + tPlayer);
                     p.sendMessage(ChatColor.GREEN + "Opened at: " + ChatColor.WHITE + tOpened);
                     p.sendMessage(ChatColor.GREEN + "Last Updated: " + ChatColor.WHITE + tModified);
@@ -599,7 +613,7 @@ public final class TreeboTickets extends JavaPlugin {
 
 
     public void adminDeleteTicket(Player p, int t) {
-        if (p.hasPermission("tbticketa.admin")) {
+        if (p.hasPermission("tbtickets.admin")) {
             int tId = -1;
             String tPlayer = "";
 
@@ -796,7 +810,6 @@ public final class TreeboTickets extends JavaPlugin {
                     if (assigned.equalsIgnoreCase("Builders")) {
                         tId = response.getInt("ID");
                         tPlayer = response.getString("IGNAME");
-
                         tCoords = (response.getString("X") + " " + response.getString("Y") + " " + response.getString("Z"));
                         tDesc = response.getString("DESCRIPTION");
                         tStaffS = response.getString("STAFFSTEPS");
@@ -892,24 +905,94 @@ public final class TreeboTickets extends JavaPlugin {
         }
     }
 
+    public void builderUpdate(Player p, int t, String staffText) {
+        if (p.hasPermission("tbtickets.builder")) {
+            String query = ("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+            ResultSet response;
+            try {
+                response = connection.createStatement().executeQuery(query);
+                while (response.next()) {
+                    int tId = response.getInt("ID");
+                    String tStaff = response.getString("STAFF");
+                    if(tStaff.equalsIgnoreCase("Builders")){
+                    String tStaffSteps = response.getString("STAFFSTEPS");
+                    String newStaffSteps = (tStaffSteps + "\n" + LocalDateTime.now() + " - " + p.getName() + " - " + staffText);
+                    if (tStaff.equalsIgnoreCase("Builders")) {
+                        String query2 = ("UPDATE  `" + table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + "' WHERE  `ID` =" + tId);
+                        try {
+                            connection.createStatement().executeUpdate(query2);
+                            p.sendMessage("Ticket " + t + " updated.");
+                        } catch (SQLException e) {
+                            p.sendMessage(ChatColor.RED + "Something went wrong");
+                            System.out.println("Encountered " + e.toString() + " during builderUpdate()");
+                            makeLog(e);
+                            }
+                        }
+                    }
+                    else {
+                        p.sendMessage(ChatColor.RED + "That ticket is assigned to " + tStaff + " so you are not able to update it.");
+                    }
+                }
+            } catch (SQLException e) {
+                p.sendMessage(ChatColor.RED + "Something went wrong");
+                System.out.println("Encountered " + e.toString() + " during staffUpdate()");
+                makeLog(e);
+
+            }
+        }
+    }
+    public void builderTP(Player p, String query, int t) {
+        ResultSet response;
+        try {
+            response = connection.createStatement().executeQuery(query);
+            while (response.next()) {
+                String tStaff = response.getString("STAFF");
+                if (p.hasPermission("tbtickets.builder") && tStaff.equalsIgnoreCase("Builders")) {
+                    int tX = response.getInt("X");
+                    int tY = response.getInt("Y");
+                    int tZ = response.getInt("Z");
+                    String tServer = response.getString("SERVER");
+                    String tWorld = response.getString("WORLD");
+                    if (!tServer.equalsIgnoreCase(getConfig().getString("serverName"))) {
+                        p.sendMessage("As you were on the wrong server, you will need to repeat the command.");
+                        p.sendMessage("Changing your server for you now.");
+                        api.connectOther(p.getName(), tServer);
+                    } else {
+                        p.teleport(new Location(Bukkit.getWorld(tWorld), tX, tY, tZ));
+                    }
+                }
+                else {
+                    p.sendMessage("Insufficient permissions");
+                }
+            }
+        } catch (SQLException e) {
+            p.sendMessage(ChatColor.RED + "Something went wrong");
+            System.out.println("Encountered " + e.toString() + " during staffTP()");
+            makeLog(e);
+
+        }
+    }
+
+
 
     public void pullBack() {
-        if (getConfig().getString("isLobbyServer") == "false") {
+        if (getConfig().getString("isLobbyServer").equalsIgnoreCase("false")) {
             for (String player : getConfig().getConfigurationSection("shutdownPlayerList").getKeys(false)) {
-                api.sendMessage(player, "Now attempting to return you to the " + getConfig().getString("serverName") + " server");
-                api.connectOther(player, getConfig().getString("serverName"));
+                //api.sendMessage(player, "Now attempting to return you to the " + getConfig().getString("serverName") + " server");
+                // api.connectOther(player, getConfig().getString("serverName"));
                 getConfig().set("shutdownPlayerList." + player, null);
+                saveConfig();
             }
         }
     }
 
     public void pushToLobby() {
-        if (getConfig().getString("isLobbyServer") == "false") {
+        if (getConfig().getString("isLobbyServer").equalsIgnoreCase("false")) {
             for (Player p : getServer().getOnlinePlayers()) {
                 getConfig().set("shutdownPlayerList." + p.getName(), p.getName());
                 p.sendMessage("This server is restarting.");
                 p.sendMessage("Moving you temporarily to the Lobby");
-                p.sendMessage("You will be automatically moved back when the restart is complete");
+                //p.sendMessage("You will be automatically moved back when the restart is complete");
                 serverSwitch(p, "hub");
             }
         }
