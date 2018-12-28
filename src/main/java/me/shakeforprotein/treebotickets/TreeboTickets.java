@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.sql.*;
 import java.time.LocalDateTime;
-
+import java.util.UUID;
 
 
 public final class TreeboTickets extends JavaPlugin {
@@ -93,6 +93,7 @@ public final class TreeboTickets extends JavaPlugin {
         saveConfig();
         for(Player player : Bukkit.getServer().getOnlinePlayers())
         {
+            logConnection(player.getUniqueId(), player.getName(), "OFF", LocalDateTime.now().toString());
             if(!getConfig().getString("serverName)").equalsIgnoreCase("hub")){
                 player.sendMessage("Server is going down for restart, moving you to Hub");
                 api.connectOther(player.getName(), "hub");
@@ -1007,6 +1008,19 @@ public final class TreeboTickets extends JavaPlugin {
                 //p.sendMessage("You will be automatically moved back when the restart is complete");
                 serverSwitch(p, "hub");
             }
+        }
+    }
+
+    public void logConnection(UUID pUUID, String pIGN, String pOnOff, String pCreated) {
+        int response;
+        String output = "";
+        try {
+           String query = "INSERT INTO `ontime`(`UUID`, `IGNAME`, `ONOFF`, `CREATED`) VALUES (\""+pUUID+"\",\""+pIGN+"\",\""+pOnOff+"\",\""+pCreated+"\")";
+           System.out.println(query);
+            response = connection.createStatement().executeUpdate(query);
+        } catch (SQLException e) {
+            System.out.println("Encountered " + e.toString() + " during logConnection()");
+            makeLog(e);
         }
     }
 }

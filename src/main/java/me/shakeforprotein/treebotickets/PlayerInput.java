@@ -8,8 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -138,6 +140,7 @@ public class PlayerInput implements Listener {
         try{pl.openConnection();}
         catch (SQLException | ClassNotFoundException err){System.out.println("Failed to reconnect to database. This is probably fine.");}
 
+        pl.logConnection(e.getPlayer().getUniqueId(), e.getPlayer().getName(), "ON", LocalDateTime.now().toString());
         if((pl.getConfig().getString("isLobbyServer").equalsIgnoreCase("true")) && (!e.getPlayer().hasPlayedBefore())) {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
                 public void run() {
@@ -191,6 +194,11 @@ public class PlayerInput implements Listener {
 
             }
         }, 200L);
+    }
+
+    @EventHandler
+    public void onPlayerLeave (PlayerQuitEvent e){
+        pl.logConnection(e.getPlayer().getUniqueId(), e.getPlayer().getName(), "OFF", LocalDateTime.now().toString());
     }
 }
 
