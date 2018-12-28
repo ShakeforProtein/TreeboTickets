@@ -100,7 +100,7 @@ public class Commands implements CommandExecutor {
             }
 
             else if (cmd.getName().equalsIgnoreCase("reviewlist") && p.hasPermission("tbtickets.builder")){
-                pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='Builders'");
+                pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='Builders' ORDER BY id DESC");
             }
             else if (cmd.getName().equalsIgnoreCase("reviewview") && p.hasPermission("tbtickets.builder")){
                 if(args.length > 0){
@@ -146,7 +146,7 @@ public class Commands implements CommandExecutor {
                     else if(args[0].equalsIgnoreCase("open") && !p.hasPermission("tbtickets.create")){p.sendMessage(ChatColor.RED+ "You lack the required permission to create a new ticket");}
                     //TBTICKET COMMAND - LIST OWN Logic
                     else if (args[0].equalsIgnoreCase("list") && (p.hasPermission("tbtickets.view.own"))) {
-                        String fullData = pl.listTickets(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE IGNAME='" + p.getName() + "'");
+                        String fullData = pl.listTickets(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE IGNAME='" + p.getName() + "' ORDER BY id DESC");
                     }
                     else if (args[0].equalsIgnoreCase("list") && !p.hasPermission("tbtickets.view.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to list tickets");}
 
@@ -158,7 +158,7 @@ public class Commands implements CommandExecutor {
                     else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.close.own")) {
                         p.sendMessage(ChatColor.RED + "Please include the ticket number at the end of the command. Eg. /tbticket close 274");
                     }
-                    else if (args[0].equalsIgnoreCase("view") && !p.hasPermission("tbtickets.close.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to close a ticket");}
+                    else if (args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.close.own")){p.sendMessage(ChatColor.RED+ "You lack the required permission to close a ticket");}
 
                 } else if (args.length == 2) {
                     // Make sure second argumentt is a valid integer.
@@ -199,20 +199,20 @@ public class Commands implements CommandExecutor {
                     if (args[0].equalsIgnoreCase("list")){
                         if(args[1].equalsIgnoreCase("assigned")) {
                             if (p.hasPermission("tbtickets.view.any")) {
-                                pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "' AND STATUS='OPEN'");
+                                pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "' AND STATUS='OPEN' ORDER BY id DESC");
                             }
                         }
                         else if (args[1].equalsIgnoreCase("unassigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("idea")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("open")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("closed")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED' ORDER BY id DESC");
                         }
                     }
                     else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.close.any")){
@@ -265,23 +265,23 @@ public class Commands implements CommandExecutor {
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("list")){
                         if (args[1].equalsIgnoreCase("unassigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("assigned")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED' AND STATUS='OPEN'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED' AND STATUS='OPEN' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("open")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("closed")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("idea")) {
-                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN'");
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN' ORDER BY id DESC");
                         }
                     }
                     else if(args[0].equalsIgnoreCase("staffList")) {
-                        pl.adminListStaff(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + args[1] + "'", args[1]);
+                        pl.adminListStaff(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + args[1] + "' ORDER BY id DESC", args[1]);
                     }
                     else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.admin")){
                         pl.adminCloseTicket(p, Integer.parseInt(args[1]));

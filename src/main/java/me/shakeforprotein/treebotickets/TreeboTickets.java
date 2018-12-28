@@ -4,7 +4,6 @@ import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
+
 
 
 public final class TreeboTickets extends JavaPlugin {
@@ -92,6 +91,17 @@ public final class TreeboTickets extends JavaPlugin {
     @Override
     public void onDisable() {
         saveConfig();
+        for(Player player : Bukkit.getServer().getOnlinePlayers())
+        {
+            if(!getConfig().getString("serverName)").equalsIgnoreCase("hub")){
+                player.sendMessage("Server is going down for restart, moving you to Hub");
+                api.connectOther(player.getName(), "hub");
+            }
+            else {
+                player.sendMessage("Server is going down for restart, moving you to Survival");
+                api.connectOther(player.getName(),"survival");
+            }
+        }
         getPluginLoader().disablePlugin(this);
         System.out.println("TreeboTickets Stopped");
     }
@@ -703,17 +713,18 @@ public final class TreeboTickets extends JavaPlugin {
         try {
             response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "'");
             while (response.next()) {
-                p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
-                p.sendMessage("Your TOTAL assigned tickets: " + response.getInt("TOTAL"));
+                if(!p.hasPermission("tbtickets.admin")){p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));}
+                /*p.sendMessage(ChatColor.UNDERLINE + "Your" + ChatColor.RESET + " TOTAL assigned tickets: " + response.getInt("TOTAL"));
+                */
             }
             response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "' AND STATUS='OPEN'");
             while (response.next()) {
-                p.sendMessage("Your OPEN Tickets: " + response.getInt("TOTAL"));
+                p.sendMessage(ChatColor.UNDERLINE + "Your" + ChatColor.RESET + ChatColor.RED + " OPEN" + ChatColor.RESET + " Tickets: " + response.getInt("TOTAL"));
             }
-            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "' AND STATUS='CLOSED'");
+            /*response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "' AND STATUS='CLOSED'");
             while (response.next()) {
-                p.sendMessage("Your CLOSED Tickets: " + response.getInt("TOTAL"));
-            }
+                p.sendMessage(ChatColor.UNDERLINE + "Your" + ChatColor.RESET + ChatColor.GREEN + " CLOSED" + ChatColor.RESET + " Tickets: " + response.getInt("TOTAL"));
+            }*/
         } catch (SQLException e) {
             // p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during staffStats()");
@@ -725,14 +736,15 @@ public final class TreeboTickets extends JavaPlugin {
 
         ResultSet response;
         try {
-            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE ID!='0'");
+            p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + getConfig().getString("networkName")));
+            /*response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE ID!='0'");
             while (response.next()) {
                 p.sendMessage("Total Tickets:" + response.getInt("TOTAL"));
-            }
-            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED'");
+            }*/
+            /*response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF!='UNASSIGNED'");
             while (response.next()) {
                 p.sendMessage("Assigned Tickets:" + response.getInt("TOTAL"));
-            }
+            }*/
             response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED'");
             while (response.next()) {
                 p.sendMessage("UnAssigned Tickets:" + response.getInt("TOTAL"));
@@ -741,10 +753,10 @@ public final class TreeboTickets extends JavaPlugin {
             while (response.next()) {
                 p.sendMessage("Open Tickets:" + response.getInt("TOTAL"));
             }
-            response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
+            /*response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STATUS='CLOSED'");
             while (response.next()) {
                 p.sendMessage("Closed Tickets:" + response.getInt("TOTAL"));
-            }
+            }*/
         } catch (SQLException e) {
             p.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during AdminStats()");

@@ -1,8 +1,6 @@
 package me.shakeforprotein.treebotickets;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -157,36 +155,42 @@ public class PlayerInput implements Listener {
         }
 
 
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+            public void run() {
+                Player p = e.getPlayer();
 
-        if ((pl.getConfig().getString(e.getPlayer().getName()) == null) || ((pl.getConfig().getString(e.getPlayer().getName()) != null) && (pl.getConfig().getString(e.getPlayer().getName()).equalsIgnoreCase("false")))) {
-            if (e.getPlayer().hasPermission("tbtickets.admin")) {
-                pl.adminStats(e.getPlayer());
-            }
-            else if (e.getPlayer().hasPermission("tbtickets.view.any")) {
-                pl.staffStats(e.getPlayer());
-            }
-            else if (e.getPlayer().hasPermission("tbtickets.builder")) {
-                pl.builderStats(e.getPlayer());
-            }
-            if (e.getPlayer().hasPermission(uc.requiredPermission)) {
-                uc.getCheckDownloadURL(e.getPlayer());
-                pl.getConfig().set(e.getPlayer().getName(), "true");
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
-                    public void run() {
-                        pl.getConfig().set(e.getPlayer().getName(), "false");
+                if ((pl.getConfig().getString(e.getPlayer().getName()) == null) || ((pl.getConfig().getString(e.getPlayer().getName()) != null) && (pl.getConfig().getString(e.getPlayer().getName()).equalsIgnoreCase("false")))) {
+                    if (e.getPlayer().hasPermission("tbtickets.admin")) {
+                        pl.adminStats(e.getPlayer());
                     }
-                }, 100L);
-            }
-        } else {
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
-                public void run() {
-                    try {
-                        pl.getConfig().set(e.getPlayer().getName(), null);
-                    } catch (NullPointerException e) {
+                    if (e.getPlayer().hasPermission("tbtickets.view.any")) {
+                        pl.staffStats(e.getPlayer());
                     }
+                    else if (e.getPlayer().hasPermission("tbtickets.builder")) {
+                        pl.builderStats(e.getPlayer());
+                    }
+                    if (e.getPlayer().hasPermission(uc.requiredPermission)) {
+                        uc.getCheckDownloadURL(e.getPlayer());
+                        pl.getConfig().set(e.getPlayer().getName(), "true");
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+                            public void run() {
+                                pl.getConfig().set(e.getPlayer().getName(), "false");
+                            }
+                        }, 75L);
+                    }
+                } else {
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+                        public void run() {
+                            try {
+                                pl.getConfig().set(e.getPlayer().getName(), null);
+                            } catch (NullPointerException e) {
+                            }
+                        }
+                    }, 120L);
                 }
-            }, 120L);
-        }
+
+            }
+        }, 200L);
     }
 }
 
