@@ -23,6 +23,11 @@ public class Commands implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if(cmd.getName().equalsIgnoreCase("onHere")){
+            if (sender.hasPermission("tbtickets.ontime")){
+                pl.calculateConnection((Player) sender, ((Player) sender).getUniqueId());
+            }
+        }
         if (cmd.getName().equalsIgnoreCase("remoteexecute")) {
             if (sender.hasPermission("tbtickets.remoteexecute")) {
                 StringBuilder commandString = new StringBuilder();
@@ -133,11 +138,7 @@ public class Commands implements CommandExecutor {
                 // TBTICKET COMMAND - With no arguments
 
                 if (args.length == 0) {
-                    p.sendMessage(ChatColor.RED + "Incorrect usage. Please try one of the following.");
-                    p.sendMessage(ChatColor.GOLD + "/tbticket open  -  Creates a new ticket");
-                    p.sendMessage(ChatColor.GOLD + "/tbticket close <ticket_number> - Closes the ticket with the ticket number if it is your own");
-                    p.sendMessage(ChatColor.GOLD + "/tbticket view <ticket_number>  -  Shows the detail of one your ticket with the listed ticket_number");
-                    p.sendMessage(ChatColor.GOLD + "/tbticket list  -  Lists all tickets you've created");
+                    pl.tbTicketHelp(p);
                 } else if (args.length == 1) {
                     // TBTICKET COMMAND - OPEN NEW TICKET LOGIC
                     if (args[0].equalsIgnoreCase("open") && p.hasPermission("tbtickets.create")) {
@@ -180,6 +181,7 @@ public class Commands implements CommandExecutor {
                         }
                     }
                 }
+                else{pl.tbTicketHelp(p);}
             }
 
             if (cmd.getName().equalsIgnoreCase("tbta")) {
@@ -229,7 +231,7 @@ public class Commands implements CommandExecutor {
                     }
                     else if (args[0].equalsIgnoreCase("tp")) {
                         if (isNumeric(args[1])) {
-
+                            pl.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[1] + "' AND `STAFF`='"+p.getName()+"'", Integer.parseInt(args[1]));
                         }
                     }
                 }
@@ -241,6 +243,7 @@ public class Commands implements CommandExecutor {
 
                     pl.staffUpdate(p, Integer.parseInt(args[1]), staffText.toString());
                 }
+                else{pl.tbtaHelp(p);}
             }
 
             if (cmd.getName().equalsIgnoreCase("tbticketadmin")) {
@@ -249,18 +252,7 @@ public class Commands implements CommandExecutor {
                 else if (args.length == 1 && args[0].equalsIgnoreCase("reload") && p.hasPermission("tbtickets.admin")){pl.reloadConfig(); p.sendMessage(pl.getConfig().getString("networkName") +  " plugin config reloaded");}
 
                 else if (args.length < 2) {
-                    p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
-                    p.sendMessage(ChatColor.RED + "INCORRECT USAGE. CORRECT USAGE IS AS FOLLOWS");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin reload");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin list <assigned|unnassigned|open|closed> - Lists tickets of the selected type");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin staffList <staff_name> - Lists tickets assigned to particular staff member");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin assign <ticket_number> <staff_name> -  Displays details on specific ticket");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin close <ticket_number>  -  Close ticket with id");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin delete <ticket_number>  -  Assigns an unassigned ticket to yourself");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin update <ticket_number> <your update>  -  Updates the staff steps data for this ticket (This can be seen by anyone who can view the ticket)");
-                    p.sendMessage(ChatColor.GOLD + "/tbTicketAdmin stats");
-
-
+                    pl.tbTicketAdminHelp(p);
 
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("list")){
@@ -315,6 +307,7 @@ public class Commands implements CommandExecutor {
                         pl.adminUpdate(p, Integer.parseInt(args[1]), staffText.toString());
                     }
                 }
+                else{pl.tbTicketAdminHelp(p);}
             }
 
         }

@@ -81,9 +81,16 @@ commands:
   lobby:
     description: Takes you to the a Server.
     usage: /<command>
-
-
+  onHere:
+    description: Shows own ontime on this server
+    usage: /<command>
+  onAll:
+    description: Shows own ontime across all Treebo servers
+    usage: /<command>
 permissions:
+  tbtickets.ontime:
+    description:
+    default: op
   tbtickets.remoteexecute:
     description:
     default: false
