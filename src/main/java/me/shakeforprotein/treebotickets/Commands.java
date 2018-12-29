@@ -30,17 +30,24 @@ public class Commands implements CommandExecutor {
         }
         if (cmd.getName().equalsIgnoreCase("remoteexecute")) {
             if (sender.hasPermission("tbtickets.remoteexecute")) {
-                StringBuilder commandString = new StringBuilder();
-                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-                for (int i = 1; i < args.length; i++) {
-                    commandString = commandString.append(args[i] + " ");
-                }
+                String onServer = args[0];
+                if (onServer.equalsIgnoreCase(pl.getConfig().getString("serverName"))) {
+                    StringBuilder commandString = new StringBuilder();
+                    ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                    for (int i = 1; i < args.length; i++) {
+                        commandString = commandString.append(args[i] + " ");
+                    }
+                    sender.sendMessage("Executing command \""+ commandString.toString() +"\" on server - " +args[0]);
 
-                    pl.api.forward(args[0],"BungeeCord",commandString.toString().getBytes());            }
+                    Bukkit.dispatchCommand(console, commandString.toString());
+                }
+            else{sender.sendMessage("Command does not apply to this server - " + pl.getConfig().getString("serverName") + ". Skipping execute");}
+            }
 
             else {
                 sender.sendMessage("You do not have permission for that command");
             }
+
         }
 
         /*if(cmd.getName().equalsIgnoreCase("remotereceive")) {
@@ -62,7 +69,7 @@ public class Commands implements CommandExecutor {
            */
             if(cmd.getName().equalsIgnoreCase("restarttimed") && args.length == 1 && sender.hasPermission("tbtickets.restart")){
 
-            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+            //ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
             String command = "restart";
             Integer timer = Integer.parseInt(args[0]) + 60;
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.pl, new Runnable() {
@@ -72,8 +79,9 @@ public class Commands implements CommandExecutor {
                     }
                 }, Integer.parseInt(args[0]));
 
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.pl, new Runnable() {
                     public void run() {sender.sendMessage("Restarting Now");
+                        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                         Bukkit.dispatchCommand(console, command);
                     }
                 }, timer);

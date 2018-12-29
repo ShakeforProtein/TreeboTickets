@@ -9,11 +9,8 @@ website: http://treebomc.com
 
 commands:
   remoteexecute:
-    description: issues restart command in X ticks
+    description: issues a command to another server (can only be used from console)
     usage: /<command> <server> <args>
-  remotereceive:
-    description: issues restart command in X ticks
-    usage: /<command> <command_to_run> <args>w
   restarttimed:
     description: issues restart command in X ticks
     usage: /<command> <args>

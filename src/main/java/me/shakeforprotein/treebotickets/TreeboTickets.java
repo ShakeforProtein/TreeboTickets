@@ -4,6 +4,7 @@ import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,7 +54,7 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("acidislands").setExecutor(cmds);
         this.getCommand("test").setExecutor(cmds);
         this.getCommand("restarttimed").setExecutor(cmds);
-        this.getCommand("remotereceive").setExecutor(cmds);
+        this.getCommand("remoteexecute").setExecutor(cmds);
         this.getCommand("onHere").setExecutor(cmds);
 
         getServer().getPluginManager().registerEvents(new PlayerInput(this), this);
@@ -95,16 +96,14 @@ public final class TreeboTickets extends JavaPlugin {
         saveConfig();
         for(Player player : Bukkit.getServer().getOnlinePlayers())
         {
-            logConnection(player.getUniqueId(), player.getName(), "OFF", LocalDateTime.now().toString());
             if(!getConfig().getString("serverName)").equalsIgnoreCase("hub")){
                 player.sendMessage("Server is going down for restart, moving you to Hub");
-                api.connectOther(player.getName(), "hub");
             }
             else {
                 player.sendMessage("Server is going down for restart, moving you to Survival");
-                api.connectOther(player.getName(),"survival");
             }
         }
+        pushToLobby();
         getPluginLoader().disablePlugin(this);
         System.out.println("TreeboTickets Stopped");
     }
@@ -386,6 +385,10 @@ public final class TreeboTickets extends JavaPlugin {
             ResultSet response;
             try {
                 response = connection.createStatement().executeQuery("SELECT * FROM `" + getConfig().getString("table") + "` WHERE ID='" + t + "'");
+                if (!response.isBeforeFirst() ) {
+                    p.sendMessage("No Data Matching ticket number " + t);
+                    System.out.println("No Data Matching ticket number " +t);
+                }
                 while (response.next()) {
                     tStaff = response.getString("STAFF");
                     tId = response.getInt("ID");
@@ -1003,13 +1006,17 @@ public final class TreeboTickets extends JavaPlugin {
 
     public void pushToLobby() {
         if (getConfig().getString("isLobbyServer").equalsIgnoreCase("false")) {
+
             for (Player p : getServer().getOnlinePlayers()) {
                 getConfig().set("shutdownPlayerList." + p.getName(), p.getName());
                 p.sendMessage("This server is restarting.");
                 p.sendMessage("Moving you temporarily to the Lobby");
                 //p.sendMessage("You will be automatically moved back when the restart is complete");
-                serverSwitch(p, "hub");
+                //serverSwitch(p, "hub");
             }
+            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+            String command = "sudo ** lobby";
+            Bukkit.dispatchCommand(console, command);
         }
     }
 
@@ -1017,7 +1024,7 @@ public final class TreeboTickets extends JavaPlugin {
         int response;
         String output = "";
         try {
-           String query = "INSERT INTO `ontime`(`UUID`, `IGNAME`, `ONOFF`, `CREATED`, `SERVER`) VALUES (\""+pUUID+"\",\""+pIGN+"\",\""+pOnOff+"\",\""+pCreated+"\",\"" + Bukkit.getServer().getName() + "\")";
+           String query = "INSERT INTO `ontime`(`UUID`, `IGNAME`, `ONOFF`, `CREATED`, `SERVER`) VALUES (\""+pUUID+"\",\""+pIGN+"\",\""+pOnOff+"\",\""+pCreated+"\",\"" + getConfig().getString("serverName") + "\")";
            System.out.println(query);
             response = connection.createStatement().executeUpdate(query);
         } catch (SQLException e) {
