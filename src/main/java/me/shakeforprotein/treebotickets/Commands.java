@@ -29,7 +29,7 @@ public class Commands implements CommandExecutor {
             }
         }
         if (cmd.getName().equalsIgnoreCase("remoteexecute")) {
-            if (sender.hasPermission("tbtickets.remoteexecute")) {
+            if (sender instanceof  ConsoleCommandSender) {
                 String onServer = args[0];
                 if (onServer.equalsIgnoreCase(pl.getConfig().getString("serverName"))) {
                     StringBuilder commandString = new StringBuilder();
@@ -45,7 +45,7 @@ public class Commands implements CommandExecutor {
             }
 
             else {
-                sender.sendMessage("You do not have permission for that command");
+                sender.sendMessage("This command only runs from console");
             }
 
         }
@@ -67,7 +67,7 @@ public class Commands implements CommandExecutor {
             }
         }
            */
-            if(cmd.getName().equalsIgnoreCase("restarttimed") && args.length == 1 && sender.hasPermission("tbtickets.restart")){
+            if(cmd.getName().equalsIgnoreCase("restarttimed") && args.length == 1 && (sender.hasPermission("tbtickets.restart")) || sender instanceof  ConsoleCommandSender){
 
             //ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
             String command = "restart";
