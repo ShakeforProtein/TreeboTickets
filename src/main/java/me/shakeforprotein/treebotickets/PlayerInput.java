@@ -1,14 +1,20 @@
 package me.shakeforprotein.treebotickets;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.sql.Time;
@@ -102,9 +108,13 @@ public class PlayerInput implements Listener {
                     p.sendMessage("Your response - " + description);
                     p.sendMessage("");
                     p.sendMessage("");
-                    if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")){p.sendMessage("Please list any additional details you'd like to include.");}
-                    else if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("review")){p.sendMessage("Please list any additional details you'd like to include.");}
-                    else{p.sendMessage("Briefly describe what steps you've taken to attempt to fix this issue yourself");}
+                    if (pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")) {
+                        p.sendMessage("Please list any additional details you'd like to include.");
+                    } else if (pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("review")) {
+                        p.sendMessage("Please list any additional details you'd like to include.");
+                    } else {
+                        p.sendMessage("Briefly describe what steps you've taken to attempt to fix this issue yourself");
+                    }
                 }
 
                 if (ticketState == 3) {
@@ -117,8 +127,12 @@ public class PlayerInput implements Listener {
                     p.sendMessage("");
                     p.sendMessage("");
 
-                    if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")){staff = "Robert_Beckley";}
-                    if(pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("review")){staff = "Builders";}
+                    if (pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")) {
+                        staff = "Robert_Beckley";
+                    }
+                    if (pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("review")) {
+                        staff = "Builders";
+                    }
 
                     type = pl.getConfig().getString("players." + p.getName() + ".type");
                     description = pl.getConfig().getString("players." + p.getName() + ".description");
@@ -128,7 +142,7 @@ public class PlayerInput implements Listener {
                     pl.getConfig().set("players." + p.getName() + "lastQuery", pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
                     pl.saveConfig();
-                pl.addTicketToDB(p, ticketData);
+                    pl.addTicketToDB(p, ticketData);
                 }
             }
         }
@@ -137,11 +151,14 @@ public class PlayerInput implements Listener {
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent e) {
-        try{pl.openConnection();}
-        catch (SQLException | ClassNotFoundException err){System.out.println("Failed to reconnect to database. This is probably fine.");}
+        try {
+            pl.openConnection();
+        } catch (SQLException | ClassNotFoundException err) {
+            System.out.println("Failed to reconnect to database. This is probably fine.");
+        }
 
         pl.logConnection(e.getPlayer().getUniqueId(), e.getPlayer().getName(), "ON", LocalDateTime.now().toString());
-        if((pl.getConfig().getString("isLobbyServer").equalsIgnoreCase("true")) && (!e.getPlayer().hasPlayedBefore())) {
+        if ((pl.getConfig().getString("isLobbyServer").equalsIgnoreCase("true")) && (!e.getPlayer().hasPlayedBefore())) {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
                 public void run() {
                     String command;
@@ -168,8 +185,7 @@ public class PlayerInput implements Listener {
                     }
                     if (e.getPlayer().hasPermission("tbtickets.view.any")) {
                         pl.staffStats(e.getPlayer());
-                    }
-                    else if (e.getPlayer().hasPermission("tbtickets.builder")) {
+                    } else if (e.getPlayer().hasPermission("tbtickets.builder")) {
                         pl.builderStats(e.getPlayer());
                     }
                     if (e.getPlayer().hasPermission(uc.requiredPermission)) {
@@ -197,10 +213,78 @@ public class PlayerInput implements Listener {
     }
 
     @EventHandler
-    public void onPlayerLeave (PlayerQuitEvent e){
+    public void onPlayerLeave(PlayerQuitEvent e) {
         pl.logConnection(e.getPlayer().getUniqueId(), e.getPlayer().getName(), "OFF", LocalDateTime.now().toString());
     }
+
+    @EventHandler
+    public void invDragEvent(InventoryDragEvent e) {
+        Inventory inv = e.getInventory();
+        String name = inv.getName();
+        if (name.equalsIgnoreCase("Your assigned tickets") || name.equalsIgnoreCase("Unassigned tickets") || name.equalsIgnoreCase("All open tickets") || name.equalsIgnoreCase("All closed tickets")) {
+            e.setCancelled(true);
+            return;
+        }
+
+    }
+
+    @EventHandler
+    public void invClickEvent(InventoryClickEvent e) {
+        Inventory inv = e.getInventory();
+        Player p = (Player) e.getWhoClicked();
+        String name = inv.getName();
+        int slot = e.getSlot();
+        if (slot < 0) {
+            p.closeInventory();
+            return;
+        }
+
+        if (name.equalsIgnoreCase("Tickets Main Menu")) {
+            e.setCancelled(true);
+            if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Your Assigned Tickets")) {
+                pl.listAssignedGui(p);
+            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Unassigned Tickets")) {
+                pl.listUnassignedGui(p);
+            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("All Open Tickets")) {
+                pl.listOpenGui(p);
+            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("All Closed Tickets")) {
+                pl.listClosedGui(p);
+            }
+        }
+        if (name.equalsIgnoreCase("Ticket List - Assigned to you") || name.equalsIgnoreCase("Ticket List - Unassigned ALL") || name.equalsIgnoreCase("Ticket List - Open ALL") || name.equalsIgnoreCase("Ticket List - Closed ALL")) {
+            e.setCancelled(true);
+            if(e.getClickedInventory().getItem(slot).hasItemMeta() && e.getClickedInventory().getItem(slot).getItemMeta().getLore().toArray().length == 2 && e.getClickedInventory().getItem(slot).getItemMeta().getLore().get(1).equalsIgnoreCase("Main Menu")){pl.openTicketGui(p);}
+            else {
+                int ticketID = Integer.parseInt(e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().split(" - ")[1]);
+                pl.specificTicketGui(p, ticketID, "Ticket - " + ticketID, name.split(" - ")[1].split(" ")[0]);
+            }
+        }
+
+        if (name.split(" - ") != null && name.split(" - ")[0].equalsIgnoreCase("Ticket")){
+            e.setCancelled(true);
+            if(e.getClickedInventory().getItem(slot).hasItemMeta() && e.getClickedInventory().getItem(slot).getItemMeta().getLore().toArray().length > 1){
+                String command = e.getClickedInventory().getItem(slot).getItemMeta().getLore().get(1);
+                if(command.equalsIgnoreCase("Open")){pl.listOpenGui(p);}
+                else if(command.equalsIgnoreCase("Closed")){pl.listClosedGui(p);}
+                else if(command.equalsIgnoreCase("Assigned")){pl.listAssignedGui(p);}
+                else if(command.equalsIgnoreCase("Unassigned")){pl.listUnassignedGui(p);}
+                else if (e.getClickedInventory().getItem(slot).getType() != Material.BOOK){Bukkit.dispatchCommand(p, command);}
+                else if (e.getClickedInventory().getItem(slot).getType() == Material.BOOK){
+                    if(p.hasPermission("tbtickets.admin")){
+                        command = "tbticketadmin view " + name.split(" - ")[1];
+                        Bukkit.dispatchCommand(p, command);
+                    }
+                    else{
+                        command = "tbta view " + name.split(" - ")[1];
+                        Bukkit.dispatchCommand(p, command);
+                    }
+                }
+
+            }
+        }
+    }
 }
+
 
 
 

@@ -19,6 +19,8 @@ password: 'XYZ'
 database: 'Database'
 table: 'tickets'
 isLobbyServer: 'false'
+lobbyServerName: 'hub'
+maxClosedTickets: 50
 
 serverName: 'Test'
 networkName: 'Example Network'

@@ -11,6 +11,9 @@ commands:
   remoteexecute:
     description: issues a command to another server (can only be used from console)
     usage: /<command> <server> <args>
+  multipleCommands:
+    description: issues multiple commands seperated by a forward slash
+    usage: /<command> /<command1> /<command2> /...
   restarttimed:
     description: issues restart command in X ticks
     usage: /<command> <args>
@@ -49,34 +52,37 @@ commands:
     description: Updates staff entries on a review ticket.
     usage: /<command>
   survival:
-    description: Takes you to the Survival Serv
+    description: Takes you to the Server named Survival
     usage: /<command>
   hardcore:
-    description: Takes you to the hardcore Server.
+    description: Takes you to the Server named Hardcore.
     usage: /<command>
   creative:
-    description: Takes you to the a Server.
+    description: Takes you to the Server named Creative.
     usage: /<command>
   plots:
-    description: Takes you to the a Server.
+    description: Takes you to the a Server named Creative.
+    usage: /<command>
+  comp:
+    description: Takes you to the a Server named Creative.
     usage: /<command>
   skyblock:
-    description: Takes you to the a Server.
+    description: Takes you to the Server named Sky.
     usage: /<command>
   acidislands:
-    description: Takes you to the a Server.
+    description: Takes you to the Server named Sky.
     usage: /<command>
   prison:
-    description: Takes you to the a Server.
+    description: Takes you to the Server named Prison.
     usage: /<command>
   test:
-    description: Takes you to the a Server.
+    description: Takes you to the Server named Test.
     usage: /<command>
   games:
-    description: Takes you to the a Server.
+    description: Takes you to the Server named Games.
     usage: /<command>
   lobby:
-    description: Takes you to the a Server.
+    description: Takes you to the Server named Hub.
     usage: /<command>
   onHere:
     description: Shows own ontime on this server
@@ -84,6 +90,9 @@ commands:
   onAll:
     description: Shows own ontime across all Treebo servers
     usage: /<command>
+  ticketNotify:
+    description: Notifies relevant online staff about tickets
+    usage: /<command> <permission node> <ticket type> <ticket id>
 permissions:
   tbtickets.ontime:
     description:

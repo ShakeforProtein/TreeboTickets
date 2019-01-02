@@ -23,6 +23,23 @@ public class Commands implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("multipleCommands")) {
+            if (args.length > 0) {
+                StringBuilder argsText = new StringBuilder();
+                for (int i = 0; i < args.length; i++) {
+                    argsText.append(args[i] + " ");
+                }
+                String[] commandsArray = new String[argsText.toString().split("/").length];
+
+                int positionCount = 0;
+                for (String command : argsText.toString().split("/")){
+                    commandsArray[positionCount] = command;
+                    Bukkit.dispatchCommand(sender, command);
+                }
+            }
+            else {sender.sendMessage("No command arguments detected");
+            }
+        }
         if(cmd.getName().equalsIgnoreCase("onHere")){
             if (sender.hasPermission("tbtickets.ontime")){
                 pl.calculateConnection((Player) sender, ((Player) sender).getUniqueId());
@@ -90,17 +107,27 @@ public class Commands implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
-            if (cmd.getName().equalsIgnoreCase("survival")) {pl.serverSwitch(p, "survival");}
-            else if (cmd.getName().equalsIgnoreCase("lobby")) {pl.serverSwitch(p, "hub");}
-            else if (cmd.getName().equalsIgnoreCase("creative")) {pl.serverSwitch(p, "creative");}
-            else if (cmd.getName().equalsIgnoreCase("skyblock")) {pl.serverSwitch(p, "sky");}
-            else if (cmd.getName().equalsIgnoreCase("skygrid")) {pl.serverSwitch(p, "sky");}
-            else if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.serverSwitch(p, "sky");}
+            if (cmd.getName().equalsIgnoreCase("survival")) {pl.toWorld("survival","survival",p);}
+            else if (cmd.getName().equalsIgnoreCase("lobby")) {pl.toWorld("hub","hub",p);}
+            else if (cmd.getName().equalsIgnoreCase("creative")) {pl.toWorld("creative","creative",p);}
+            else if (cmd.getName().equalsIgnoreCase("plots")) {pl.toWorld("creative","plots",p);}
+            else if (cmd.getName().equalsIgnoreCase("comp")) {pl.toWorld("creative","comp",p);}
+            else if (cmd.getName().equalsIgnoreCase("skyblock")) {pl.toWorld("sky","BSkyblock_world",p);}
+            else if (cmd.getName().equalsIgnoreCase("skygrid")) {pl.toWorld("sky","Skygrid_world",p);}
+            else if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.toWorld("sky","AcidIsland_world",p);}
             else if (cmd.getName().equalsIgnoreCase("hardcore")) {pl.serverSwitch(p, "hardcore");}
-            else if (cmd.getName().equalsIgnoreCase("prison")) {pl.serverSwitch(p, "prison");}
-            else if (cmd.getName().equalsIgnoreCase("plots")) {pl.serverSwitch(p, "creative");}
             else if (cmd.getName().equalsIgnoreCase("games")) {pl.serverSwitch(p, "games");}
-            else if (cmd.getName().equalsIgnoreCase("test")) {pl.serverSwitch(p, "test");}
+            else if (cmd.getName().equalsIgnoreCase("prison")) {pl.serverSwitch(p, "prison");}
+            else if (cmd.getName().equalsIgnoreCase("test")) {pl.toWorld("test","test_the_end",p);}
+           /* else if (cmd.getName().equalsIgnoreCase("ticketNotify")){
+                if (sender instanceof ConsoleCommandSender){
+                    if(args.length != 3){sender.sendMessage("Incorrect usage. /ticketNotify <required permission without tbttickets.>  <ticket type>  <ticket id>");}
+                    else {pl.notifyOnline(args[0], args[1], args[2]);}
+                }
+                else {sender.sendMessage("This command can only be issued from console");
+                }
+            }*/
+
             else if (cmd.getName().equalsIgnoreCase("idea")){
                 pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                 pl.getConfig().set("players." + p.getName() + ".type", "Idea");
@@ -193,16 +220,25 @@ public class Commands implements CommandExecutor {
             }
 
             if (cmd.getName().equalsIgnoreCase("tbta")) {
-                if (args.length < 2) {
+                if (args.length == 1 && args[0].equalsIgnoreCase("gui")){
+                    if(p.hasPermission("tbtickets.view.any")){
+                        pl.openTicketGui(p);
+                    }
+
+                    else{
+                        p.sendMessage("You lack the permissions required to use this command");
+                    }
+                }
+                else if (args.length < 2) {
                     p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
                     p.sendMessage(ChatColor.RED + "INCORRECT USAGE. CORRECT USAGE IS AS FOLLOWS");
                     p.sendMessage(ChatColor.GOLD + "/tbta list <assigned|unnassigned|open|closed|idea>  -  Lists all tickets assigned to you");
                     p.sendMessage(ChatColor.GOLD + "/tbta view <ticket_number>  -  Displays details on specific ticket");
-                    p.sendMessage(ChatColor.GOLD + "/tbta close <ticket_number>  -  Close ticket with id");
+                    p.sendMessage(ChatColor.GOLD + "/tbta <close|reopen> <ticket_number>  -  Close / Reopen ticket with id");
                     p.sendMessage(ChatColor.GOLD + "/tbta <claim|unclaim> <ticket_number>  -  Assigns an unassigned ticket to yourself");
                     p.sendMessage(ChatColor.GOLD + "/tbta tp <ticket_number>  -  Teleport to location of ticket number");
                     p.sendMessage(ChatColor.GOLD + "/tbta update <ticket_number>  <your message> -  Updates a tickets staff steps data.  Remember this can be seen by the ticket submitter");
-
+                    p.sendMessage(ChatColor.GOLD + "/tbta gui");
 
 
                 } else if (args.length == 2) {
@@ -224,6 +260,9 @@ public class Commands implements CommandExecutor {
                         else if (args[1].equalsIgnoreCase("closed")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED' ORDER BY id DESC");
                         }
+                    }
+                    else if (args[0].equalsIgnoreCase("reopen") && p.hasPermission("tbtickets.view.any")) {
+                        pl.staffReOpenTicket(p, Integer.parseInt(args[1]));
                     }
                     else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.close.any")){
                         pl.staffCloseTicket(p, Integer.parseInt(args[1]));
@@ -258,6 +297,11 @@ public class Commands implements CommandExecutor {
                 if (args.length == 1 && args[0].equalsIgnoreCase("stats") && p.hasPermission("tbtickets.admin")){pl.adminStats(p);}
                 else if (args.length == 1 && args[0].equalsIgnoreCase("version") && p.hasPermission("tbtickets.admin")){p.sendMessage(pl.getConfig().getString("networkName") + " - Version:  " +  pl.getDescription().getVersion());}
                 else if (args.length == 1 && args[0].equalsIgnoreCase("reload") && p.hasPermission("tbtickets.admin")){pl.reloadConfig(); p.sendMessage(pl.getConfig().getString("networkName") +  " plugin config reloaded");}
+                else if (args.length == 1 && args[0].equalsIgnoreCase("trim") && p.hasPermission("tbtickets.admin")){
+                 pl.cleanupDatabase(40);}
+                else if (args.length == 2 && args[0].equalsIgnoreCase("trim") && p.hasPermission("tbtickets.admin")){
+                    pl.cleanupDatabase(Integer.parseInt(args[1]));
+                }
 
                 else if (args.length < 2) {
                     pl.tbTicketAdminHelp(p);
@@ -275,6 +319,9 @@ public class Commands implements CommandExecutor {
                         }
                         else if (args[1].equalsIgnoreCase("closed")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED' ORDER BY id DESC");
+                        }
+                        else if (args[1].equalsIgnoreCase("deleted")) {
+                            pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='DELETED' ORDER BY id DESC");
                         }
                         else if (args[1].equalsIgnoreCase("idea")) {
                             pl.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN' ORDER BY id DESC");
