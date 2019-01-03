@@ -115,9 +115,9 @@ public class Commands implements CommandExecutor {
             else if (cmd.getName().equalsIgnoreCase("skyblock")) {pl.toWorld("sky","BSkyblock_world",p);}
             else if (cmd.getName().equalsIgnoreCase("skygrid")) {pl.toWorld("sky","Skygrid_world",p);}
             else if (cmd.getName().equalsIgnoreCase("acidislands")) {pl.toWorld("sky","AcidIsland_world",p);}
-            else if (cmd.getName().equalsIgnoreCase("hardcore")) {pl.serverSwitch(p, "hardcore");}
-            else if (cmd.getName().equalsIgnoreCase("games")) {pl.serverSwitch(p, "games");}
-            else if (cmd.getName().equalsIgnoreCase("prison")) {pl.serverSwitch(p, "prison");}
+            else if (cmd.getName().equalsIgnoreCase("hardcore")) {pl.toWorld("hardcore", "hardcore",p);}
+            else if (cmd.getName().equalsIgnoreCase("games")) {pl.toWorld("games", "games",p);}
+            else if (cmd.getName().equalsIgnoreCase("prison")) {pl.toWorld("prison", "prison", p);}
             else if (cmd.getName().equalsIgnoreCase("test")) {pl.toWorld("test","test_the_end",p);}
            /* else if (cmd.getName().equalsIgnoreCase("ticketNotify")){
                 if (sender instanceof ConsoleCommandSender){
