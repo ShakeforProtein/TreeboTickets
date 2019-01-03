@@ -159,7 +159,10 @@ permissions:
     default: true
   tbtickets.server.test:
     description:
-    default: true
+    default: false
   tbtickets.server.lobby:
+    description:
+    default: true
+  tbtickets.server.games:
     description:
     default: true

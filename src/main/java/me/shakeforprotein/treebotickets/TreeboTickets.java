@@ -844,7 +844,7 @@ public final class TreeboTickets extends JavaPlugin {
     }
 
     public void serverSwitch(Player p, String server) {
-        if (p.hasPermission("tbtickets.server." + getConfig().getString("serverName"))) {
+        if (p.hasPermission("tbtickets.server." + server)){
             if (!server.equalsIgnoreCase(getConfig().getString("serverName"))) {
                 p.sendMessage("Attempting to send you to " + server);
                 api.connectOther(p.getName(), server);
@@ -1463,14 +1463,17 @@ public final class TreeboTickets extends JavaPlugin {
         guiStaffList(p, "SELECT * FROM `" + getConfig().getString("table") + "` WHERE STATUS='CLOSED' AND STAFF!='DELETED' ORDER BY id DESC", "Ticket List - Closed ALL");
     }
 
-    public void toWorld(String tServer, String tWorld, Player p){
-    if (!tServer.equalsIgnoreCase(getConfig().getString("serverName"))) {
+    public void toWorld(String server, String toWorld, Player p){
+        if (p.hasPermission("tbtickets.server." + server)){
+
+            if (!server.equalsIgnoreCase(getConfig().getString("serverName"))) {
         p.sendMessage("As you were on the wrong server, you will need to repeat the command.");
         p.sendMessage("Changing your server for you now.");
-        api.connectOther(p.getName(), tServer);
+        api.connectOther(p.getName(), server);
     } else {
-        if(p.getWorld().getName().equalsIgnoreCase("test_the_end")){tWorld = "test";}
-        p.teleport(Bukkit.getWorld(tWorld).getSpawnLocation());
+        if(p.getWorld().getName().equalsIgnoreCase("test_the_end")){toWorld = "test";}
+        p.teleport(Bukkit.getWorld(toWorld).getSpawnLocation());
     }
     }
+        else{p.sendMessage(ChatColor.RED + "You do not have the required permission node");}}
 }
