@@ -1,5 +1,6 @@
-package me.shakeforprotein.treebotickets;
+package me.shakeforprotein.treebotickets.UpdateChecker;
 
+import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ public class UpdateChecker {
     //These two need to be changed for different plugins
     private TreeboTickets pl;
 
-    public UpdateChecker(TreeboTickets pl) {
-        this.pl = pl;
+    public UpdateChecker(TreeboTickets main) {
+        this.pl = main;
     }
 
     public String requiredPermission = "tbtickets.updatechecker";
