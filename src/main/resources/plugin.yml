@@ -4,7 +4,8 @@ main: me.shakeforprotein.treebotickets.TreeboTickets
 prefix: TreeboTickets
 authors: [ShakeforProtein]
 description: Light weight ticket plugin
-website: http://treebomc.com
+website: http://minecraft.treebo.games
+api-version: 1.13
 
 
 commands:
@@ -137,32 +138,32 @@ permissions:
     description: 'Allows use of all tbTicketAdmin commands'
     default: false
   tbtickets.server.survival:
-    description:
+    description: 'Allows use of /survival'
     default: true
   tbtickets.server.hardcore:
-    description:
+    description: 'Allows use of /hardcore'
     default: true
   tbtickets.server.skyblock:
-    description:
+    description: 'Allows use of /skyblock'
     default: true
   tbtickets.server.acidislands:
-    description:
+    description: 'Allows use of /acidislands'
     default: true
   tbtickets.server.creative:
-    description:
+    description: 'Allows use of /creative'
     default: true
   tbtickets.server.plots:
-    description:
+    description: 'Allows use of /plots'
     default: true
   tbtickets.server.prison:
-    description:
+    description: 'Allows use of /prison'
     default: true
   tbtickets.server.test:
-    description:
+    description: 'Allows use of /test'
     default: false
-  tbtickets.server.lobby:
-    description:
+  tbtickets.server.hub:
+    description: 'Allows use of /lobby'
     default: true
   tbtickets.server.games:
-    description:
+    description: 'Allows use of /games'
     default: true
