@@ -1,6 +1,7 @@
 package me.shakeforprotein.treebotickets.Methods.CreateTicket;
 
 import me.shakeforprotein.treebotickets.TreeboTickets;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -18,6 +19,11 @@ public class StartTicket {
         p.sendMessage(ChatColor.GOLD + "3 " + ChatColor.RESET + "-" + ChatColor.RED + " For Other issues");
         p.sendMessage("or enter 'cancel' at any time to stop creating a ticket");
         pl.getConfig().set("players." + p.getName() + ".ticketstate", 1);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.pl, new Runnable() {
+            public void run() {
+                pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
+            }
+        }, 600L);
         pl.saveConfig();
     }
 }

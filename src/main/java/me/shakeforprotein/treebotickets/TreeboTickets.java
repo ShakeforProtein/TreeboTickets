@@ -17,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import me.shakeforprotein.treebotickets.Commands.*;
 import me.shakeforprotein.treebotickets.Listeners.*;
@@ -47,7 +46,7 @@ public final class TreeboTickets extends JavaPlugin {
     private Review review = new Review(this);
     private ServerTransfers serverTransfers = new ServerTransfers(this);
     private Tbta tbta = new Tbta(this);
-    private TBTicket tbTicket = new TBTicket(this);
+    private TbTicket tbTicket = new TbTicket(this);
     private TbTicketAdmin tbTicketAdmin = new TbTicketAdmin(this);
 
 
@@ -66,7 +65,7 @@ public final class TreeboTickets extends JavaPlugin {
     public void onEnable() {
         //Register Command Executors
         this.cmds = new Commands(this);
-        this.tbTicket = new TBTicket(this);
+        this.tbTicket = new TbTicket(this);
         this.idea = new Idea(this);
         this.multipleCommands = new MultipleCommands(this);
         this.onHere = new OnHere(this);
@@ -98,6 +97,7 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("prison").setExecutor(serverTransfers);
         this.getCommand("games").setExecutor(serverTransfers);
         this.getCommand("skyblock").setExecutor(serverTransfers);
+        this.getCommand("skygrid").setExecutor(serverTransfers);
         this.getCommand("acidislands").setExecutor(serverTransfers);
         this.getCommand("test").setExecutor(serverTransfers);
         this.getCommand("restarttimed").setExecutor(restartTimed);
@@ -118,6 +118,9 @@ public final class TreeboTickets extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TicketConversation(this), this);
         getConfig().options().copyDefaults(true);
         getConfig().set("version", this.getDescription().getVersion());
+        for(String player : getConfig().getConfigurationSection("players").getKeys(false)){
+            getConfig().set("players." + player + ".ticketstate", 0);
+        }
         saveConfig();
         this.uc = new UpdateChecker(this);
         uc.getCheckDownloadURL();
@@ -144,6 +147,7 @@ public final class TreeboTickets extends JavaPlugin {
         }
         System.out.println("TreeboTickets Started");
     }
+    public String ontimetable = getConfig().getString("ontimetable");
 
 
     @Override
@@ -158,7 +162,7 @@ public final class TreeboTickets extends JavaPlugin {
         }
         pushToLobby.pushToLobby();
         try{connection.close();}
-        catch(SQLException e){}
+        catch(SQLException e){makeLog(e);}
         getPluginLoader().disablePlugin(this);
         System.out.println("TreeboTickets Stopped");
     }
@@ -218,11 +222,8 @@ public final class TreeboTickets extends JavaPlugin {
 
     public String placeholderParser(String input, Player p) {
 
-        String output = input.
-                replace("XXXPLAYERXXX", p.getName()).
+        return input.replace("XXXPLAYERXXX", p.getName()).
                 replace("XXXNETWORKNAMEXXX", getConfig().getString("networkName"));
-
-        return output;
     }
 
 
@@ -255,7 +256,7 @@ public final class TreeboTickets extends JavaPlugin {
             PrintStream ps = new PrintStream(file);
             tr.printStackTrace(ps);
             ps.close();
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {makeLog(e);
         }
     }
 

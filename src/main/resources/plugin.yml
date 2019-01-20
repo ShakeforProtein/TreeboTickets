@@ -70,6 +70,9 @@ commands:
   skyblock:
     description: Takes you to the Server named Sky.
     usage: /<command>
+  skygrid:
+    description: Takes you to the Server named Sky.
+    usage: /<command>
   acidislands:
     description: Takes you to the Server named Sky.
     usage: /<command>
@@ -148,6 +151,9 @@ permissions:
     default: true
   tbtickets.server.acidislands:
     description: 'Allows use of /acidislands'
+    default: true
+  tbtickets.server.skygrid:
+    description: 'Allows use of /skygrid'
     default: true
   tbtickets.server.creative:
     description: 'Allows use of /creative'

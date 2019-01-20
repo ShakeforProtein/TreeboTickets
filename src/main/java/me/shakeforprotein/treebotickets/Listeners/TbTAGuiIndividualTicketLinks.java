@@ -32,7 +32,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
         }
 
 
-        if (name.split(" - ") != null && name.split(" - ")[0].equalsIgnoreCase("Ticket")){
+        if (name.split(" - ")[0].equalsIgnoreCase("Ticket")){
             e.setCancelled(true);
             if(e.getClickedInventory().getItem(slot).hasItemMeta() && e.getClickedInventory().getItem(slot).getItemMeta().getLore().toArray().length > 1){
                 String command = e.getClickedInventory().getItem(slot).getItemMeta().getLore().get(1);
@@ -40,6 +40,14 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                 else if(command.equalsIgnoreCase("Closed")){listGuis.listClosedGui(p);}
                 else if(command.equalsIgnoreCase("Assigned")){listGuis.listAssignedGui(p);}
                 else if(command.equalsIgnoreCase("Unassigned")){listGuis.listUnassignedGui(p);}
+                else if (e.getClickedInventory().getItem(slot).getType() == Material.FLINT_AND_STEEL){
+                    Bukkit.dispatchCommand(p,command);
+                    command = e.getClickedInventory().getItem(26).getItemMeta().getLore().get(1);
+                    if(command.equalsIgnoreCase("Open")){listGuis.listOpenGui(p);}
+                    else if(command.equalsIgnoreCase("Closed")){listGuis.listClosedGui(p);}
+                    else if(command.equalsIgnoreCase("Assigned")){listGuis.listAssignedGui(p);}
+                    else if(command.equalsIgnoreCase("Unassigned")){listGuis.listUnassignedGui(p);}
+                }
                 else if (e.getClickedInventory().getItem(slot).getType() != Material.BOOK){
                     Bukkit.dispatchCommand(p, command);}
                 else if (e.getClickedInventory().getItem(slot).getType() == Material.BOOK){

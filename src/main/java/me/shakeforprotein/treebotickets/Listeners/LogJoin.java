@@ -20,6 +20,6 @@ public class LogJoin implements Listener {
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent e) {
-        logConnection.logConnection(e.getPlayer().getUniqueId(), e.getPlayer().getName(), "ON", LocalDateTime.now().toString());
+        logConnection.logConnection(e.getPlayer());
     }
 }

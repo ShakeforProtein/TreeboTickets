@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 import static me.shakeforprotein.treebotickets.Commands.Commands.isNumeric;
 
-public class TBTicket implements CommandExecutor {
+public class TbTicket implements CommandExecutor {
 
     private TreeboTickets pl;
     private TbTicketsHelp tbTicketHelp;
@@ -24,7 +24,7 @@ public class TBTicket implements CommandExecutor {
     private PlayerViewTicket playerViewTicket;
 
 
-    public TBTicket(TreeboTickets main) {
+    public TbTicket(TreeboTickets main) {
         pl = main;
         this.tbTicketHelp = new TbTicketsHelp(main);
         this.startTicketLogic = new StartTicket(main);
