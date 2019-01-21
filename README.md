@@ -8,22 +8,25 @@ A Simple Tickets, Ideas & Review Plugin
   tbtickets.create - Allows a player to create a new ticket.
   tbtickets.view.own - Allows a player to view their own tickets.
   tbtickets.close.own - Allows a player to close their own tickets.
-  tbtickets.survival - Allows use of /survival command (teleport to server with name survival)
-  tbtickets.hardcore - Allows use of /hardcore command (teleport to server with name hardcore)
-  tbtickets.creative - Allows use of /creative command (teleport to server with name creative)
-  tbtickets.acidislands - Allows use of /acidislands command (teleport to server with name sky)
-  tbtickets.skyblock - Allows use of /skyblock command (teleport to server with name sky)
-  tbtickets.plots - Allows use of /plots command (teleport to server with name creative)
-  tbtickets.prison - Allows use of /prison command (teleport to server with name prison)
-  tbtickets.test - Allows use of /test command (teleport to server with name test)
-  tbtickets.server.lobby - Allows use of /lobby command (teleport to server with name lobby)
-  
+  tbtickets.server.survival - Allows use of /survival command (teleport to server with name survival) (or to the survival world if on correct server)
+  tbtickets.server.hardcore - Allows use of /hardcore command (teleport to server with name hardcore) (or to the hardcore world if on correct server)
+  tbtickets.server.creative - Allows use of /creative command (teleport to server with name creative) (or to the creative world if on correct server)
+  tbtickets.server.acidislands - Allows use of /acidislands command (teleport to server with name sky) (or to the acid islands world if on correct server)
+  tbtickets.server.skyblock - Allows use of /skyblock command (teleport to server with name sky) (or to the skyblock world if on correct server)
+  tbtickets.server.skygrid - Allows use of /skygrid command (teleport to server with name sky) (or to the skygrid world if on correct server)
+  tbtickets.server.plots - Allows use of /plots command (teleport to server with name creative)
+  tbtickets.server.prison - Allows use of /prison command (teleport to server with name prison) (or to the prison world if on correct server)
+  tbtickets.server.test - Allows use of /test command (teleport to server with name test) (or to the test / test end world if on correct server)
+  tbtickets.server.lobby - Allows use of /lobby command (teleport to server with name lobby) (or to the hub world if on correct server)
+  tbtickets.server.games - Allows use of /games command (teleport to server with name games) (or to the games world if on correct server)
+
 ### Defaults to False
   tbtickets.delete.closed - Allows a player to delete closed tickets.
   tbtickets.builder - Lets builders see review tickets
-  tbtickets.restart -
-  tbtickets.remoteexecute -
-  
+  tbtickets.restart - Allows use of /restarttimed to restart the server in a specified amount of ticks plus 60
+  tbtickets.remoteexecute - Allows use of the remoteexecute command. (This doesn't work in game and can only be used from a shared console)(Essentially useless)
+
+
 ### Defaults to OP
   tbtickets.updatechecker - Notifies player when an update is available.
   tbtickets.close.any - Allows a player to close any ticket.
@@ -32,7 +35,7 @@ A Simple Tickets, Ideas & Review Plugin
   tbtickets.view.any - Allows a player to view any ticket.
   tbtickets.admin - Allows use of all admin commands.
   tbtickets.restore - Allows a player to restore a deleted ticket.
-  tbtickets.ontime - 
+  tbtickets.ontime - Allows player to use /onhere.
   
 ```
 
@@ -79,25 +82,28 @@ A Simple Tickets, Ideas & Review Plugin
   /tbTicketAdmin delete <ticket number> - Removes ticket from database, no questions asked.
   /tbTicketAdmin update <ticket number> <Message> - As with tbta this will add a comment to the ticket, but will ignore the assigned staff requirement              
   /tbTicketAdmin stats - Lists total tickets, assigned tickets, unassigned tickets, open tickets, closed tickets.                         
-  ### Movement: 
-  /skyblock - Teleport you to <server> 
-  /acisislands - Teleport you to <server> 
-  /skygrid - Teleport you to <server> (To be added) 
-  /prison - Teleport you to <server> 
-  /survial - Teleport you to <server> 
-  /hardcore - Teleport you to <server> 
-  /creative - Teleport you to <server> 
-  /plots - Teleport you to <server> 
-  /test- Teleport you to <server> 
-  /lobby - Teleport you to <server> 
-  /games - Teleport you to <server>
-  
+
+  ### Movement:
+  /skyblock - Teleport you to Sky Server
+  /skygrid - Teleport you to Sky Server
+  /acisislands - Teleport you to Sky Server
+  /prison - Teleport you to Prison Server
+  /survial - Teleport you to Survival Server
+  /hardcore - Teleport you to Hardcore Server
+  /creative - Teleport you to Creative Server
+  /plots - Teleport you to Creative Server
+  /comp - Teleports you to the Creative Competition Plots world.
+  /test- Teleport you to Test Server
+  /lobby - Teleport you to Hub Server
+  /games - Teleport you to Games Server
+
   ### Misc:
   /remoteexecute <command> <server> <args> - issues a command to another server (can only be used from console)
   /restarttimed - issues restart command in X ticks
-  /onhere - Shows own ontime on this server
-  /onall - Shows own ontime across all Treebo servers
-  
+  /onhere - Shows own ontime on the network
+  /onall - Shows own ontime across all Treebo servers (disabled)
+  /multiplecommands - Executes multiple commands in order from one command input. -- Eg. /multiplecommands /tp xXx_Pu55y_D357R0YA_xXx /gmsp /broadcast The All knowing eye casts it's gaze upon you xXx_Pu55y_D357R0YA_xXx
+
 ```
 
 ## Command Alias

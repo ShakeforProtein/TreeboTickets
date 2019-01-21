@@ -24,7 +24,9 @@ public class CreateTicket {
             }
             p.sendMessage(ChatColor.GREEN + "Your ticket has been successfully submitted");
         } catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong");
+            p.sendMessage(ChatColor.RED + "Something went wrong while sending your ticket to the database");
+            p.sendMessage(ChatColor.RED + "This could be that the connection to the database was interupted");
+            p.sendMessage(ChatColor.RED + "Or that you've managed to use an unaccounted for special character");
             System.out.println("Encountered " + e.toString() + " during addTicketToDB()");
         }
     }

@@ -83,7 +83,7 @@ public class TicketConversation implements Listener {
                 }
                 if (ticketState == 2) {
                     description = m.replace("'","APOSTR").replace("\\","BSlash").replace("/"," FSlash ");
-                    pl.getConfig().set("players." + p.getName() + ".description", m);
+                    pl.getConfig().set("players." + p.getName() + ".description", description);
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", 3);
                     pl.saveConfig();
 
