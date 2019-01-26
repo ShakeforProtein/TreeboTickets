@@ -73,11 +73,11 @@ public class Tbta implements CommandExecutor {
 
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("list")) {
-                        if (args[1].equalsIgnoreCase("assigned")) {
-                            if (p.hasPermission("tbtickets.view.any")) {
+                        if (p.hasPermission("tbtickets.view.any")) {
+                            if (args[1].equalsIgnoreCase("assigned")) {
                                 staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "' AND STATUS='OPEN' ORDER BY id DESC");
                             }
-                        } else if (args[1].equalsIgnoreCase("unassigned")) {
+                         else if (args[1].equalsIgnoreCase("unassigned")) {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN' ORDER BY id DESC");
                         } else if (args[1].equalsIgnoreCase("idea")) {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN' ORDER BY id DESC");
@@ -85,6 +85,7 @@ public class Tbta implements CommandExecutor {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='OPEN' ORDER BY id DESC");
                         } else if (args[1].equalsIgnoreCase("closed")) {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED' ORDER BY id DESC");
+                        }
                         }
                     } else if (args[0].equalsIgnoreCase("reopen") && p.hasPermission("tbtickets.view.any")) {
                         if (pl.isNumeric(args[1])) {

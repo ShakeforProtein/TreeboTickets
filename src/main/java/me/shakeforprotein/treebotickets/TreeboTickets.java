@@ -82,12 +82,6 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("tbticketadmin").setExecutor(tbTicketAdmin);
         this.getCommand("idea").setExecutor(idea);
         this.getCommand("review").setExecutor(review);
-        this.getCommand("reviewview").setExecutor(review);
-        this.getCommand("reviewlist").setExecutor(review);
-        this.getCommand("reviewclose").setExecutor(review);
-        this.getCommand("reviewstats").setExecutor(review);
-        this.getCommand("reviewupdate").setExecutor(review);
-        this.getCommand("reviewtp").setExecutor(review);
         this.getCommand("lobby").setExecutor(serverTransfers);
         this.getCommand("survival").setExecutor(serverTransfers);
         this.getCommand("creative").setExecutor(serverTransfers);

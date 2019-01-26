@@ -4,6 +4,7 @@ import me.shakeforprotein.treebotickets.Methods.CreateTicket.StartTicket;
 import me.shakeforprotein.treebotickets.Methods.Helps.TbTicketsHelp;
 import me.shakeforprotein.treebotickets.Methods.Lists.PlayerListOwn;
 import me.shakeforprotein.treebotickets.Methods.TicketCloses.PlayerClose;
+import me.shakeforprotein.treebotickets.Methods.TicketUpdates.PlayerUpdate;
 import me.shakeforprotein.treebotickets.Methods.ViewTickets.PlayerViewTicket;
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.ChatColor;
@@ -22,6 +23,7 @@ public class TbTicket implements CommandExecutor {
     private PlayerListOwn playerListOwn;
     private PlayerClose playerClose;
     private PlayerViewTicket playerViewTicket;
+    private PlayerUpdate playerUpdate;
 
 
     public TbTicket(TreeboTickets main) {
@@ -31,6 +33,7 @@ public class TbTicket implements CommandExecutor {
         this.playerListOwn = new PlayerListOwn(main);
         this.playerClose = new PlayerClose(main);
         this.playerViewTicket = new PlayerViewTicket(main);
+        this.playerUpdate = new PlayerUpdate(main);
     }
 
 
@@ -102,6 +105,14 @@ public class TbTicket implements CommandExecutor {
                         } else if (args[0].equalsIgnoreCase("close")) {
                             playerClose.closeTicket(p, ticketNumber);
                         }
+                    }
+                    else if (args.length >= 3 && args[0].equalsIgnoreCase("update")) {
+                        StringBuilder playerText = new StringBuilder();
+                        for (int i = 2; i < args.length; i++) {
+                            playerText.append(args[i] + " ");
+                        }
+
+                        playerUpdate.playerUpdate(p, Integer.parseInt(args[1]), playerText.toString());
                     }
                 } else {
                     tbTicketHelp.tbTicketHelp(p);

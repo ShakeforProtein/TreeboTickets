@@ -40,6 +40,8 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                 else if(command.equalsIgnoreCase("Closed")){listGuis.listClosedGui(p);}
                 else if(command.equalsIgnoreCase("Assigned")){listGuis.listAssignedGui(p);}
                 else if(command.equalsIgnoreCase("Unassigned")){listGuis.listUnassignedGui(p);}
+                else if(command.equalsIgnoreCase("Builders")){listGuis.builderListOpenGui(p);}
+
                 else if (e.getClickedInventory().getItem(slot).getType() == Material.FLINT_AND_STEEL){
                     Bukkit.dispatchCommand(p,command);
                     command = e.getClickedInventory().getItem(26).getItemMeta().getLore().get(1);
@@ -47,6 +49,8 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                     else if(command.equalsIgnoreCase("Closed")){listGuis.listClosedGui(p);}
                     else if(command.equalsIgnoreCase("Assigned")){listGuis.listAssignedGui(p);}
                     else if(command.equalsIgnoreCase("Unassigned")){listGuis.listUnassignedGui(p);}
+                    else if(command.equalsIgnoreCase("Builders")){listGuis.builderListOpenGui(p);}
+
                 }
                 else if (e.getClickedInventory().getItem(slot).getType() != Material.BOOK){
                     Bukkit.dispatchCommand(p, command);}
@@ -55,8 +59,12 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                         command = "tbticketadmin view " + name.split(" - ")[1];
                         Bukkit.dispatchCommand(p, command);
                     }
-                    else{
+                    else if(p.hasPermission("tbtickets.view.any")){
                         command = "tbta view " + name.split(" - ")[1];
+                        Bukkit.dispatchCommand(p, command);
+                    }
+                    else if(p.hasPermission("tbtickets.builder")){
+                        command = "reviewview " + name.split(" - ")[1];
                         Bukkit.dispatchCommand(p, command);
                     }
                 }

@@ -34,24 +34,6 @@ commands:
   review:
     description: Allows a player to request build review
     usage: /<command>
-  reviewview:
-    description: Allows a player to use the ticket system to submit ideas
-    usage: /<command> <args>
-  reviewlist:
-    description: Allows a player to use the ticket system to submit ideas
-    usage: /<command>
-  reviewstats:
-    description: Shows total review tickets.
-    usage: /<command>
-  reviewclose:
-    description: Closes a build review ticket.
-    usage: /<command>
-  reviewtp:
-    description: Teleports to Builder tickets.
-    usage: /<command>
-  reviewupdate:
-    description: Updates staff entries on a review ticket.
-    usage: /<command>
   survival:
     description: Takes you to the Server named Survival
     usage: /<command>

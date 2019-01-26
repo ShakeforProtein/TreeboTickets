@@ -15,5 +15,6 @@ public class TbTicketsHelp {
         p.sendMessage(ChatColor.GOLD + "/tbticket close <ticket_number> - Closes the ticket with the ticket number if it is your own");
         p.sendMessage(ChatColor.GOLD + "/tbticket view <ticket_number>  -  Shows the detail of one your ticket with the listed ticket_number");
         p.sendMessage(ChatColor.GOLD + "/tbticket list  -  Lists all tickets you've created");
+        p.sendMessage(ChatColor.GOLD + "/tbticket update <ticket_number>  -  Allows user to update own ticket");
     }
 }

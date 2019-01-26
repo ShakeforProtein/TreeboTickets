@@ -40,6 +40,8 @@ public class TbTAGuiMainMenuLinks implements Listener {
                 listGuis.listOpenGui(p);
             } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("All Closed Tickets")) {
                 listGuis.listClosedGui(p);
+            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Builder tickets")) {
+                listGuis.builderListOpenGui(p);
             }
         }
     }

@@ -13,6 +13,7 @@ import me.shakeforprotein.treebotickets.Methods.TicketCloses.AdminClose;
 import me.shakeforprotein.treebotickets.Methods.TicketUpdates.AdminUpdate;
 import me.shakeforprotein.treebotickets.Methods.ViewTickets.StaffViewTicket;
 import me.shakeforprotein.treebotickets.TreeboTickets;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,7 +58,7 @@ public class TbTicketAdmin implements CommandExecutor {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
 
-            if (cmd.getName().equalsIgnoreCase("tbticketadmin")) {
+            if (cmd.getName().equalsIgnoreCase("tbticketadmin") && p.hasPermission("tbtickets.admin")) {
                 if (args.length == 1 && args[0].equalsIgnoreCase("stats") && p.hasPermission("tbtickets.admin")){adminStats.adminStats(p);}
                 else if (args.length == 1 && args[0].equalsIgnoreCase("version") && p.hasPermission("tbtickets.admin")){p.sendMessage(pl.getConfig().getString("networkName") + " - Version:  " +  pl.getDescription().getVersion());}
                 else if (args.length == 1 && args[0].equalsIgnoreCase("reload") && p.hasPermission("tbtickets.admin")){pl.reloadConfig(); p.sendMessage(pl.getConfig().getString("networkName") +  " plugin config reloaded");}
@@ -71,7 +72,7 @@ public class TbTicketAdmin implements CommandExecutor {
                     ticketAdminHelp.tbTicketAdminHelp(p);
 
                 } else if (args.length == 2) {
-                    if (args[0].equalsIgnoreCase("list")){
+                    if (args[0].equalsIgnoreCase("list") && (p.hasPermission("tbtickets.admin")) || p.hasPermission("tickets.view.any")){
                         if (args[1].equalsIgnoreCase("unassigned")) {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN' ORDER BY id DESC");
                         }
@@ -128,7 +129,7 @@ public class TbTicketAdmin implements CommandExecutor {
                 }
                 else{ticketAdminHelp.tbTicketAdminHelp(p);}
             }
-
+            else if (cmd.getName().equalsIgnoreCase("tbticketadmin") && !p.hasPermission("tbtickets.admin")){p.sendMessage(ChatColor.RED + "You lack the required permissions for these commands");}
         }
         return true;
     }

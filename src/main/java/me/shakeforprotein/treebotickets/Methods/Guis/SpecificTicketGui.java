@@ -139,11 +139,18 @@ public class SpecificTicketGui {
 
                 claimMetaLore.add("tbta claim "+ tId);
                 unclaimMetaLore.add("tbta unclaim " + tId);
-                closeMetaLore.add("tbta close " +tId);
+                if (p.hasPermission("tbtickets.view.any")){closeMetaLore.add("tbta close " +tId);}
+                else if(p.hasPermission("tbtickets.builder")){closeMetaLore.add("review close " + tId);}
                 openMetaLore.add("tbta reopen " + tId);
-                if(p.hasPermission("tbtickets.admin")){teleportMetaLore.add("tbticketadmin tp " +tId );}
-                else{teleportMetaLore.add("tbta tp " +tId );}
-                deleteMetaLore.add("tbticketadmin delete "+ tId);
+
+                if (p.hasPermission("tbtickets.admin")){teleportMetaLore.add("tbticketadmin tp " +tId );}
+                else if (p.hasPermission("tbtickets.view.any")){teleportMetaLore.add("tbta tp " +tId );}
+                else if (p.hasPermission("tbtickets.builder")){teleportMetaLore.add("review tp " +tId );}
+
+                if (p.hasPermission("tbtickets.admin")){deleteMetaLore.add("tbticketadmin delete "+ tId);}
+                else if (p.hasPermission("tbtickets.view.any")){deleteMetaLore.add("tbta delete " +tId );}
+                else if (p.hasPermission("tbtickets.builder")){teleportMetaLore.add("review close " +tId );}
+
 
                 claimMeta.setLore(claimMetaLore);
                 unclaimMeta.setLore(unclaimMetaLore);

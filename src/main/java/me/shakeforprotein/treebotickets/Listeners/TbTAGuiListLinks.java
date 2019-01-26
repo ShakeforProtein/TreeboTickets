@@ -36,7 +36,8 @@ public class TbTAGuiListLinks implements Listener {
         if (name.equalsIgnoreCase("Ticket List - Assigned to you") ||
                 name.equalsIgnoreCase("Ticket List - Unassigned ALL") ||
                 name.equalsIgnoreCase("Ticket List - Open ALL") ||
-                name.equalsIgnoreCase("Ticket List - Closed ALL")) {
+                name.equalsIgnoreCase("Ticket List - Closed ALL") ||
+                name.equalsIgnoreCase("Ticket List - Builder List")) {
             e.setCancelled(true);
             if (e.getClickedInventory().getItem(slot).hasItemMeta() && e.getClickedInventory().getItem(slot).getItemMeta().getLore().toArray().length == 2 && e.getClickedInventory().getItem(slot).getItemMeta().getLore().get(1).equalsIgnoreCase("Main Menu")) {
                 openTicketGui.openTicketGui(p);

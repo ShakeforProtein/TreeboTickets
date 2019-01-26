@@ -36,12 +36,7 @@ public class GuiStaffList {
                 int tZ = response.getInt("Z");
                 String tWorld = response.getString("WORLD");
                 String tStatus = response.getString("STATUS");
-                //p.sendMessage(ChatColor.WHITE + "" + tId + "  -
-                // " + tPlayer + "    -
-                // " + tWorld + "    -
-                // " + tX + " " + tY + " " + tZ + "   -
-                // " + tStaff + "   -
-                // " + tStatus);
+
 
                 String fromMenu = "Main";
                 ItemStack newTicket = new ItemStack(Material.PAPER, 1);

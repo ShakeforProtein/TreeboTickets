@@ -23,7 +23,7 @@ public class StartTicket {
             public void run() {
                 pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
             }
-        }, 600L);
+        }, 3000L);
         pl.saveConfig();
     }
 }
