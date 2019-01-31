@@ -135,12 +135,16 @@ public class SpecificTicketGui {
                 if(fromMenu.equalsIgnoreCase("Closed")){backMetaLore.add("Closed");}
                 if(fromMenu.equalsIgnoreCase("Assigned")){backMetaLore.add("Assigned");}
                 if(fromMenu.equalsIgnoreCase("Unassigned")){backMetaLore.add("Unassigned");}
+                if(fromMenu.equalsIgnoreCase("Builders")){backMetaLore.add("Builders");}
+
 
 
                 claimMetaLore.add("tbta claim "+ tId);
                 unclaimMetaLore.add("tbta unclaim " + tId);
-                if (p.hasPermission("tbtickets.view.any")){closeMetaLore.add("tbta close " +tId);}
-                else if(p.hasPermission("tbtickets.builder")){closeMetaLore.add("review close " + tId);}
+                if (p.hasPermission("tbtickets.admin")){closeMetaLore.add("tbticketadmin close " +tId);}
+                else if (p.hasPermission("tbtickets.view.any")){closeMetaLore.add("tbta close " +tId);}
+                else if (p.hasPermission("tbtickets.builder")){closeMetaLore.add("review close " + tId);}
+
                 openMetaLore.add("tbta reopen " + tId);
 
                 if (p.hasPermission("tbtickets.admin")){teleportMetaLore.add("tbticketadmin tp " +tId );}
@@ -148,7 +152,7 @@ public class SpecificTicketGui {
                 else if (p.hasPermission("tbtickets.builder")){teleportMetaLore.add("review tp " +tId );}
 
                 if (p.hasPermission("tbtickets.admin")){deleteMetaLore.add("tbticketadmin delete "+ tId);}
-                else if (p.hasPermission("tbtickets.view.any")){deleteMetaLore.add("tbta delete " +tId );}
+                else if (p.hasPermission("tbtickets.view.any")){deleteMetaLore.add("tbta close " +tId );}
                 else if (p.hasPermission("tbtickets.builder")){teleportMetaLore.add("review close " +tId );}
 
 

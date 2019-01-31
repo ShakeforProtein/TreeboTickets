@@ -32,15 +32,15 @@ public class TbTAGuiMainMenuLinks implements Listener {
 
         if (name.equalsIgnoreCase("Tickets Main Menu")) {
             e.setCancelled(true);
-            if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Your Assigned Tickets")) {
+            if ((p.hasPermission("tbtickets.admin") || p.hasPermission("tbtickets.view.any")) && e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Your Assigned Tickets")) {
                 listGuis.listAssignedGui(p);
-            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Unassigned Tickets")) {
+            } else if ((p.hasPermission("tbtickets.admin") || p.hasPermission("tbtickets.view.any")) && e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Unassigned Tickets")) {
                 listGuis.listUnassignedGui(p);
-            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("All Open Tickets")) {
+            } else if ((p.hasPermission("tbtickets.admin") || p.hasPermission("tbtickets.view.any")) && e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("All Open Tickets")) {
                 listGuis.listOpenGui(p);
-            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("All Closed Tickets")) {
+            } else if ((p.hasPermission("tbtickets.admin") || p.hasPermission("tbtickets.view.any")) && e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("All Closed Tickets")) {
                 listGuis.listClosedGui(p);
-            } else if (e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Builder tickets")) {
+            } else if ((p.hasPermission("tbtickets.admin") || p.hasPermission("tbtickets.builder")) && e.getClickedInventory().getItem(slot).getItemMeta().getDisplayName().equalsIgnoreCase("Builder tickets")) {
                 listGuis.builderListOpenGui(p);
             }
         }

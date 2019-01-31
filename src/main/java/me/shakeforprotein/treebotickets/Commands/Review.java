@@ -70,7 +70,7 @@ public class Review implements CommandExecutor {
                         }
                     } else if (args[0].equalsIgnoreCase("tp")) {
                         if (pl.isNumeric(args[1])) {
-                            builderTp.builderTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[0] + "'", Integer.parseInt(args[0]));
+                            builderTp.builderTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF = 'Builders' AND ID='" + args[0] + "'", Integer.parseInt(args[1]));
                         } else {
                             p.sendMessage("Please enter a valid ticket number for Teleport");
                         }

@@ -32,7 +32,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
         }
 
 
-        if (name.split(" - ")[0].equalsIgnoreCase("Ticket")){
+        if (name != null && name.split(" - ")[0].equalsIgnoreCase("Ticket")){
             e.setCancelled(true);
             if(e.getClickedInventory().getItem(slot).hasItemMeta() && e.getClickedInventory().getItem(slot).getItemMeta().getLore().toArray().length > 1){
                 String command = e.getClickedInventory().getItem(slot).getItemMeta().getLore().get(1);
@@ -64,7 +64,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                         Bukkit.dispatchCommand(p, command);
                     }
                     else if(p.hasPermission("tbtickets.builder")){
-                        command = "reviewview " + name.split(" - ")[1];
+                        command = "review view " + name.split(" - ")[1];
                         Bukkit.dispatchCommand(p, command);
                     }
                 }

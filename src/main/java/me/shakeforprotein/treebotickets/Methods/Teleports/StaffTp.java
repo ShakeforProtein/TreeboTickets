@@ -20,7 +20,7 @@ public class StaffTp {
             response = pl.connection.createStatement().executeQuery(query);
             while (response.next()) {
                 String tPlayer = response.getString("IGNAME");
-                if (p.hasPermission("tbtickets.view.any")) {
+                if (p.hasPermission("tbtickets.view.any") || p.hasPermission("tbtickets.admin")) {
                     int tId = response.getInt("ID");
                     int tX = response.getInt("X");
                     int tY = response.getInt("Y");
