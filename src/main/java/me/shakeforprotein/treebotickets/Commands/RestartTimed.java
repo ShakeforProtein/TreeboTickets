@@ -26,14 +26,14 @@ public class RestartTimed implements CommandExecutor {
 
             String command = "restart";
             Integer timer = Integer.parseInt(args[0]) + 60;
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.pl, new Runnable() {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
                 public void run() {
                     pushToLobby.pushToLobby();
                     pl.saveConfig();
                 }
             }, Integer.parseInt(args[0]));
 
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.pl, new Runnable() {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
                 public void run() {
                     sender.sendMessage("Restarting Now");
                     ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();

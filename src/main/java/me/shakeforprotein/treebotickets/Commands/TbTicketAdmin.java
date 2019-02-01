@@ -72,7 +72,7 @@ public class TbTicketAdmin implements CommandExecutor {
                     ticketAdminHelp.tbTicketAdminHelp(p);
 
                 } else if (args.length == 2) {
-                    if (args[0].equalsIgnoreCase("list") && (p.hasPermission("tbtickets.admin")) || p.hasPermission("tickets.view.any")){
+                    if (args[0].equalsIgnoreCase("list")){
                         if (args[1].equalsIgnoreCase("unassigned")) {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='UNASSIGNED' AND STATUS='OPEN' ORDER BY id DESC");
                         }
@@ -92,24 +92,24 @@ public class TbTicketAdmin implements CommandExecutor {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE TYPE='Idea' AND STATUS='OPEN' ORDER BY id DESC");
                         }
                     }
+
                     else if(args[0].equalsIgnoreCase("staffList")) {
                         adminListStaff.adminListStaff(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + args[1] + "' ORDER BY id DESC", args[1]);
                     }
-                    else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.admin")){
+
+                    else if (args[0].equalsIgnoreCase("close")){
                         adminClose.adminCloseTicket(p, Integer.parseInt(args[1]));
                     }
-                    else if (args[0].equalsIgnoreCase("delete") && p.hasPermission("tbtickets.admin")){
+
+                    else if (args[0].equalsIgnoreCase("delete")){
                         adminDeleteTicket.adminDeleteTicket(p, Integer.parseInt(args[1]));
                     }
-                    else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.admin")){
+                    else if (args[0].equalsIgnoreCase("view")){
                         staffViewTicket.staffViewTicket(p, Integer.parseInt(args[1]));
                     }
                     else if (args[0].equalsIgnoreCase("tp")) {
-                        if (isNumeric(args[1])) {
-                            staffTp.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[1] + "'", Integer.parseInt(args[1]));
-                        }
+                        staffTp.staffTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + args[1] + "'", Integer.parseInt(args[1]));
                     }
-
                 }
 
                 else if (args.length >= 3 ){

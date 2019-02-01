@@ -152,6 +152,9 @@ permissions:
   tbtickets.server.hub:
     description: 'Allows use of /lobby'
     default: true
+  tbtickets.server.lobby:
+    description: 'Allows use of /lobby'
+    default: true
   tbtickets.server.games:
     description: 'Allows use of /games'
     default: true

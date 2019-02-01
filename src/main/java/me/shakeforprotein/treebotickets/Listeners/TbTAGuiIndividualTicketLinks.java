@@ -40,7 +40,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                 else if(command.equalsIgnoreCase("Closed")){listGuis.listClosedGui(p);}
                 else if(command.equalsIgnoreCase("Assigned")){listGuis.listAssignedGui(p);}
                 else if(command.equalsIgnoreCase("Unassigned")){listGuis.listUnassignedGui(p);}
-                else if(command.equalsIgnoreCase("Builders")){listGuis.builderListOpenGui(p);}
+                else if(command.equalsIgnoreCase("Builder")){listGuis.builderListOpenGui(p);}
 
                 else if (e.getClickedInventory().getItem(slot).getType() == Material.FLINT_AND_STEEL){
                     Bukkit.dispatchCommand(p,command);
@@ -49,7 +49,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                     else if(command.equalsIgnoreCase("Closed")){listGuis.listClosedGui(p);}
                     else if(command.equalsIgnoreCase("Assigned")){listGuis.listAssignedGui(p);}
                     else if(command.equalsIgnoreCase("Unassigned")){listGuis.listUnassignedGui(p);}
-                    else if(command.equalsIgnoreCase("Builders")){listGuis.builderListOpenGui(p);}
+                    else if(command.equalsIgnoreCase("Builder")){listGuis.builderListOpenGui(p);}
 
                 }
                 else if (e.getClickedInventory().getItem(slot).getType() != Material.BOOK){

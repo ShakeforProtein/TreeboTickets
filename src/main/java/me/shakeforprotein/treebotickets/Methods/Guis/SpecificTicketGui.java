@@ -135,7 +135,7 @@ public class SpecificTicketGui {
                 if(fromMenu.equalsIgnoreCase("Closed")){backMetaLore.add("Closed");}
                 if(fromMenu.equalsIgnoreCase("Assigned")){backMetaLore.add("Assigned");}
                 if(fromMenu.equalsIgnoreCase("Unassigned")){backMetaLore.add("Unassigned");}
-                if(fromMenu.equalsIgnoreCase("Builders")){backMetaLore.add("Builders");}
+                if(fromMenu.equalsIgnoreCase("Builder")){backMetaLore.add("Builder");}
 
 
 
