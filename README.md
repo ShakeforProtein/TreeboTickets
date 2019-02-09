@@ -58,6 +58,9 @@ A Simple Tickets, Ideas & Review Plugin
   /reviewtp - Teleports to Builder tickets.
   /reviewupdate - Updates staff entries on a review ticket.
   /reviewview - Allows a player to use the ticket system to submit ideas
+  /discord - runs /discordsrv:discord link
+  /discord default - runs /discordsrv:discord
+  /discord <anything other than default> - runs /discordsrv:discord <anything other than default>
   
   ### Staff:
   /tbta - Help for tbta commands.
