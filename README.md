@@ -49,7 +49,10 @@ A Simple Tickets, Ideas & Review Plugin
   /tbTicket view <ticket number> - Views details on this ticket number if owned by the player
   /tbTicket list - Lists all of this players tickets
   /idea - Allows a player to use the ticket system to submit ideas
-  
+  /discord - runs /discordsrv:discord link
+  /discord default - runs /discordsrv:discord
+  /discord <anything other than default> - runs /discordsrv:discord <anything other than default>
+
   ### Builder: 
   /review - Allows a player to request build review.
   /reviewclose - Closes a build review ticket.
@@ -58,9 +61,6 @@ A Simple Tickets, Ideas & Review Plugin
   /reviewtp - Teleports to Builder tickets.
   /reviewupdate - Updates staff entries on a review ticket.
   /reviewview - Allows a player to use the ticket system to submit ideas
-  /discord - runs /discordsrv:discord link
-  /discord default - runs /discordsrv:discord
-  /discord <anything other than default> - runs /discordsrv:discord <anything other than default>
   
   ### Staff:
   /tbta - Help for tbta commands.
