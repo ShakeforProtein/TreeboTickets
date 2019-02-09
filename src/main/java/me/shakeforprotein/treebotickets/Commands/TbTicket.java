@@ -98,14 +98,13 @@ public class TbTicket implements CommandExecutor {
                             noPerms(p);
                         } else if (args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.close.own")) {
                             noPerms(p);
-                        }
-
-                        else if (args[0].equalsIgnoreCase("view")) {
+                        } else if (args[0].equalsIgnoreCase("view")) {
                             playerViewTicket.getTicket(p, ticketNumber);
                         } else if (args[0].equalsIgnoreCase("close")) {
                             playerClose.closeTicket(p, ticketNumber);
                         }
                     }
+                }
                     else if (args.length >= 3 && args[0].equalsIgnoreCase("update")) {
                         StringBuilder playerText = new StringBuilder();
                         for (int i = 2; i < args.length; i++) {
@@ -118,7 +117,6 @@ public class TbTicket implements CommandExecutor {
                     tbTicketHelp.tbTicketHelp(p);
                 }
             }
-        }
         return true;
     }
 }
