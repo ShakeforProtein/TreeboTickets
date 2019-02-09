@@ -5,7 +5,6 @@ import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class OnHere implements CommandExecutor {
 
@@ -22,7 +21,7 @@ public class OnHere implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("onHere")) {
             if (sender.hasPermission("tbtickets.ontime")) {
                 if(args.length == 1){
-                    retrieveOntime.retrieveOntime(args[0], (Player) sender);
+                    retrieveOntime.retrieveOntime(args[0], sender);
                 }
             }
         }

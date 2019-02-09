@@ -48,6 +48,8 @@ public final class TreeboTickets extends JavaPlugin {
     private Tbta tbta = new Tbta(this);
     private TbTicket tbTicket = new TbTicket(this);
     private TbTicketAdmin tbTicketAdmin = new TbTicketAdmin(this);
+    private Discord discord = new Discord(this);
+
 
 
     //Method Classes
@@ -75,6 +77,7 @@ public final class TreeboTickets extends JavaPlugin {
         this.serverTransfers = new ServerTransfers(this);
         this.tbta = new Tbta(this);
         this.tbTicketAdmin = new TbTicketAdmin(this);
+        this.discord = new Discord(this);
 
         //Register Commands to Executors
         this.getCommand("tbticket").setExecutor(tbTicket);
@@ -93,11 +96,14 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("skyblock").setExecutor(serverTransfers);
         this.getCommand("skygrid").setExecutor(serverTransfers);
         this.getCommand("acidislands").setExecutor(serverTransfers);
+        this.getCommand("caveblock").setExecutor(serverTransfers);
         this.getCommand("test").setExecutor(serverTransfers);
         this.getCommand("restarttimed").setExecutor(restartTimed);
         this.getCommand("remoteexecute").setExecutor(remoteExecute);
         this.getCommand("multipleCommands").setExecutor(multipleCommands);
         this.getCommand("onHere").setExecutor(onHere);
+        this.getCommand("discord").setExecutor(discord);
+
 
         //Register Listeners
         getServer().getPluginManager().registerEvents(new PlayerInput(this), this);

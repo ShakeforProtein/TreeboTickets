@@ -9,6 +9,9 @@ api-version: 1.13
 
 
 commands:
+  discord:
+    description: Overides discordsrv commands.
+    usage: /<command> <args>
   remoteexecute:
     description: issues a command to another server (can only be used from console)
     usage: /<command> <server> <args>
@@ -56,6 +59,9 @@ commands:
     description: Takes you to the Server named Sky.
     usage: /<command>
   acidislands:
+    description: Takes you to the Server named Sky.
+    usage: /<command>
+  caveblock:
     description: Takes you to the Server named Sky.
     usage: /<command>
   prison:
