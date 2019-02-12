@@ -4,6 +4,7 @@ import me.shakeforprotein.treebotickets.Methods.Guis.ListGuis;
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
     public void invClickEvent(InventoryClickEvent e) {
         Inventory inv = e.getInventory();
         Player p = (Player) e.getWhoClicked();
+        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
         String name = inv.getName();
         int slot = e.getSlot();
         if (slot < 0) {
@@ -52,8 +54,14 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                     else if(command.equalsIgnoreCase("Builder")){listGuis.builderListOpenGui(p);}
 
                 }
+
+                else if (e.getClickedInventory().getItem(slot).getType() == Material.INK_SAC){
+                    Bukkit.dispatchCommand(console, command);
+                }
+
                 else if (e.getClickedInventory().getItem(slot).getType() != Material.BOOK){
                     Bukkit.dispatchCommand(p, command);}
+
                 else if (e.getClickedInventory().getItem(slot).getType() == Material.BOOK){
                     if(p.hasPermission("tbtickets.admin")){
                         command = "tbticketadmin view " + name.split(" - ")[1];

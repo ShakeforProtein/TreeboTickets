@@ -17,9 +17,20 @@ public class LogConnection {
 
     public void logConnection(Player p) {
         ResultSet response;
+        ResultSet responseIndividualServer;
         String query = "";
         try {
             response = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + pl.ontimetable + "` WHERE UUID = '"+ p.getUniqueId() +"'");
+            responseIndividualServer = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `stats_" + pl.getConfig().getString("serverName") + "` WHERE UUID = '"+ p.getUniqueId() +"'");
+
+
+            while (responseIndividualServer.next()) {
+                if (responseIndividualServer.getInt("TOTAL") == 0) {
+                    UUID uUID = p.getUniqueId();
+                    query = "INSERT INTO `stats_" + pl.getConfig().getString("serverName") + "`(`UUID`, `IGNAME`) VALUES  ('" + uUID + "', '"+ p.getName() +"')";
+                    pl.connection.createStatement().executeUpdate(query);
+                }
+            }
             while (response.next()) {
                 if(response.getInt("TOTAL") == 0){
                     UUID uUID = p.getUniqueId();

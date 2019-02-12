@@ -41,29 +41,29 @@ public class ServerTransfers implements CommandExecutor {
 
         }*/
         if (cmd.getName().equalsIgnoreCase("survival")) {
-            toWorld.toWorld("survival", "survival", p);
+            toWorld.toWorld("survival", "Survival", p);
         } else if (cmd.getName().equalsIgnoreCase("lobby")) {
             toWorld.toWorld("hub", "hub", p);
         } else if (cmd.getName().equalsIgnoreCase("creative")) {
-            toWorld.toWorld("creative", "creative", p);
+            toWorld.toWorld("creative", "Creative", p);
         } else if (cmd.getName().equalsIgnoreCase("plots")) {
-            toWorld.toWorld("creative", "plots", p);
+            toWorld.toWorld("creative", "Plots", p);
         } else if (cmd.getName().equalsIgnoreCase("comp")) {
-            toWorld.toWorld("creative", "comp", p);
+            toWorld.toWorld("creative", "Comp", p);
         } else if (cmd.getName().equalsIgnoreCase("skyblock")) {
-            toWorld.toWorld("sky", "BSkyblock_world", p);
+            toWorld.toWorld("sky", "BSkyBlock_world", p);
         } else if (cmd.getName().equalsIgnoreCase("skygrid")) {
-            toWorld.toWorld("sky", "Skygrid_world", p);
+            toWorld.toWorld("sky", "Skygrid-world", p);
         } else if (cmd.getName().equalsIgnoreCase("acidislands")) {
             toWorld.toWorld("sky", "AcidIsland_world", p);
         } else if (cmd.getName().equalsIgnoreCase("caveblock")) {
             toWorld.toWorld("sky", "CaveBlock_world", p);
         } else if (cmd.getName().equalsIgnoreCase("hardcore")) {
-            toWorld.toWorld("hardcore", "hardcore", p);
+            toWorld.toWorld("hardcore", "Hardcore", p);
         } else if (cmd.getName().equalsIgnoreCase("games")) {
-            toWorld.toWorld("games", "games", p);
+            toWorld.toWorld("games", "Games", p);
         } else if (cmd.getName().equalsIgnoreCase("prison")) {
-            toWorld.toWorld("prison", "prison", p);
+            toWorld.toWorld("prison", "Prison", p);
         } else if (cmd.getName().equalsIgnoreCase("test")) {
             toWorld.toWorld("test", "test_the_end", p);
         }

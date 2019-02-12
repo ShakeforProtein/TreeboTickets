@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -98,6 +99,8 @@ public class SpecificTicketGui {
                 ItemStack teleportIcon = new ItemStack(Material.ENDER_PEARL, 1);
                 ItemStack deleteIcon = new ItemStack(Material.FLINT_AND_STEEL, 1);
                 ItemStack backIcon = new ItemStack(Material.BARRIER, 1);
+                ItemStack replyIcon = new ItemStack(Material.INK_SAC, 1);
+
 
                 ItemMeta claimMeta = claimIcon.getItemMeta();
                 ItemMeta unclaimMeta = unclaimIcon.getItemMeta();
@@ -105,7 +108,8 @@ public class SpecificTicketGui {
                 ItemMeta openMeta = openIcon.getItemMeta();
                 ItemMeta teleportMeta = teleportIcon.getItemMeta();
                 ItemMeta deleteMeta = deleteIcon.getItemMeta();
-                ItemMeta backMeta = deleteIcon.getItemMeta();
+                ItemMeta backMeta = backIcon.getItemMeta();
+                ItemMeta replyMeta = replyIcon.getItemMeta();
 
                 claimMeta.setDisplayName("Claim Ticket");
                 unclaimMeta.setDisplayName("Unclaim Ticket");
@@ -114,6 +118,7 @@ public class SpecificTicketGui {
                 teleportMeta.setDisplayName("Teleport to Ticket");
                 deleteMeta.setDisplayName("Delete Ticket");
                 backMeta.setDisplayName("Back");
+                replyMeta.setDisplayName("Reply");
 
                 List<String> claimMetaLore = new ArrayList<String>();
                 List<String> unclaimMetaLore = new ArrayList<String>();
@@ -122,6 +127,8 @@ public class SpecificTicketGui {
                 List<String> teleportMetaLore = new ArrayList<String>();
                 List<String> deleteMetaLore = new ArrayList<String>();
                 List<String> backMetaLore = new ArrayList<String>();
+                List<String> replyMetaLore = new ArrayList<String>();
+
 
                 claimMetaLore.add("Claims a ticket for yourself");
                 unclaimMetaLore.add("Unclaims a ticket claimed by yourself");
@@ -130,6 +137,7 @@ public class SpecificTicketGui {
                 teleportMetaLore.add("Teleports to this ticket");
                 deleteMetaLore.add("Deletes this ticket");
                 backMetaLore.add("Returns you to the previous menu");
+                replyMetaLore.add("Reply to this ticket");
 
                 if(fromMenu.equalsIgnoreCase("Open")){backMetaLore.add("Open");}
                 if(fromMenu.equalsIgnoreCase("Closed")){backMetaLore.add("Closed");}
@@ -141,9 +149,16 @@ public class SpecificTicketGui {
 
                 claimMetaLore.add("tbta claim "+ tId);
                 unclaimMetaLore.add("tbta unclaim " + tId);
-                if (p.hasPermission("tbtickets.admin")){closeMetaLore.add("tbticketadmin close " +tId);}
-                else if (p.hasPermission("tbtickets.view.any")){closeMetaLore.add("tbta close " +tId);}
-                else if (p.hasPermission("tbtickets.builder")){closeMetaLore.add("review close " + tId);}
+
+                if (p.hasPermission("tbtickets.admin")){closeMetaLore.add("tbticketadmin close " +tId);
+                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"tbticketadmin update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
+                }
+                else if (p.hasPermission("tbtickets.view.any")){closeMetaLore.add("tbta close " +tId);
+                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"tbta update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
+                }
+                else if (p.hasPermission("tbtickets.builder")){closeMetaLore.add("review close " + tId);
+                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"review update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
+                }
 
                 openMetaLore.add("tbta reopen " + tId);
 
@@ -156,6 +171,7 @@ public class SpecificTicketGui {
                 else if (p.hasPermission("tbtickets.builder")){teleportMetaLore.add("review close " +tId );}
 
 
+
                 claimMeta.setLore(claimMetaLore);
                 unclaimMeta.setLore(unclaimMetaLore);
                 closeMeta.setLore(closeMetaLore);
@@ -163,6 +179,7 @@ public class SpecificTicketGui {
                 teleportMeta.setLore(teleportMetaLore);
                 deleteMeta.setLore(deleteMetaLore);
                 backMeta.setLore(backMetaLore);
+                replyMeta.setLore(replyMetaLore);
 
                 claimIcon.setItemMeta(claimMeta);
                 unclaimIcon.setItemMeta(unclaimMeta);
@@ -171,6 +188,7 @@ public class SpecificTicketGui {
                 teleportIcon.setItemMeta(teleportMeta);
                 deleteIcon.setItemMeta(deleteMeta);
                 backIcon.setItemMeta(backMeta);
+                replyIcon.setItemMeta(replyMeta);
 
                 if (tStaff.equalsIgnoreCase("Unassigned")){
                     individualTicketGui.setItem( 8+ 2, claimIcon );}
@@ -187,7 +205,7 @@ public class SpecificTicketGui {
                 individualTicketGui.setItem(8 + 6, teleportIcon);
                 individualTicketGui.setItem(8 + 8, deleteIcon );
                 individualTicketGui.setItem(26, backIcon );
-
+                individualTicketGui.setItem(23, replyIcon);
 
                 p.openInventory(individualTicketGui);
 

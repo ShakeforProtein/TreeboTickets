@@ -20,20 +20,31 @@ public class LogDisconnection {
     public void logDisconnection(Player p) {
 
         ResultSet response;
+        ResultSet response2;
         String query;
+        String statsQuery;
         try {
             long totalOn = 0;
             long currentOn = 0;
-            response = pl.connection.createStatement().executeQuery("SELECT *FROM `" + pl.ontimetable + "` WHERE UUID = '"+ p.getUniqueId() +"'");
+            long playTime = 0;
+            UUID uUID = p.getUniqueId();
+            response = pl.connection.createStatement().executeQuery("SELECT *FROM `" + pl.ontimetable + "` WHERE UUID = '"+ uUID +"'");
+            response2 = pl.connection.createStatement().executeQuery("SELECT *FROM `stats_" + pl.getConfig().getString("serverName") + "` WHERE UUID = '"+ uUID +"'");
             while (response.next()) {
                 totalOn = response.getLong("TotalOn");
                 currentOn = response.getLong("CurrentOn");
             }
-            UUID uUID = p.getUniqueId();
+            while (response2.next()) {
+                playTime = response2.getLong("PLAYTIME");
+            }
             long lastLeft = System.currentTimeMillis();
             totalOn = totalOn + (lastLeft - currentOn);
-            query = "UPDATE `" + pl.ontimetable + "` SET  `LastLeft` = '" + lastLeft + "', `TotalOn` = '" + totalOn + "' WHERE  `UUID` = '" + p.getUniqueId() + "'";
-            int response2 = pl.connection.createStatement().executeUpdate(query);
+            playTime = playTime + (lastLeft - currentOn);
+            query = "UPDATE `" + pl.ontimetable + "` SET  `LastLeft` = '" + lastLeft + "', `TotalOn` = '" + totalOn + "' WHERE  `UUID` = '" + uUID + "'";
+            statsQuery = "UPDATE `stats_"+ pl.getConfig().getString("serverName") +"` SET `PLAYTIME` = '" + playTime + "' WHERE  `UUID` = '" + uUID + "'";
+
+            int response3 = pl.connection.createStatement().executeUpdate(query);
+            int response4 = pl.connection.createStatement().executeUpdate(statsQuery);
         } catch (SQLException e) {
             System.out.println("Encountered " + e.toString() + " during logDisconnection()");
             pl.makeLog(e);

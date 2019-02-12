@@ -3,7 +3,9 @@ package me.shakeforprotein.treebotickets;
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import me.shakeforprotein.treebotickets.Commands.Commands;
 import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
+import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerDeath;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CleanupDatabase;
+import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CreateTables;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.DbKeepAlive;
 import me.shakeforprotein.treebotickets.Methods.Teleports.PushToLobby;
 import me.shakeforprotein.treebotickets.UpdateChecker.UpdateChecker;
@@ -35,6 +37,7 @@ public final class TreeboTickets extends JavaPlugin {
     private TbTAGuiListLinks tbTAGuiListLinks = new TbTAGuiListLinks(this);
     private TbTAGuiMainMenuLinks tbTAGuiMainMenuLinks = new TbTAGuiMainMenuLinks(this);
     private TicketConversation ticketConversation = new TicketConversation(this);
+    private OnPlayerDeath onPlayerDeath = new OnPlayerDeath(this);
 
     //Command Classes
     private Commands cmds; //not used.
@@ -56,6 +59,7 @@ public final class TreeboTickets extends JavaPlugin {
     private DbKeepAlive dbKeepAlive = new DbKeepAlive(this);
     private CleanupDatabase cleanupDatabase = new CleanupDatabase(this);
     private PushToLobby pushToLobby = new PushToLobby(this);
+    private CreateTables createTables = new CreateTables(this);
 
     public TreeboTickets() {
     }
@@ -116,6 +120,8 @@ public final class TreeboTickets extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new NotifyHub(this), this);
         getServer().getPluginManager().registerEvents(new NotifyStaff(this), this);
         getServer().getPluginManager().registerEvents(new TicketConversation(this), this);
+        getServer().getPluginManager().registerEvents(new OnPlayerDeath(this), this);
+
         getConfig().options().copyDefaults(true);
         getConfig().set("version", this.getDescription().getVersion());
         for(String player : getConfig().getConfigurationSection("players").getKeys(false)){
@@ -139,9 +145,17 @@ public final class TreeboTickets extends JavaPlugin {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
+            int doesNothing = 1;
         }
 
         dbKeepAlive.dbKeepAlive();
+        if(getConfig().getString("serverName").equalsIgnoreCase("Sky")){
+            createTables.createServerStatsTable("BSkyBlock");
+            createTables.createServerStatsTable("AcidIsland");
+            createTables.createServerStatsTable("SkyGrid");
+            createTables.createServerStatsTable("CaveBlock");
+        }
+        else{createTables.createServerStatsTable(getConfig().getString("serverName"));}
         if(getServer().getName().equalsIgnoreCase(getConfig().getString("lobbyServerName"))){
             cleanupDatabase.cleanupDatabase(getConfig().getInt("maxClosedTickets"));
         }
