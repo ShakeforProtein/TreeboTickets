@@ -1,12 +1,11 @@
 package me.shakeforprotein.treebotickets.Commands;
 
-import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
 import me.shakeforprotein.treebotickets.Methods.AdminDeleteTicket;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CleanupDatabase;
 import me.shakeforprotein.treebotickets.Methods.Helps.TbTicketAdminHelp;
 import me.shakeforprotein.treebotickets.Methods.Lists.AdminStaffList;
 import me.shakeforprotein.treebotickets.Methods.Lists.StaffList;
-import me.shakeforprotein.treebotickets.Methods.Stats.AdminStats;
+import me.shakeforprotein.treebotickets.Methods.TicketStatistics.AdminStats;
 import me.shakeforprotein.treebotickets.Methods.Teleports.StaffTp;
 import me.shakeforprotein.treebotickets.Methods.TicketAssignments.AdminAssign;
 import me.shakeforprotein.treebotickets.Methods.TicketCloses.AdminClose;
@@ -18,8 +17,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import static me.shakeforprotein.treebotickets.Commands.Commands.isNumeric;
 
 public class TbTicketAdmin implements CommandExecutor {
     private TreeboTickets pl;

@@ -1,6 +1,7 @@
 package me.shakeforprotein.treebotickets.Methods.ConnectionLoging;
 
 import me.shakeforprotein.treebotickets.TreeboTickets;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
@@ -29,7 +30,7 @@ public class LogDisconnection {
             long playTime = 0;
             UUID uUID = p.getUniqueId();
             response = pl.connection.createStatement().executeQuery("SELECT *FROM `" + pl.ontimetable + "` WHERE UUID = '"+ uUID +"'");
-            response2 = pl.connection.createStatement().executeQuery("SELECT *FROM `stats_" + pl.getConfig().getString("serverName") + "` WHERE UUID = '"+ uUID +"'");
+            response2 = pl.connection.createStatement().executeQuery("SELECT *FROM `stats_" + pl.getServerName(p) + "` WHERE UUID = '"+ uUID +"'");
             while (response.next()) {
                 totalOn = response.getLong("TotalOn");
                 currentOn = response.getLong("CurrentOn");
@@ -41,7 +42,7 @@ public class LogDisconnection {
             totalOn = totalOn + (lastLeft - currentOn);
             playTime = playTime + (lastLeft - currentOn);
             query = "UPDATE `" + pl.ontimetable + "` SET  `LastLeft` = '" + lastLeft + "', `TotalOn` = '" + totalOn + "' WHERE  `UUID` = '" + uUID + "'";
-            statsQuery = "UPDATE `stats_"+ pl.getConfig().getString("serverName") +"` SET `PLAYTIME` = '" + playTime + "' WHERE  `UUID` = '" + uUID + "'";
+            statsQuery = "UPDATE `stats_"+ pl.getServerName(p) +"` SET `PLAYTIME` = '" + playTime + "' WHERE  `UUID` = '" + uUID + "'";
 
             int response3 = pl.connection.createStatement().executeUpdate(query);
             int response4 = pl.connection.createStatement().executeUpdate(statsQuery);

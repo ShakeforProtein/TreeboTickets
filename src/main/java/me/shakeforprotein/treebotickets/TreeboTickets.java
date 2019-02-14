@@ -3,7 +3,10 @@ package me.shakeforprotein.treebotickets;
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import me.shakeforprotein.treebotickets.Commands.Commands;
 import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
+import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerChangeWorld;
 import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerDeath;
+import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerDisconnect;
+import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerKill;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CleanupDatabase;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CreateTables;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.DbKeepAlive;
@@ -11,6 +14,7 @@ import me.shakeforprotein.treebotickets.Methods.Teleports.PushToLobby;
 import me.shakeforprotein.treebotickets.UpdateChecker.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import me.shakeforprotein.treebotickets.Commands.*;
 import me.shakeforprotein.treebotickets.Listeners.*;
@@ -38,6 +43,12 @@ public final class TreeboTickets extends JavaPlugin {
     private TbTAGuiMainMenuLinks tbTAGuiMainMenuLinks = new TbTAGuiMainMenuLinks(this);
     private TicketConversation ticketConversation = new TicketConversation(this);
     private OnPlayerDeath onPlayerDeath = new OnPlayerDeath(this);
+    private OnPlayerKill onPlayerKill = new OnPlayerKill(this);
+    private OnPlayerChangeWorld onPlayerChangeWorld = new OnPlayerChangeWorld(this);
+    private OnPlayerDisconnect onPlayerDisconnect = new OnPlayerDisconnect(this);
+
+
+
 
     //Command Classes
     private Commands cmds; //not used.
@@ -52,6 +63,8 @@ public final class TreeboTickets extends JavaPlugin {
     private TbTicket tbTicket = new TbTicket(this);
     private TbTicketAdmin tbTicketAdmin = new TbTicketAdmin(this);
     private Discord discord = new Discord(this);
+    private GetStat getStat = new GetStat(this);
+
 
 
 
@@ -82,6 +95,7 @@ public final class TreeboTickets extends JavaPlugin {
         this.tbta = new Tbta(this);
         this.tbTicketAdmin = new TbTicketAdmin(this);
         this.discord = new Discord(this);
+        this.getStat = new GetStat(this);
 
         //Register Commands to Executors
         this.getCommand("tbticket").setExecutor(tbTicket);
@@ -107,6 +121,7 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("multipleCommands").setExecutor(multipleCommands);
         this.getCommand("onHere").setExecutor(onHere);
         this.getCommand("discord").setExecutor(discord);
+        this.getCommand("getstat").setExecutor(getStat);
 
 
         //Register Listeners
@@ -121,6 +136,12 @@ public final class TreeboTickets extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new NotifyStaff(this), this);
         getServer().getPluginManager().registerEvents(new TicketConversation(this), this);
         getServer().getPluginManager().registerEvents(new OnPlayerDeath(this), this);
+        getServer().getPluginManager().registerEvents(new OnPlayerKill(this), this);
+        getServer().getPluginManager().registerEvents(new OnPlayerChangeWorld(this), this);
+        getServer().getPluginManager().registerEvents(new OnPlayerDisconnect(this), this);
+
+
+
 
         getConfig().options().copyDefaults(true);
         getConfig().set("version", this.getDescription().getVersion());
@@ -128,6 +149,7 @@ public final class TreeboTickets extends JavaPlugin {
             getConfig().set("players." + player + ".ticketstate", 0);
         }
         saveConfig();
+        defineMobList();
         this.uc = new UpdateChecker(this);
         uc.getCheckDownloadURL();
         host = getConfig().getString("host");
@@ -183,6 +205,7 @@ public final class TreeboTickets extends JavaPlugin {
 
 
     public Connection connection;
+    public ArrayList<String> mobList = new ArrayList<>();
     private String host, database, username, password;
     private int port;
     public String table = getConfig().getString("table");
@@ -269,6 +292,7 @@ public final class TreeboTickets extends JavaPlugin {
         try {
             PrintStream ps = new PrintStream(file);
             tr.printStackTrace(ps);
+            System.out.println(tr.getCause());
             ps.close();
         } catch (FileNotFoundException e) {makeLog(e);
         }
@@ -292,5 +316,100 @@ public final class TreeboTickets extends JavaPlugin {
         return str.matches("\\d+");
     }
 
+    public String getServerName(Entity e){
+        String server = getConfig().getString("serverName");
+        if(server.toLowerCase().contains("Sky")){
+            server = e.getWorld().getName().split("_]")[0].split("-")[0];
+        }
+        return server;
+    }
+
+
+
+    private void defineMobList(){
+        mobList.add("SKELETON_HORSE");
+        mobList.add("WITHER_SKELETON");
+        mobList.add("CAVE_SPIDER");
+        mobList.add("ELDER_GUARDIAN");
+        mobList.add("PIG_ZOMBIE");
+        mobList.add("ZOMBIE PIGMAN");
+        mobList.add("ZOMBIE_VILLAGER");
+        mobList.add("IRON_GOLEM");
+        mobList.add("SNOW_GOLEM");
+        mobList.add("ENDER_DRAGON");
+        mobList.add("TRADER_LLAMA");
+        mobList.add("WANDERING_TRADER");
+        mobList.add("SKELETON HORSE");
+        mobList.add("WITHER SKELETON");
+        mobList.add("CAVE SPIDER");
+        mobList.add("ELDER GUARDIAN");
+        mobList.add("PIG ZOMBIE");
+        mobList.add("WITHER");
+        mobList.add("ZOMBIE VILLAGER");
+        mobList.add("IRON GOLEM");
+        mobList.add("SNOW GOLEM");
+        mobList.add("ENDER DRAGON");
+        mobList.add("WITHER BOSS");
+        mobList.add("TRADER LLAMA");
+        mobList.add("WANDERING TRADER");
+        mobList.add("MAGMA_CUBE");
+        mobList.add("MAGMA CUBE");
+        mobList.add("MAGMACUBE");
+        mobList.add("MOOSHROOM");
+        mobList.add("MUSHROOM_COW");
+        mobList.add("MUSHROOM COW");
+        mobList.add("COW");
+        mobList.add("GIANT");
+        mobList.add("CREEPER");
+        mobList.add("BAT");
+        mobList.add("CHICKEN");
+        mobList.add("COD");
+        mobList.add("DONKEY");
+        mobList.add("HORSE");
+        mobList.add("MULE");
+        mobList.add("OCELOT");
+        mobList.add("PARROT");
+        mobList.add("PIG");
+        mobList.add("RABBIT");
+        mobList.add("SHEEP");
+        mobList.add("SALMON");
+        mobList.add("SQUID");
+        mobList.add("TURTLE");
+        mobList.add("TROPICAL_FISH");
+        mobList.add("VILLAGER");
+        mobList.add("PUFFERFISH");
+        mobList.add("DOLPHIN");
+        mobList.add("LLAMA");
+        mobList.add("POLARBEAR");
+        mobList.add("POLAR BEAR");
+        mobList.add("POLAR_BEAR");
+        mobList.add("WOLF");
+        mobList.add("ENDERMAN");
+        mobList.add("SPIDER");
+        mobList.add("GUARDIAN");
+        mobList.add("PHANTOM");
+        mobList.add("SILVERFISH");
+        mobList.add("SLIME");
+        mobList.add("DROWNED");
+        mobList.add("HUSK");
+        mobList.add("ZOMBIE");
+        mobList.add("SKELETON");
+        mobList.add("STRAY");
+        mobList.add("BLAZE");
+        mobList.add("GHAST");
+        mobList.add("MAGMACUBE");
+        mobList.add("ENDERMITE");
+        mobList.add("SHULKER");
+        mobList.add("EVOKER");
+        mobList.add("VINDICATOR");
+        mobList.add("VEX");
+        mobList.add("WITCH");
+        mobList.add("CAT");
+        mobList.add("PANDA");
+        mobList.add("PILLAGER");
+        mobList.add("RAVAGER");
+        mobList.add("ILLUSIONER");
+        mobList.add("KILLER BUNNY");
+    }
 
 }

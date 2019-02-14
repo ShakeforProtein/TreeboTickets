@@ -1,4 +1,4 @@
-package me.shakeforprotein.treebotickets.Methods.Stats;
+package me.shakeforprotein.treebotickets.Methods.TicketStatistics;
 
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.ChatColor;

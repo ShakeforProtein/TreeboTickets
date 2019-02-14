@@ -61,7 +61,7 @@ public class OpenTicketGui {
         mainTicketInv.addItem(builderIcon);
 
         p.openInventory(mainTicketInv);
-    /*TODO: Stats
+    /*TODO: TicketStatistics
           Reload
      */
     }

@@ -1,6 +1,7 @@
 package me.shakeforprotein.treebotickets.Methods.ConnectionLoging;
 
 import me.shakeforprotein.treebotickets.TreeboTickets;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.net.InetAddress;
@@ -21,13 +22,13 @@ public class LogConnection {
         String query = "";
         try {
             response = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + pl.ontimetable + "` WHERE UUID = '"+ p.getUniqueId() +"'");
-            responseIndividualServer = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `stats_" + pl.getConfig().getString("serverName") + "` WHERE UUID = '"+ p.getUniqueId() +"'");
+            responseIndividualServer = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `stats_" + pl.getServerName(p) + "` WHERE UUID = '"+ p.getUniqueId() +"'");
 
 
             while (responseIndividualServer.next()) {
                 if (responseIndividualServer.getInt("TOTAL") == 0) {
                     UUID uUID = p.getUniqueId();
-                    query = "INSERT INTO `stats_" + pl.getConfig().getString("serverName") + "`(`UUID`, `IGNAME`) VALUES  ('" + uUID + "', '"+ p.getName() +"')";
+                    query = "INSERT INTO `stats_" + pl.getServerName(p) + "`(`UUID`, `IGNAME`) VALUES  ('" + uUID + "', '"+ p.getName() +"')";
                     pl.connection.createStatement().executeUpdate(query);
                 }
             }
@@ -67,5 +68,7 @@ public class LogConnection {
             pl.makeLog(e);
         }
     }
+
+
 }
 

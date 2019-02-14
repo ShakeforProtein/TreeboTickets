@@ -1,8 +1,8 @@
 package me.shakeforprotein.treebotickets.Listeners;
 
-import me.shakeforprotein.treebotickets.Methods.Stats.AdminStats;
-import me.shakeforprotein.treebotickets.Methods.Stats.BuilderStats;
-import me.shakeforprotein.treebotickets.Methods.Stats.StaffStats;
+import me.shakeforprotein.treebotickets.Methods.TicketStatistics.AdminStats;
+import me.shakeforprotein.treebotickets.Methods.TicketStatistics.BuilderStats;
+import me.shakeforprotein.treebotickets.Methods.TicketStatistics.StaffStats;
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import me.shakeforprotein.treebotickets.UpdateChecker.UpdateChecker;
 import org.bukkit.Bukkit;
