@@ -14,9 +14,6 @@ public class AddStatistic {
     public void addStatistic(Player p, String type, String entity){
         try{pl.getConfig().get("playerStats." + pl.getServerName(p) + "." + p.getName() + "." + type + "." + entity);}
         catch(NullPointerException err) {
-            p.sendMessage(pl.getServerName(p));
-            p.sendMessage(type);
-            p.sendMessage(entity);
             pl.getConfig().createSection("playerStats." + pl.getServerName(p) + "." + p.getName() + "." + entity);
         }
         pl.getConfig().set("playerStats." + pl.getServerName(p) + "." + p.getName() + "." + type + "." + entity, (pl.getConfig().getInt("playerStats." + pl.getServerName(p) + "." + p.getName() + "." + type + "." + entity) + 1));

@@ -30,7 +30,6 @@ public class OnPlayerDeath implements Listener {
         String cause = e.getDeathMessage();
         cause = cause.replaceAll(p.getName(), "XXXVICTIMXXX");
         String deathCause = "";
-        p.sendMessage(cause);
         for(Player player: Bukkit.getOnlinePlayers()){
             if (cause.toLowerCase().contains(player.getName().toLowerCase())){
                 addStatistic.addStatistic(p, "deaths", "PLAYER");
@@ -69,7 +68,6 @@ public class OnPlayerDeath implements Listener {
             attributed = 1;
             deathCause = "ENVIRONMENT";
         }
-        p.sendMessage(deathCause);
         addStatistic.addStatistic(p,"deaths","TOTAL");
     }
     catch(Exception err){

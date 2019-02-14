@@ -22,10 +22,11 @@ public class GetStat implements CommandExecutor {
         if(cmd.getName().equalsIgnoreCase("getstat")){
             if(sender instanceof Player) {
                 if (args.length == 2) {
-                    getStatistic.getStatistic(args[0], args[1], (Player) sender);
+                    sender.sendMessage(getStatistic.getStatistic(args[0], args[1], (Player) sender));
+
                 } else if (args.length == 1) {
                     sender.sendMessage("No playername detected, getting own stat");
-                    getStatistic.getStatistic(args[0], sender.getName(), (Player) sender);
+                    sender.sendMessage(getStatistic.getStatistic(args[0], sender.getName(), (Player) sender));
                 } else {
                     sender.sendMessage("Incorrect command usage. Please specify stat and player.");
                     sender.sendMessage("/getstat <stat> <playername>");

@@ -2,7 +2,6 @@ package me.shakeforprotein.treebotickets.Methods.PlayerStatistics;
 
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
@@ -26,12 +25,13 @@ public class GetStatistic {
         try {
             response = pl.connection.createStatement().executeQuery(query);
             while(response.next()){
-                returnedStat = response.getString(stat);
+                returnedStat = response.getString(stat.toUpperCase());
             }
         } catch (SQLException e) {
-            sender.sendMessage(ChatColor.RED + "Something went wrong");
+            /*sender.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during genericQuery()");
-            pl.makeLog(e);
+            pl.makeLog(e);*/
+            returnedStat = ChatColor.RED + "No statistic data matching those search terms";
         }
 
 
@@ -51,7 +51,7 @@ public class GetStatistic {
             try {
                 response = pl.connection.createStatement().executeQuery(query);
                 while(response.next()){
-                    returnedStat = response.getString(stat);
+                    returnedStat = response.getString(stat.toUpperCase());
                 }
             } catch (SQLException e) {
                 System.out.println(ChatColor.RED + "Something went wrong");

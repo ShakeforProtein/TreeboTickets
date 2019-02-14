@@ -23,15 +23,13 @@ public class OnPlayerKill implements Listener {
         Entity entity = e.getEntity();
         if (e.getEntity().getKiller() != null) {
             Player killer = e.getEntity().getKiller();
-            killer.sendMessage(killer + ", " + e.getEntity().getType());
             if(e.getEntity() instanceof Player){
                 addStatistic.addStatistic(killer,"kills","TOTALPLAYER");
             }
-            else{ killer.sendMessage("Not player");
+            else{
                 for (String mob : pl.mobList) {
                     if (entity.getType().toString().toLowerCase().contains(mob.toLowerCase()) || entity.getType().toString().replace(" ","").replace("_","").toLowerCase().contains(mob.toLowerCase())) {
                         String killedMob = mob.toUpperCase().replace(" ","").replace("_", "");
-                        killer.sendMessage(killedMob);
                         if (killedMob.toLowerCase().equalsIgnoreCase("PIGZOMBIE")){killedMob = "ZOMBIEPIGMAN";}
                         if (killedMob.toLowerCase().equalsIgnoreCase("WITHER")){killedMob = "WITHERBOSS";}
                         addStatistic.addStatistic(killer,"kills",killedMob);
