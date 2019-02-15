@@ -167,3 +167,6 @@ permissions:
   tbtickets.server.games:
     description: 'Allows use of /games'
     default: true
+  tbtickets.server.caveblock:
+    description: 'Allows use of /caveblock'
+    default: true
