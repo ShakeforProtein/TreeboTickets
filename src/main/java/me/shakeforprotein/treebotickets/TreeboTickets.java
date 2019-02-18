@@ -318,7 +318,7 @@ public final class TreeboTickets extends JavaPlugin {
 
     public String getServerName(Entity e){
         String server = getConfig().getString("serverName");
-        if(server.toLowerCase().contains("Sky")){
+        if(server.toLowerCase().contains("sky")){
             server = e.getWorld().getName().split("_]")[0].split("-")[0];
         }
         return server;
