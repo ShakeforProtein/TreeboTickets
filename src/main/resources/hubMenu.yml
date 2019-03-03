@@ -1,0 +1,27 @@
+hubmenu:
+  menuRows: 2
+  note1: 'menuRows must be between 1 and 6'
+  menuItems:
+    item1:
+      icon: 'GRASS_BLOCK'
+      note2: 'Must be a valid Bukkit 1.13.2 material'
+      position: 1
+      note3: 'If two things occupy the same position the earliest will be overwritten'
+      label: 'Come to Hub, meet interesting people, get kicked for AFK'
+      command: 'say test'
+      note4: 'No need to include the /'
+      executor: 'console'
+      note5: 'Executor can be player or console'
+      note6: 'the lore node is required but the subnodes are not'
+      lore:
+        l1: 'bla bla bla'
+        l2: 'roblabla'
+        l3: 'etc'
+    item2:
+      icon: 'NETHERRACK'
+      position: 3
+      label: 'Come to Hub, meet interesting people, get kicked for AFK Again'
+      command: 'say test'
+      executor: 'player'
+      lore:
+        l1: 'This is here purely as a test'

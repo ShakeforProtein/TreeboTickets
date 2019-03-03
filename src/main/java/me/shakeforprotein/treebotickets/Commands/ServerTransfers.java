@@ -1,15 +1,12 @@
 package me.shakeforprotein.treebotickets.Commands;
 
-import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
-import me.shakeforprotein.treebotickets.Methods.Teleports.ToWorld;
 import me.shakeforprotein.treebotickets.TreeboTickets;
-import org.bukkit.Bukkit;
+import me.shakeforprotein.treebotickets.Methods.Teleports.ToWorld;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
 
 public class ServerTransfers implements CommandExecutor {
 
@@ -19,7 +16,7 @@ public class ServerTransfers implements CommandExecutor {
 
     public ServerTransfers(TreeboTickets main) {
         pl = main;
-        this.toWorld = new ToWorld(main);
+        this.toWorld = new ToWorld(pl);
     }
 
     @Override
@@ -56,6 +53,8 @@ public class ServerTransfers implements CommandExecutor {
             toWorld.toWorld("sky", "Skygrid-world", p);
         } else if (cmd.getName().equalsIgnoreCase("acidislands")) {
             toWorld.toWorld("sky", "AcidIsland_world", p);
+        } else if (cmd.getName().equalsIgnoreCase("acidislands")) {
+            toWorld.toWorld("sky", "AcidIsland_world", p);
         } else if (cmd.getName().equalsIgnoreCase("caveblock")) {
             toWorld.toWorld("sky", "CaveBlock_world", p);
         } else if (cmd.getName().equalsIgnoreCase("hardcore")) {
@@ -64,8 +63,6 @@ public class ServerTransfers implements CommandExecutor {
             toWorld.toWorld("games", "Games", p);
         } else if (cmd.getName().equalsIgnoreCase("prison")) {
             toWorld.toWorld("prison", "Prison", p);
-        } else if (cmd.getName().equalsIgnoreCase("test")) {
-            toWorld.toWorld("test", "test_the_end", p);
         }
         return true;
     }

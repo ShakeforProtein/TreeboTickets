@@ -1,6 +1,5 @@
 package me.shakeforprotein.treebotickets.Commands;
 
-import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
 import me.shakeforprotein.treebotickets.Methods.Teleports.PushToLobby;
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.Bukkit;

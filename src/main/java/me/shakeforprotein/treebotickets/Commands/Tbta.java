@@ -16,6 +16,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+
 import static me.shakeforprotein.treebotickets.Commands.Commands.isNumeric;
 
 
@@ -124,6 +125,7 @@ public class Tbta implements CommandExecutor {
                     }
                 } else if (args.length >= 3 && args[0].equalsIgnoreCase("update")) {
                     StringBuilder staffText = new StringBuilder();
+
                     for (int i = 2; i < args.length; i++) {
                         staffText.append(args[i] + " ");
                     }

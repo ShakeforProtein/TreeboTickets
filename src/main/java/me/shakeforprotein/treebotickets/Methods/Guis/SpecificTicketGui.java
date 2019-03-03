@@ -81,7 +81,7 @@ public class SpecificTicketGui {
                 newTicketLore.add("Modified: " + tModified);
                 newTicketLore.add("Coords:" + tX + "," + tY + "," + tZ);
                 newTicketLore.add("");
-                newTicketLore.add("Description: " + tDesc);
+                newTicketLore.add("Description: " + tDesc.replace("APOSTR","'").replace("BSlash","\\").replace(" FSlash ","/"));
                 newTicketLore.add("");
                 newTicketLore.add("User Steps:" + tUserS);
                 newTicketLore.add("");
@@ -151,13 +151,13 @@ public class SpecificTicketGui {
                 unclaimMetaLore.add("tbta unclaim " + tId);
 
                 if (p.hasPermission("tbtickets.admin")){closeMetaLore.add("tbticketadmin close " +tId);
-                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"tbticketadmin update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
+                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/tbticketadmin update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
                 }
                 else if (p.hasPermission("tbtickets.view.any")){closeMetaLore.add("tbta close " +tId);
-                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"tbta update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
+                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/tbta update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
                 }
                 else if (p.hasPermission("tbtickets.builder")){closeMetaLore.add("review close " + tId);
-                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"review update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
+                    replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/review update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
                 }
 
                 openMetaLore.add("tbta reopen " + tId);

@@ -1,4 +1,4 @@
-package me.shakeforprotein.treebotickets.Listeners;
+package me.shakeforprotein.treebotickets.Listeners.InventoryEvents;
 
 import me.shakeforprotein.treebotickets.Methods.Guis.OpenTicketGui;
 import me.shakeforprotein.treebotickets.Methods.Guis.SpecificTicketGui;

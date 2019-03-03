@@ -62,7 +62,6 @@ public class LogConnection {
 
                 }
             }
-            System.out.println(query);
         } catch (SQLException e) {
             System.out.println("Encountered " + e.toString() + " during logConnection()");
             pl.makeLog(e);

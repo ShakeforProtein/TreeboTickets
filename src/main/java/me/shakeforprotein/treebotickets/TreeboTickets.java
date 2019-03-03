@@ -2,6 +2,14 @@ package me.shakeforprotein.treebotickets;
 
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import me.shakeforprotein.treebotickets.Commands.Commands;
+import me.shakeforprotein.treebotickets.Commands.TabComplete.ReviewTabComplete;
+import me.shakeforprotein.treebotickets.Commands.TabComplete.TbTicketAdminTabComplete;
+import me.shakeforprotein.treebotickets.Commands.TabComplete.TbTicketTabComplete;
+import me.shakeforprotein.treebotickets.Commands.TabComplete.TbtaTabComplete;
+import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.HubMenuInventoryListener;
+import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiIndividualTicketLinks;
+import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiListLinks;
+import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiMainMenuLinks;
 import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
 import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerChangeWorld;
 import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerDeath;
@@ -46,8 +54,7 @@ public final class TreeboTickets extends JavaPlugin {
     private OnPlayerKill onPlayerKill = new OnPlayerKill(this);
     private OnPlayerChangeWorld onPlayerChangeWorld = new OnPlayerChangeWorld(this);
     private OnPlayerDisconnect onPlayerDisconnect = new OnPlayerDisconnect(this);
-
-
+    private HubMenuInventoryListener hubMenuInventoryListener = new HubMenuInventoryListener(this);
 
 
     //Command Classes
@@ -64,9 +71,14 @@ public final class TreeboTickets extends JavaPlugin {
     private TbTicketAdmin tbTicketAdmin = new TbTicketAdmin(this);
     private Discord discord = new Discord(this);
     private GetStat getStat = new GetStat(this);
+    private Hub hub = new Hub(this);
 
 
-
+    //Tab Completers
+    private TbTicketTabComplete tbTicketTabComplete = new TbTicketTabComplete(this);
+    private TbtaTabComplete tbtaTabComplete = new TbtaTabComplete(this);
+    private TbTicketAdminTabComplete tbTicketAdminTabComplete = new TbTicketAdminTabComplete(this);
+    private ReviewTabComplete reviewTabComplete = new ReviewTabComplete(this);
 
     //Method Classes
     private DbKeepAlive dbKeepAlive = new DbKeepAlive(this);
@@ -96,13 +108,20 @@ public final class TreeboTickets extends JavaPlugin {
         this.tbTicketAdmin = new TbTicketAdmin(this);
         this.discord = new Discord(this);
         this.getStat = new GetStat(this);
+        this.hub = new Hub(this);
 
         //Register Commands to Executors
+        //this.getCommand("hub1").setExecutor(hub);
         this.getCommand("tbticket").setExecutor(tbTicket);
+        this.getCommand("tbticket").setTabCompleter(tbTicketTabComplete);
+        this.getCommand("ticket").setTabCompleter(tbTicketTabComplete);
         this.getCommand("tbta").setExecutor(tbta);
+        this.getCommand("tbta").setTabCompleter(tbtaTabComplete);
         this.getCommand("tbticketadmin").setExecutor(tbTicketAdmin);
-        this.getCommand("idea").setExecutor(idea);
+        this.getCommand("tbticketadmin").setTabCompleter(tbTicketAdminTabComplete);
         this.getCommand("review").setExecutor(review);
+        this.getCommand("review").setTabCompleter(reviewTabComplete);
+        this.getCommand("idea").setExecutor(idea);
         this.getCommand("lobby").setExecutor(serverTransfers);
         this.getCommand("survival").setExecutor(serverTransfers);
         this.getCommand("creative").setExecutor(serverTransfers);
@@ -115,11 +134,11 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("skygrid").setExecutor(serverTransfers);
         this.getCommand("acidislands").setExecutor(serverTransfers);
         this.getCommand("caveblock").setExecutor(serverTransfers);
-        this.getCommand("test").setExecutor(serverTransfers);
         this.getCommand("restarttimed").setExecutor(restartTimed);
         this.getCommand("remoteexecute").setExecutor(remoteExecute);
         this.getCommand("multipleCommands").setExecutor(multipleCommands);
         this.getCommand("onHere").setExecutor(onHere);
+        this.getCommand("seen").setExecutor(onHere);
         this.getCommand("discord").setExecutor(discord);
         this.getCommand("getstat").setExecutor(getStat);
 
@@ -139,6 +158,7 @@ public final class TreeboTickets extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnPlayerKill(this), this);
         getServer().getPluginManager().registerEvents(new OnPlayerChangeWorld(this), this);
         getServer().getPluginManager().registerEvents(new OnPlayerDisconnect(this), this);
+        getServer().getPluginManager().registerEvents(new HubMenuInventoryListener (this), this);
 
 
 
@@ -190,7 +210,7 @@ public final class TreeboTickets extends JavaPlugin {
     public void onDisable() {
         saveConfig();
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            if (!getConfig().getString("serverName)").equalsIgnoreCase("hub")) {
+            if ((getConfig().getString("serverName") != null) && (!getConfig().getString("serverName)").equalsIgnoreCase("hub"))) {
                 player.sendMessage("Server is going down for restart, moving you to Hub");
             } else {
                 player.sendMessage("Server is going down for restart, moving you to Survival");
@@ -199,8 +219,8 @@ public final class TreeboTickets extends JavaPlugin {
         pushToLobby.pushToLobby();
         try{connection.close();}
         catch(SQLException e){makeLog(e);}
-        getPluginLoader().disablePlugin(this);
         System.out.println("TreeboTickets Stopped");
+        getPluginLoader().disablePlugin(this);
     }
 
 
@@ -288,13 +308,19 @@ public final class TreeboTickets extends JavaPlugin {
 
 
     public void makeLog(Exception tr) {
-        File file = new File(LocalDateTime.now() + ".log");
+        System.out.println("Creating new log folder - " + new File (this.getDataFolder() + File.separator + "logs").mkdir());
+        String dateTimeString = LocalDateTime.now().toString().replace(":", "_").replace("T","__");
+        File file = new File(this.getDataFolder() + File.separator + "logs" + File.separator + dateTimeString + "-" + tr.getCause() + ".log");
         try {
             PrintStream ps = new PrintStream(file);
             tr.printStackTrace(ps);
-            System.out.println(tr.getCause());
+            System.out.println(this.getDescription().getName() + " - " + this.getDescription().getVersion() + "Encountered Error of type: " + tr.getCause());
+            System.out.println("A log file has been generated at " + this.getDataFolder() + File.separator + "logs" + File.separator + dateTimeString + "-" + tr.getCause() + ".log");
             ps.close();
-        } catch (FileNotFoundException e) {makeLog(e);
+        } catch (FileNotFoundException e) {
+            System.out.println("Error creating new log file for " + getDescription().getName() + " - " + getDescription().getVersion());
+            System.out.println("Error was as follows");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -319,7 +345,7 @@ public final class TreeboTickets extends JavaPlugin {
     public String getServerName(Entity e){
         String server = getConfig().getString("serverName");
         if(server.toLowerCase().contains("sky")){
-            server = e.getWorld().getName().split("_]")[0].split("-")[0];
+            server = e.getWorld().getName().split("_")[0].split("-")[0];
         }
         return server;
     }

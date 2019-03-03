@@ -9,6 +9,9 @@ api-version: 1.13
 
 
 commands:
+  hub1:
+    description: Displays the hub menu
+    usage: /<command>
   discord:
     description: Overides discordsrv commands.
     usage: /<command> <args>
@@ -79,6 +82,9 @@ commands:
   onHere:
     description: Shows own ontime on this server
     usage: /<command>
+  seen:
+    description: Alias for onHere
+    usage: /<command>
   onAll:
     description: Shows own ontime across all Treebo servers
     usage: /<command>
@@ -137,14 +143,8 @@ permissions:
   tbtickets.server.hardcore:
     description: 'Allows use of /hardcore'
     default: true
-  tbtickets.server.skyblock:
-    description: 'Allows use of /skyblock'
-    default: true
-  tbtickets.server.acidislands:
-    description: 'Allows use of /acidislands'
-    default: true
-  tbtickets.server.skygrid:
-    description: 'Allows use of /skygrid'
+  tbtickets.server.sky:
+    description: 'Allows use of /skyblock, /caveblock, /acidisland, /acidislands and /skygrid'
     default: true
   tbtickets.server.creative:
     description: 'Allows use of /creative'

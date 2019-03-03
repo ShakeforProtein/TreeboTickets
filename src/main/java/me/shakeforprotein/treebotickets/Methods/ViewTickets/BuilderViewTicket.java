@@ -61,11 +61,11 @@ public class BuilderViewTicket {
                         p.sendMessage(ChatColor.GREEN + "On World: " + ChatColor.WHITE + tWorld);
                         p.sendMessage(ChatColor.GREEN + "At Coordinates: " + ChatColor.GOLD + tCoords);
                         p.sendMessage("");
-                        p.sendMessage(ChatColor.GREEN + "User Description: " + ChatColor.WHITE + tDesc);
+                        p.sendMessage(ChatColor.GREEN + "User Description: " + ChatColor.WHITE + tDesc.replace("APOSTR","'").replace("BSlash","\\").replace(" FSlash ","/"));
                         p.sendMessage("");
-                        p.sendMessage(ChatColor.BLUE + "Steps taken by user: " + ChatColor.WHITE + tUserS);
+                        p.sendMessage(ChatColor.BLUE + "Steps taken by user: " + ChatColor.WHITE + tUserS.replace("APOSTR","'").replace("BSlash","\\").replace(" FSlash ","/"));
                         p.sendMessage("");
-                        p.sendMessage(ChatColor.RED + "Staff comments / actions: " + ChatColor.WHITE + tStaffS);
+                        p.sendMessage(ChatColor.RED + "Staff comments / actions: " + ChatColor.WHITE + tStaffS.replace("APOSTR","'").replace("BSlash","\\").replace(" FSlash ","/"));
                     } else {
                         p.sendMessage("You can't use this command");
                     }
