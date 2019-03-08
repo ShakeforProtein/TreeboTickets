@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class StaffUpdate {
 
@@ -17,7 +18,7 @@ public class StaffUpdate {
     }
 
     public void staffUpdate(Player p, int t, String staffText) {
-        if (p.hasPermission("tbtickets.view.any")) {
+        if (p.hasPermission("tbtickets.mod.view")) {
             if (staffText != "" && staffText != null) {
                 String query = ("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + t + "'");
                 ResultSet response;
@@ -30,7 +31,7 @@ public class StaffUpdate {
                         String tStaffSteps = response.getString("STAFFSTEPS");
                         String newStaffSteps = (tStaffSteps + "\n" + LocalDateTime.now() + " - " + p.getName() + " - " + staffText);
                         if (tStaff.equalsIgnoreCase(p.getName())) {
-                            String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + "' WHERE  `ID` =" + tId);
+                            String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + "', `ATTN` = 'Player' WHERE  `ID` =" + tId);
                             try {
                                 pl.connection.createStatement().executeUpdate(query2);
                                 p.sendMessage("Ticket " + t + " updated.");
@@ -50,7 +51,7 @@ public class StaffUpdate {
                 }
             }
         } else {
-            p.sendMessage("You don't the required permissions to run this command.");
+            p.sendMessage("You don't have the required permissions to run this command.");
         }
     }
 }

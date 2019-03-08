@@ -57,31 +57,31 @@ public class TbTicket implements CommandExecutor {
                 }
 
                 else if (args.length == 1) {
-                    if (args[0].equalsIgnoreCase("open") && p.hasPermission("tbtickets.create")) {
+                    if (args[0].equalsIgnoreCase("open") && p.hasPermission("tbtickets.player.create")) {
                         startTicketLogic.startTicketLogic(p);
                     }
-                    else if (args[0].equalsIgnoreCase("open") && !p.hasPermission("tbtickets.create")) {
+                    else if (args[0].equalsIgnoreCase("open") && !p.hasPermission("tbtickets.player.create")) {
                         noPerms(p);
                     }
 
                     //TBTICKET COMMAND - LIST OWN Logic
-                    else if (args[0].equalsIgnoreCase("list") && (p.hasPermission("tbtickets.view.own"))) {
+                    else if (args[0].equalsIgnoreCase("list") && (p.hasPermission("tbtickets.player.view"))) {
                         String fullData = playerListOwn.listTickets(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE IGNAME='" + p.getName() + "' ORDER BY id DESC");
-                    } else if (args[0].equalsIgnoreCase("list") && !p.hasPermission("tbtickets.view.own")) {
+                    } else if (args[0].equalsIgnoreCase("list") && !p.hasPermission("tbtickets.player.view")) {
                         p.sendMessage(ChatColor.RED + "You lack the required permission to list tickets");
                     }
 
                     //TBTICKET COMMAND - INCOMPLETE COMMANDS
-                    else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.view.own")) {
+                    else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.player.view")) {
                         p.sendMessage(ChatColor.RED + "Please include the ticket number at the end of the command. Eg. /tbticket view 274");
-                    } else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.close.own")) {
+                    } else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.player.close")) {
                         p.sendMessage(ChatColor.RED + "Please include the ticket number at the end of the command. Eg. /tbticket close 274");
                     }
 
                     //TBTICKET COMMAND - NO PERMISSIONS
-                    else if (args[0].equalsIgnoreCase("view")  && !p.hasPermission("tbtickets.view.own")) {
+                    else if (args[0].equalsIgnoreCase("view")  && !p.hasPermission("tbtickets.player.view")) {
                         noPerms(p);
-                    } else if (args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.close.own")) {
+                    } else if (args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.player.close")) {
                         noPerms(p);
                     }
 
@@ -94,9 +94,9 @@ public class TbTicket implements CommandExecutor {
 
                     if (ticketNumber != -1) {
                         //TBTICKET COMMAND - VIEW SPECIFIC TICKET LOGIC
-                        if (args[0].equalsIgnoreCase("view") && !p.hasPermission("tbtickets.view.own")) {
+                        if (args[0].equalsIgnoreCase("view") && !p.hasPermission("tbtickets.player.view")) {
                             noPerms(p);
-                        } else if (args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.close.own")) {
+                        } else if (args[0].equalsIgnoreCase("close") && !p.hasPermission("tbtickets.player.close")) {
                             noPerms(p);
                         } else if (args[0].equalsIgnoreCase("view")) {
                             playerViewTicket.getTicket(p, ticketNumber);

@@ -53,7 +53,8 @@ public class SavePlayerStats {
             pl.getConfig().set("LastStatEntry", statsAddQuery);
             pl.saveConfig();
             System.out.println(statsAddQuery);
-            int response = pl.connection.createStatement().executeUpdate(statsAddQuery);
+            if(!e.getPlayer().getWorld().getName().toLowerCase().replace("_","").contains("skyhub")){
+            int response = pl.connection.createStatement().executeUpdate(statsAddQuery);}
         } catch (Exception err) {
             pl.makeLog(err);
         }

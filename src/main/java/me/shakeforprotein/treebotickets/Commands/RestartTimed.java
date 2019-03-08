@@ -21,7 +21,7 @@ public class RestartTimed implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        if (cmd.getName().equalsIgnoreCase("restarttimed") && args.length == 1 && (sender.hasPermission("tbtickets.restart")) || sender instanceof ConsoleCommandSender) {
+        if (cmd.getName().equalsIgnoreCase("restarttimed") && args.length == 1 && (sender.hasPermission("tbtickets.admin.restart")) || sender instanceof ConsoleCommandSender) {
 
             String command = "restart";
             Integer timer = Integer.parseInt(args[0]) + 60;

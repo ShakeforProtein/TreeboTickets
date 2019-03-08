@@ -14,7 +14,7 @@ public class StaffViewTicket {
     public StaffViewTicket(TreeboTickets main){this.pl = main;}
 
     public void staffViewTicket(Player p, int t) {
-        if (p.hasPermission("tbtickets.view.any") || (p.hasPermission("tbtickets.admin"))) {
+        if (p.hasPermission("tbtickets.mod.view") || (p.hasPermission("tbtickets.admin"))) {
             int tId = -1;
             String tPlayer = "";
             String tCoords = "";

@@ -13,7 +13,7 @@ public class StaffClose {
     public StaffClose(TreeboTickets main){this.pl = main;}
 
     public void staffCloseTicket(Player p, int t) {
-        if (p.hasPermission("tbtickets.close.any")) {
+        if (p.hasPermission("tbtickets.mod.close")) {
             int tId = -1;
             String tPlayer = "";
 

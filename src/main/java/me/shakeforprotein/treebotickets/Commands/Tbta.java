@@ -55,7 +55,7 @@ public class Tbta implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("tbta")) {
                 if (args.length == 1 && args[0].equalsIgnoreCase("gui")) {
-                    if (p.hasPermission("tbtickets.view.any")) {
+                    if (p.hasPermission("tbtickets.mod.view")) {
                         openTicketGui.openTicketGui(p);
                     } else {
                         p.sendMessage("You lack the permissions required to use this command");
@@ -74,7 +74,7 @@ public class Tbta implements CommandExecutor {
 
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("list")) {
-                        if (p.hasPermission("tbtickets.view.any")) {
+                        if (p.hasPermission("tbtickets.mod.view")) {
                             if (args[1].equalsIgnoreCase("assigned")) {
                                 staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF='" + p.getName() + "' AND STATUS='OPEN' ORDER BY id DESC");
                             }
@@ -88,19 +88,19 @@ public class Tbta implements CommandExecutor {
                             staffList.staffList(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS='CLOSED' ORDER BY id DESC");
                         }
                         }
-                    } else if (args[0].equalsIgnoreCase("reopen") && p.hasPermission("tbtickets.view.any")) {
+                    } else if (args[0].equalsIgnoreCase("reopen") && p.hasPermission("tbtickets.mod.view")) {
                         if (pl.isNumeric(args[1])) {
                             pl.staffReOpenTicket(p, Integer.parseInt(args[1]));
                         } else {
                             p.sendMessage("Please include a valid ticket number as your second argument");
                         }
-                    } else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.close.any")) {
+                    } else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.mod.close")) {
                         if (pl.isNumeric(args[1])) {
                             staffClose.staffCloseTicket(p, Integer.parseInt(args[1]));
                         } else {
                             p.sendMessage("Please include a valid ticket number as your second argument");
                         }
-                    } else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.view.any")) {
+                    } else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.mod.view")) {
                         if (pl.isNumeric(args[1])) {
                             staffViewTicket.staffViewTicket(p, Integer.parseInt(args[1]));
                         } else {

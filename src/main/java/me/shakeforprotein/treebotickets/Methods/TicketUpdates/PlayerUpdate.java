@@ -17,7 +17,7 @@ public class PlayerUpdate {
     }
 
     public void playerUpdate(Player p, int t, String playerText) {
-        if (p.hasPermission("tbtickets.view.own")) {
+        if (p.hasPermission("tbtickets.player.view")) {
             if (playerText != "" && playerText != null) {
                 String query = ("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + t + "'");
                 ResultSet response;
@@ -30,7 +30,7 @@ public class PlayerUpdate {
                         String tStaffSteps = response.getString("STAFFSTEPS");
                         String newStaffSteps = (tStaffSteps + "\n" + LocalDateTime.now() + " - " + p.getName() + "(Player) - " + playerText);
                         if (tPlayer.equalsIgnoreCase(p.getName())) {
-                            String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + "' WHERE  `ID` =" + tId);
+                            String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + ", `ATTN` = 'Staff' WHERE  `ID` =" + tId);
                             try {
                                 pl.connection.createStatement().executeUpdate(query2);
                                 p.sendMessage("Ticket " + t + " updated.");
@@ -50,7 +50,7 @@ public class PlayerUpdate {
                 }
             }
         } else {
-            p.sendMessage("You don't the required permissions to run this command.");
+            p.sendMessage("You don't have the required permissions to run this command.");
         }
     }
 }

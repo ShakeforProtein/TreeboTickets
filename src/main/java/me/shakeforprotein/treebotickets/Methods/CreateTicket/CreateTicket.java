@@ -1,11 +1,14 @@
 package me.shakeforprotein.treebotickets.Methods.CreateTicket;
 
+import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import me.shakeforprotein.treebotickets.TreeboTickets;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CreateTicket {
 
@@ -17,16 +20,20 @@ public class CreateTicket {
         try {
             String output = "" + pl.connection.createStatement().executeUpdate(pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
             ResultSet response = pl.connection.createStatement().executeQuery("SELECT * FROM `tickets`WHERE `IGNAME`=\"" + p.getName() + "\" ORDER BY id DESC LIMIT 1");
+            ResultSet staffResponse = pl.connection.createStatement().executeQuery("SELECT * FROM `tickets_stafflist` WHERE 1 = 1");
             int tID = 0;
             while (response.next()) {
                 tID = response.getInt("ID");
                 p.sendMessage("Your Ticket number is " + tID + ". Use /ticket view " + tID + " to view any updates");
+                while (staffResponse.next()){
+                    String staff = staffResponse.getString("IGNAME");
+                    pl.api.sendMessage(staff, "Player " + p.getName() + "Has just submitted ticket number " + tID);
+                }
             }
             p.sendMessage(ChatColor.GREEN + "Your ticket has been successfully submitted");
         } catch (SQLException e) {
             p.sendMessage(ChatColor.RED + "Something went wrong while sending your ticket to the database");
-            p.sendMessage(ChatColor.RED + "This could be that the connection to the database was interupted");
-            p.sendMessage(ChatColor.RED + "Or that you've managed to use an unaccounted for special character");
+            pl.makeLog(e);
             System.out.println("Encountered " + e.toString() + " during addTicketToDB()");
         }
     }

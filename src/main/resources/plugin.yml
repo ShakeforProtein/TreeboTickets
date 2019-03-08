@@ -55,6 +55,9 @@ commands:
   comp:
     description: Takes you to the a Server named Creative.
     usage: /<command>
+  skyhub:
+    description: Takes you to the Server named Sky.
+    usage: /<command>
   skyblock:
     description: Takes you to the Server named Sky.
     usage: /<command>
@@ -94,44 +97,38 @@ commands:
   getStat:
     description: pulls player stat from database. Add <tablename> if used from console.
     usage: /<command> <stat> <player>
+  tinfo:
+    description: Provides information on specified subjects.
+    usage: /<command> <subject>
 permissions:
-  tbtickets.ontime:
+  tbtickets.staffmanager:
+    description:
+    default: false
+  tbtickets.admin.ontime:
     description:
     default: op
-  tbtickets.remoteexecute:
+  tbtickets.admin.restart:
     description:
     default: false
-  tbtickets.restart:
-    description:
-    default: false
-  tbtickets.updatechecker:
+  tbtickets.admin.updatechecker:
     description: 'Notify user if there is an update available'
     default: op
   tbtickets.builder:
     description: 'Lets builders see review tickets'
     default: false
-  tbtickets.create:
+  tbtickets.player.create:
     description: 'Allows a player to create a new ticket'
     default: true
-  tbtickets.view.own:
+  tbtickets.player.view.own:
     description: 'Allows a player to see their own tickets'
     default: true
-  tbtickets.close.own:
+  tbtickets.player.own:
     description: 'Allows a player to delete closed tickets.'
     default: true
-  tbtickets.close.any:
+  tbtickets.mod.close:
     description: 'Allows a player to delete closed tickets.'
     default: op
-  tbtickets.delete.any:
-    description: 'Allows a player to delete any ticket, even if they are open.'
-    default: op
-  tbtickets.delete.closed:
-    description: 'Allows a player to delete closed tickets.'
-    default: op
-  tbtickets.restore:
-    description: 'Allows a player to restore a deleted ticket'
-    default: op
-  tbtickets.view.any:
+  tbtickets.mod.view:
     description: 'Allows a player to see all tickets'
     default: op
   tbtickets.admin:
@@ -155,9 +152,6 @@ permissions:
   tbtickets.server.prison:
     description: 'Allows use of /prison'
     default: true
-  tbtickets.server.test:
-    description: 'Allows use of /test'
-    default: false
   tbtickets.server.hub:
     description: 'Allows use of /lobby'
     default: true

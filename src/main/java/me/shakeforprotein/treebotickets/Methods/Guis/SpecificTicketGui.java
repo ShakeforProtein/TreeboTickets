@@ -153,7 +153,7 @@ public class SpecificTicketGui {
                 if (p.hasPermission("tbtickets.admin")){closeMetaLore.add("tbticketadmin close " +tId);
                     replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/tbticketadmin update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
                 }
-                else if (p.hasPermission("tbtickets.view.any")){closeMetaLore.add("tbta close " +tId);
+                else if (p.hasPermission("tbtickets.mod.view")){closeMetaLore.add("tbta close " +tId);
                     replyMetaLore.add("tellraw " + p.getName() + " {\"text\":\"Reply to ticket - "+ tId + "\",\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/tbta update "+ tId + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click me to Prefill command.\"}}");
                 }
                 else if (p.hasPermission("tbtickets.builder")){closeMetaLore.add("review close " + tId);
@@ -163,11 +163,11 @@ public class SpecificTicketGui {
                 openMetaLore.add("tbta reopen " + tId);
 
                 if (p.hasPermission("tbtickets.admin")){teleportMetaLore.add("tbticketadmin tp " +tId );}
-                else if (p.hasPermission("tbtickets.view.any")){teleportMetaLore.add("tbta tp " +tId );}
+                else if (p.hasPermission("tbtickets.mod.view")){teleportMetaLore.add("tbta tp " +tId );}
                 else if (p.hasPermission("tbtickets.builder")){teleportMetaLore.add("review tp " +tId );}
 
                 if (p.hasPermission("tbtickets.admin")){deleteMetaLore.add("tbticketadmin delete "+ tId);}
-                else if (p.hasPermission("tbtickets.view.any")){deleteMetaLore.add("tbta close " +tId );}
+                else if (p.hasPermission("tbtickets.mod.view")){deleteMetaLore.add("tbta close " +tId );}
                 else if (p.hasPermission("tbtickets.builder")){teleportMetaLore.add("review close " +tId );}
 
 

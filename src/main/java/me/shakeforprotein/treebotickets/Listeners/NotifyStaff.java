@@ -47,7 +47,7 @@ public class NotifyStaff implements Listener {
                     if (e.getPlayer().hasPermission("tbtickets.admin")) {
                         adminStats.adminStats(e.getPlayer());
                     }
-                    if (e.getPlayer().hasPermission("tbtickets.view.any")) {
+                    if (e.getPlayer().hasPermission("tbtickets.mod.view")) {
                         staffStats.staffStats(e.getPlayer());
                     } else if (e.getPlayer().hasPermission("tbtickets.builder")) {
                         builderStats.builderStats(e.getPlayer());

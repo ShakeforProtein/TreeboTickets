@@ -2,19 +2,13 @@ package me.shakeforprotein.treebotickets;
 
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import me.shakeforprotein.treebotickets.Commands.Commands;
-import me.shakeforprotein.treebotickets.Commands.TabComplete.ReviewTabComplete;
-import me.shakeforprotein.treebotickets.Commands.TabComplete.TbTicketAdminTabComplete;
-import me.shakeforprotein.treebotickets.Commands.TabComplete.TbTicketTabComplete;
-import me.shakeforprotein.treebotickets.Commands.TabComplete.TbtaTabComplete;
+import me.shakeforprotein.treebotickets.Commands.TabComplete.*;
 import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.HubMenuInventoryListener;
 import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiIndividualTicketLinks;
 import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiListLinks;
 import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiMainMenuLinks;
 import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
-import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerChangeWorld;
-import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerDeath;
-import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerDisconnect;
-import me.shakeforprotein.treebotickets.Listeners.StatTracking.OnPlayerKill;
+import me.shakeforprotein.treebotickets.Listeners.StatTracking.*;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CleanupDatabase;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CreateTables;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.DbKeepAlive;
@@ -22,16 +16,25 @@ import me.shakeforprotein.treebotickets.Methods.Teleports.PushToLobby;
 import me.shakeforprotein.treebotickets.UpdateChecker.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import me.shakeforprotein.treebotickets.Commands.*;
 import me.shakeforprotein.treebotickets.Listeners.*;
@@ -55,6 +58,7 @@ public final class TreeboTickets extends JavaPlugin {
     private OnPlayerChangeWorld onPlayerChangeWorld = new OnPlayerChangeWorld(this);
     private OnPlayerDisconnect onPlayerDisconnect = new OnPlayerDisconnect(this);
     private HubMenuInventoryListener hubMenuInventoryListener = new HubMenuInventoryListener(this);
+    //private Bstats bstats = new Bstats(this);
 
 
     //Command Classes
@@ -72,6 +76,7 @@ public final class TreeboTickets extends JavaPlugin {
     private Discord discord = new Discord(this);
     private GetStat getStat = new GetStat(this);
     private Hub hub = new Hub(this);
+    private InfoCommand infoCommand = new InfoCommand(this);
 
 
     //Tab Completers
@@ -79,6 +84,8 @@ public final class TreeboTickets extends JavaPlugin {
     private TbtaTabComplete tbtaTabComplete = new TbtaTabComplete(this);
     private TbTicketAdminTabComplete tbTicketAdminTabComplete = new TbTicketAdminTabComplete(this);
     private ReviewTabComplete reviewTabComplete = new ReviewTabComplete(this);
+    private InfoTabComplete infoTabComplete = new InfoTabComplete(this);
+
 
     //Method Classes
     private DbKeepAlive dbKeepAlive = new DbKeepAlive(this);
@@ -109,7 +116,8 @@ public final class TreeboTickets extends JavaPlugin {
         this.discord = new Discord(this);
         this.getStat = new GetStat(this);
         this.hub = new Hub(this);
-
+        this.infoCommand = new InfoCommand(this);
+        //this.bstats = new Bstats(this);
         //Register Commands to Executors
         //this.getCommand("hub1").setExecutor(hub);
         this.getCommand("tbticket").setExecutor(tbTicket);
@@ -130,6 +138,7 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("hardcore").setExecutor(serverTransfers);
         this.getCommand("prison").setExecutor(serverTransfers);
         this.getCommand("games").setExecutor(serverTransfers);
+        this.getCommand("skyhub").setExecutor(serverTransfers);
         this.getCommand("skyblock").setExecutor(serverTransfers);
         this.getCommand("skygrid").setExecutor(serverTransfers);
         this.getCommand("acidislands").setExecutor(serverTransfers);
@@ -141,6 +150,23 @@ public final class TreeboTickets extends JavaPlugin {
         this.getCommand("seen").setExecutor(onHere);
         this.getCommand("discord").setExecutor(discord);
         this.getCommand("getstat").setExecutor(getStat);
+
+        File listFile = new File(getDataFolder(), File.separator + "infoList.yml");
+        FileConfiguration infoList = YamlConfiguration.loadConfiguration(listFile);
+
+        for(String item: infoList.getKeys(false)){
+            BukkitCommand item2 = new BukkitCommand(item) {
+                @Override
+                public boolean execute(CommandSender commandSender, String s, String[] strings) {
+                        Bukkit.dispatchCommand(commandSender, "tinfo " + item);
+                    return false;
+                }
+
+            };
+            registerNewCommand("info", item2);
+        }
+        this.getCommand("tinfo").setExecutor(infoCommand);
+        this.getCommand("tinfo").setTabCompleter(infoTabComplete);
 
 
         //Register Listeners
@@ -201,6 +227,29 @@ public final class TreeboTickets extends JavaPlugin {
         if(getServer().getName().equalsIgnoreCase(getConfig().getString("lobbyServerName"))){
             cleanupDatabase.cleanupDatabase(getConfig().getInt("maxClosedTickets"));
         }
+
+
+        if(getConfig().getString("serverName").equalsIgnoreCase("hub")){
+                File staffFile = new File(getDataFolder(), "staffList.yml");
+                FileConfiguration staffList = YamlConfiguration.loadConfiguration(staffFile);
+
+                int delTable;
+                int populateStaff;
+                try {
+                    delTable = connection.createStatement().executeUpdate("DELETE FROM `tickets_stafflist`");
+                } catch (SQLException e) {
+                    System.out.println("Encountered " + e.toString() + " during genericQuery()");
+                    makeLog(e);
+                }
+
+                for (String item : staffList.getKeys(false)) {
+                    String staff = staffList.getString(item);
+                    try{
+                    populateStaff = connection.createStatement().executeUpdate("INSERT INTO `tickets_stafflist` ('IGNAME') VALUES ('" + staff + "')");
+                }
+                    catch (SQLException err){}
+                }
+        }
         System.out.println("TreeboTickets Started");
     }
     public String ontimetable = getConfig().getString("ontimetable");
@@ -230,7 +279,7 @@ public final class TreeboTickets extends JavaPlugin {
     private int port;
     public String table = getConfig().getString("table");
     public String unusedColumns = "ID, MODIFIED";
-    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `SERVER`,`WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`";
+    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `SERVER`,`WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`, `ATTN`";
     public String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
     public Integer ID, X, Y, Z, SEVERITY = 0;
     public String OPENED = LocalDateTime.now().toString();
@@ -285,7 +334,7 @@ public final class TreeboTickets extends JavaPlugin {
 
 
     public void staffReOpenTicket(Player p, int t) {
-        if (p.hasPermission("tbtickets.view.any")) {
+        if (p.hasPermission("tbtickets.mod.view")) {
             int tId = -1;
             String tPlayer = "";
 
@@ -438,4 +487,15 @@ public final class TreeboTickets extends JavaPlugin {
         mobList.add("KILLER BUNNY");
     }
 
+
+    private void registerNewCommand(String fallback, BukkitCommand command) {
+        try {
+            Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            bukkitCommandMap.setAccessible(true);
+            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+            commandMap.register(fallback, command);
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+            e.printStackTrace();
+        }
+    }
 }

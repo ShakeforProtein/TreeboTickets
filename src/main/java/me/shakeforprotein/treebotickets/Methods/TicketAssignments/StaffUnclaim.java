@@ -13,7 +13,7 @@ public class StaffUnclaim {
     public StaffUnclaim(TreeboTickets main){this.pl = main;}
 
     public void staffUnclaim(Player p, int t) {
-        if (p.hasPermission("tbtickets.view.any")) {
+        if (p.hasPermission("tbtickets.mod.view")) {
             String query = ("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + t + "'");
             ResultSet response;
             try {

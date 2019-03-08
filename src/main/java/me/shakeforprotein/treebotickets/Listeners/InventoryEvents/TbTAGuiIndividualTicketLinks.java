@@ -67,7 +67,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
                         command = "tbticketadmin view " + name.split(" - ")[1];
                         Bukkit.dispatchCommand(p, command);
                     }
-                    else if(p.hasPermission("tbtickets.view.any")){
+                    else if(p.hasPermission("tbtickets.mod.view")){
                         command = "tbta view " + name.split(" - ")[1];
                         Bukkit.dispatchCommand(p, command);
                     }

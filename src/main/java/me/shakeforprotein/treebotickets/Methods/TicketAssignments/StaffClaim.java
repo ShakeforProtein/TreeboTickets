@@ -13,7 +13,7 @@ public class StaffClaim {
     public StaffClaim(TreeboTickets main){this.pl = main;}
 
     public void staffClaim(Player p, int t) {
-        if (p.hasPermission("tbtickets.view.any")) {
+        if (p.hasPermission("tbtickets.mod.view")) {
             String query = ("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + t + "'");
             ResultSet response;
             int response2 = 0;

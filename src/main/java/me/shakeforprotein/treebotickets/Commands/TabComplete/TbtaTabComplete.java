@@ -18,7 +18,7 @@ public class TbtaTabComplete implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        if(cmd.getName().equalsIgnoreCase("tbta") && sender.hasPermission("tbtickets.view.any")) {
+        if(cmd.getName().equalsIgnoreCase("tbta") && sender.hasPermission("tbtickets.mod.view")) {
             ArrayList<String> subCommands = new ArrayList<String>();
             ArrayList<String> outputsStrings = new ArrayList<>();
 
