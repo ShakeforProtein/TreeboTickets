@@ -69,14 +69,14 @@ public class LogJoin implements Listener {
                 }
 
                 if (totalRows > 0) {
-                    String query = ("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE UUID='" + e.getPlayer().getUniqueId().toString() + "' AND ATTN='Player'");
+                    String query = ("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE UUID='" + e.getPlayer().getUniqueId().toString() + "' AND ATTN='Player' AND 'STATUS' = 'OPEN'");
                     ResultSet response;
                     try {
                         response = pl.connection.createStatement().executeQuery(query);
                         while (response.next()) {
                             int tId = response.getInt("ID");
                             ticketNumbers = ticketNumbers + " " +  tId + ",";
-                            String notifiedQuery = "UPDATE `tickets` SET ATTN = 'DONE' WHERE ID = '" + tId + "'";
+                            // String notifiedQuery = "UPDATE `tickets` SET ATTN = 'DONE' WHERE ID = '" + tId + "'";
                         }
                         ticketNumbers = ticketNumbers.substring(0, ticketNumbers.length() - 1);
                     } catch (SQLException err) {
