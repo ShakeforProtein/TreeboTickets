@@ -4,38 +4,67 @@ A Simple Tickets, Ideas & Review Plugin
 ## Permisions
 ```
 
-### Defaults to True
-  tbtickets.create - Allows a player to create a new ticket.
-  tbtickets.view.own - Allows a player to view their own tickets.
-  tbtickets.close.own - Allows a player to close their own tickets.
-  tbtickets.server.survival - Allows use of /survival command (teleport to server with name survival) (or to the survival world if on correct server)
-  tbtickets.server.hardcore - Allows use of /hardcore command (teleport to server with name hardcore) (or to the hardcore world if on correct server)
-  tbtickets.server.creative - Allows use of /creative command (teleport to server with name creative) (or to the creative world if on correct server)
-  tbtickets.server.acidislands - Allows use of /acidislands command (teleport to server with name sky) (or to the acid islands world if on correct server)
-  tbtickets.server.skyblock - Allows use of /skyblock command (teleport to server with name sky) (or to the skyblock world if on correct server)
-  tbtickets.server.skygrid - Allows use of /skygrid command (teleport to server with name sky) (or to the skygrid world if on correct server)
-  tbtickets.server.plots - Allows use of /plots command (teleport to server with name creative)
-  tbtickets.server.prison - Allows use of /prison command (teleport to server with name prison) (or to the prison world if on correct server)
-  tbtickets.server.test - Allows use of /test command (teleport to server with name test) (or to the test / test end world if on correct server)
-  tbtickets.server.lobby - Allows use of /lobby command (teleport to server with name lobby) (or to the hub world if on correct server)
-  tbtickets.server.games - Allows use of /games command (teleport to server with name games) (or to the games world if on correct server)
-
-### Defaults to False
-  tbtickets.delete.closed - Allows a player to delete closed tickets.
-  tbtickets.builder - Lets builders see review tickets
-  tbtickets.restart - Allows use of /restarttimed to restart the server in a specified amount of ticks plus 60
-  tbtickets.remoteexecute - Allows use of the remoteexecute command. (This doesn't work in game and can only be used from a shared console)(Essentially useless)
-
-
-### Defaults to OP
-  tbtickets.updatechecker - Notifies player when an update is available.
-  tbtickets.close.any - Allows a player to close any ticket.
-  tbtickets.delete.closed - Allows a player to delete closed tickets.
-  tbtickets.delete.any - Allows a player to remove tickets from the database.
-  tbtickets.view.any - Allows a player to view any ticket.
-  tbtickets.admin - Allows use of all admin commands.
-  tbtickets.restore - Allows a player to restore a deleted ticket.
-  tbtickets.ontime - Allows player to use /onhere.
+permissions:
+  tbtickets.admin.ontime:
+    description:
+    default: op
+  tbtickets.admin.restart:
+    description:
+    default: false
+  tbtickets.admin.updatechecker:
+    description: 'Notify user if there is an update available'
+    default: op
+  tbtickets.builder:
+    description: 'Lets builders see review tickets'
+    default: false
+  tbtickets.player.create:
+    description: 'Allows a player to create a new ticket'
+    default: true
+  tbtickets.player.view.own:
+    description: 'Allows a player to see their own tickets'
+    default: true
+  tbtickets.player.own:
+    description: 'Allows a player to delete closed tickets.'
+    default: true
+  tbtickets.mod.close:
+    description: 'Allows a player to delete closed tickets.'
+    default: op 
+  tbtickets.mod.view:
+    description: 'Allows a player to see all tickets'
+    default: op
+  tbtickets.admin:
+    description: 'Allows use of all tbTicketAdmin commands'
+    default: false
+  tbtickets.server.survival:
+    description: 'Allows use of /survival'
+    default: true
+  tbtickets.server.hardcore:
+    description: 'Allows use of /hardcore'
+    default: true
+  tbtickets.server.sky:
+    description: 'Allows use of /skyblock, /caveblock, /acidisland, /acidislands and /skygrid'
+    default: true
+  tbtickets.server.creative:
+    description: 'Allows use of /creative'
+    default: true
+  tbtickets.server.plots:
+    description: 'Allows use of /plots'
+    default: true
+  tbtickets.server.prison:
+    description: 'Allows use of /prison'
+    default: true
+  tbtickets.server.hub:
+    description: 'Allows use of /lobby'
+    default: true
+  tbtickets.server.lobby:
+    description: 'Allows use of /lobby'
+    default: true
+  tbtickets.server.games:
+    description: 'Allows use of /games'
+    default: true
+  tbtickets.server.caveblock:
+    description: 'Allows use of /caveblock'
+    default: true
   
 ```
 
