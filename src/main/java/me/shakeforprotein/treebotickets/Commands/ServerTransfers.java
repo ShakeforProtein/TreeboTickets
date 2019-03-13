@@ -52,7 +52,7 @@ public class ServerTransfers implements CommandExecutor {
         } else if (cmd.getName().equalsIgnoreCase("skyblock")) {
             toWorld.toWorld("sky", "BSkyBlock_world", p);
         } else if (cmd.getName().equalsIgnoreCase("skygrid")) {
-            toWorld.toWorld("sky", "Skygrid-world", p);
+            toWorld.toWorld("sky2", "Skygrid-world", p);
         } else if (cmd.getName().equalsIgnoreCase("acidislands")) {
             toWorld.toWorld("sky", "AcidIsland_world", p);
         } else if (cmd.getName().equalsIgnoreCase("acidislands")) {

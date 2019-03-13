@@ -78,13 +78,13 @@ public class LogJoin implements Listener {
                             ticketNumbers = ticketNumbers + " " +  tId + ",";
                             // String notifiedQuery = "UPDATE `tickets` SET ATTN = 'DONE' WHERE ID = '" + tId + "'";
                         }
-                        ticketNumbers = ticketNumbers.substring(0, ticketNumbers.length() - 1);
+                        if(ticketNumbers.length() > 0) {ticketNumbers = ticketNumbers.substring(0, ticketNumbers.length() - 1);}
                     } catch (SQLException err) {
                         e.getPlayer().sendMessage(ChatColor.RED + "Something went wrong");
                         System.out.println("Encountered " + e.toString() + " during NotifyPlayer - LogJoin");
                         pl.makeLog(err);
                     }
-                    e.getPlayer().sendMessage(ChatColor.GOLD + "The following ticket numbers require your input: " + ChatColor.GREEN + ticketNumbers);
+                    if(ticketNumbers.length() > 0){e.getPlayer().sendMessage(ChatColor.GOLD + "The following ticket numbers require your input: " + ChatColor.GREEN + ticketNumbers);}
                 }
             }
         }, 120L);

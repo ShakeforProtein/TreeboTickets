@@ -9,9 +9,6 @@ api-version: 1.13
 
 
 commands:
-  hub1:
-    description: Displays the hub menu
-    usage: /<command>
   discord:
     description: Overides discordsrv commands.
     usage: /<command> <args>
