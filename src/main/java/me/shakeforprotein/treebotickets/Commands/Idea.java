@@ -22,6 +22,16 @@ public class Idea implements CommandExecutor {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
             if (cmd.getName().equalsIgnoreCase("idea")) {
+                if(args.length > 0){
+                        StringBuilder argsText = new StringBuilder();
+                        for (int i = 0; i < args.length; i++) {
+                            argsText.append(args[i] + " ");
+                        }
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd + " " + argsText);
+                }
+                else{
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd);
+                }
                 pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                 pl.getConfig().set("players." + p.getName() + ".type", "Idea");
                 p.sendMessage("Please give a brief description of your idea.");

@@ -122,8 +122,9 @@ public class TicketConversation implements Listener {
                     else {type = "Other";}
                     description = pl.getConfig().getString("players." + p.getName() + ".description");
                     usersteps = pl.getConfig().getString("players." + p.getName() + ".usersteps");
+                    String actualCommand = pl.getConfig().getString("players." + p.getName() + ".actualCommand").replace("'","APOSTR").replace("\\","BSlash").replace("/"," FSlash ");;
                     Integer severity = 0;
-                    String ticketData = "\"" + puuid + "\",\"" + p.getName() + "\",\"" + opened + "\",\"" + status + "\",\"" + staff + "\",\"" + pServer + "\",\"" + pworld + "\",\"" + px + "\",\"" + py + "\",\"" + pz + "\",\"" + type + "\",\"" + severity + "\",\"" + description + "\",\"" + usersteps + "\",\"" + staffsteps + "\", \"Staff\"";
+                    String ticketData = "\"" + puuid + "\",\"" + p.getName() + "\",\"" + opened + "\",\"" + status + "\",\"" + staff + "\",\"" + pServer + "\",\"" + pworld + "\",\"" + px + "\",\"" + py + "\",\"" + pz + "\",\"" + type + "\",\"" + severity + "\",\"" + description + "\",\"" + usersteps + "\",\"" + staffsteps + "\", \"Staff\", \"" + actualCommand + "\"";
                     pl.getConfig().set("players." + p.getName() + "lastQuery", pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
                     pl.saveConfig();

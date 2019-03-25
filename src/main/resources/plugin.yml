@@ -119,8 +119,8 @@ permissions:
   tbtickets.player.view.own:
     description: 'Allows a player to see their own tickets'
     default: true
-  tbtickets.player.own:
-    description: 'Allows a player to delete closed tickets.'
+  tbtickets.player.close:
+    description: 'Allows a player to close own tickets.'
     default: true
   tbtickets.mod.close:
     description: 'Allows a player to delete closed tickets.'

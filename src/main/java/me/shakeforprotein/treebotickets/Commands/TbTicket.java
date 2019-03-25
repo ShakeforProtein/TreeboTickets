@@ -50,6 +50,17 @@ public class TbTicket implements CommandExecutor {
 
             if (cmd.getName().equalsIgnoreCase("tbTicket")) {
 
+                if(args.length > 0){
+                    StringBuilder argsText = new StringBuilder();
+                    for (int i = 0; i < args.length; i++) {
+                        argsText.append(args[i] + " ");
+                    }
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd + " " + argsText);
+                }
+                else{
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd);
+                }
+
                 if (args.length == 0) {
                     tbTicketHelp.tbTicketHelp(p);
                     startTicketLogic.startTicketLogic(p);

@@ -46,6 +46,18 @@ public class Review implements CommandExecutor {
             String w = p.getWorld().getName();
 
             if (cmd.getName().equalsIgnoreCase("review")) {
+
+                if(args.length > 0){
+                    StringBuilder argsText = new StringBuilder();
+                    for (int i = 0; i < args.length; i++) {
+                        argsText.append(args[i] + " ");
+                    }
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd + " " + argsText);
+                }
+                else{
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd);
+                }
+
                 if (args.length == 0) {
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                     pl.getConfig().set("players." + p.getName() + ".type", "Review");

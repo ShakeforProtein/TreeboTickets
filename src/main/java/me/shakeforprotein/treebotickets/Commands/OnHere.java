@@ -23,7 +23,7 @@ public class OnHere implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("onHere") || cmd.getName().equalsIgnoreCase("seen")) {
-            if (sender.hasPermission("tbtickets.admin.ontime")) {
+            if (sender.hasPermission("tbtickets.staffmanager")) {
                 if (args.length == 1) {
                     if(args[0].equalsIgnoreCase("staff")){
                     if (pl.getConfig().getString("serverName").equalsIgnoreCase("games")) {

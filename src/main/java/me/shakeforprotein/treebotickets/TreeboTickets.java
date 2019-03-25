@@ -279,7 +279,7 @@ public final class TreeboTickets extends JavaPlugin {
     private int port;
     public String table = getConfig().getString("table");
     public String unusedColumns = "ID, MODIFIED";
-    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `SERVER`,`WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`, `ATTN`";
+    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `SERVER`,`WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`, `ATTN`, 'ACTUALCOMMAND'";
     public String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
     public Integer ID, X, Y, Z, SEVERITY = 0;
     public String OPENED = LocalDateTime.now().toString();

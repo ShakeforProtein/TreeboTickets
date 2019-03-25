@@ -37,7 +37,6 @@ public class RemoteExecute implements CommandExecutor {
             } else {
                 sender.sendMessage("This command only runs from console");
             }
-
         }
         return true;
     }
