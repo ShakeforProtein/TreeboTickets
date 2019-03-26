@@ -1,6 +1,5 @@
 package me.shakeforprotein.treebotickets.Commands;
 
-import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,10 +26,10 @@ public class Idea implements CommandExecutor {
                         for (int i = 0; i < args.length; i++) {
                             argsText.append(args[i] + " ");
                         }
-                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd + " " + argsText);
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd.getName() + " " + argsText);
                 }
                 else{
-                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd);
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd.getName());
                 }
                 pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                 pl.getConfig().set("players." + p.getName() + ".type", "Idea");

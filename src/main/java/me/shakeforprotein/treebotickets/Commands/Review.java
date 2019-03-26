@@ -52,10 +52,10 @@ public class Review implements CommandExecutor {
                     for (int i = 0; i < args.length; i++) {
                         argsText.append(args[i] + " ");
                     }
-                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd + " " + argsText);
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd.getName() + " " + argsText);
                 }
                 else{
-                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd);
+                    pl.getConfig().set("players." + p.getName() + ".actualCommand", cmd.getName());
                 }
 
                 if (args.length == 0) {
@@ -102,7 +102,12 @@ public class Review implements CommandExecutor {
                     }
                 }
                 else if(p.hasPermission("tbtickets.builder")){reviewHelp.reviewHelp(p);}
-                else{p.sendMessage(ChatColor.RED + "You do not have the required permissions");}
+                else{
+                    pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
+                    pl.getConfig().set("players." + p.getName() + ".type", "Review");
+                    p.sendMessage("Invalid input. Opening review request. Enter 'cancel' into chat at any time to cancel.");
+                    p.sendMessage("Please give a brief description of your build. You can cancel at any time by entering the word \"cancel\" into chat");
+                }
             }
         }
         return true;
