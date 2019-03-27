@@ -44,7 +44,7 @@ public class OpenHubMenu {
             }
         }
 
-        try{
+            try{
             Set menuItems = hubMenu.getConfigurationSection("hubmenu.menuItems").getKeys(false);
             String[] menuItemStrings = Arrays.copyOf(menuItems.toArray(), menuItems.size(), String[].class);
             int invSize = hubMenu.getInt("hubmenu.menuRows") * 9;

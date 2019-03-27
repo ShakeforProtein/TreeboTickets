@@ -37,48 +37,6 @@ commands:
   review:
     description: Allows a player to request build review
     usage: /<command>
-  survival:
-    description: Takes you to the Server named Survival
-    usage: /<command>
-  hardcore:
-    description: Takes you to the Server named Hardcore.
-    usage: /<command>
-  creative:
-    description: Takes you to the Server named Creative.
-    usage: /<command>
-  plots:
-    description: Takes you to the a Server named Creative.
-    usage: /<command>
-  comp:
-    description: Takes you to the a Server named Creative.
-    usage: /<command>
-  skyhub:
-    description: Takes you to the Server named Sky.
-    usage: /<command>
-  skyblock:
-    description: Takes you to the Server named Sky.
-    usage: /<command>
-  skygrid:
-    description: Takes you to the Server named Sky.
-    usage: /<command>
-  acidislands:
-    description: Takes you to the Server named Sky.
-    usage: /<command>
-  caveblock:
-    description: Takes you to the Server named Sky.
-    usage: /<command>
-  prison:
-    description: Takes you to the Server named Prison.
-    usage: /<command>
-  test:
-    description: Takes you to the Server named Test.
-    usage: /<command>
-  games:
-    description: Takes you to the Server named Games.
-    usage: /<command>
-  lobby:
-    description: Takes you to the Server named Hub.
-    usage: /<command>
   onHere:
     description: Shows own ontime on this server
     usage: /<command>
@@ -97,6 +55,9 @@ commands:
   tinfo:
     description: Provides information on specified subjects.
     usage: /<command> <subject>
+  tbtst:
+    description: Not for players to use
+    usage: Do not play with this command.
 permissions:
   tbtickets.staffmanager:
     description:
@@ -161,3 +122,6 @@ permissions:
   tbtickets.server.caveblock:
     description: 'Allows use of /caveblock'
     default: true
+  tbtickets.tbst:
+    description: 'Hidden server transfer command'
+    default: false
