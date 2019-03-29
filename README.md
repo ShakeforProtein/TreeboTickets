@@ -35,36 +35,6 @@ permissions:
   tbtickets.admin:
     description: 'Allows use of all tbTicketAdmin commands'
     default: false
-  tbtickets.server.survival:
-    description: 'Allows use of /survival'
-    default: true
-  tbtickets.server.hardcore:
-    description: 'Allows use of /hardcore'
-    default: true
-  tbtickets.server.sky:
-    description: 'Allows use of /skyblock, /caveblock, /acidisland, /acidislands and /skygrid'
-    default: true
-  tbtickets.server.creative:
-    description: 'Allows use of /creative'
-    default: true
-  tbtickets.server.plots:
-    description: 'Allows use of /plots'
-    default: true
-  tbtickets.server.prison:
-    description: 'Allows use of /prison'
-    default: true
-  tbtickets.server.hub:
-    description: 'Allows use of /lobby'
-    default: true
-  tbtickets.server.lobby:
-    description: 'Allows use of /lobby'
-    default: true
-  tbtickets.server.games:
-    description: 'Allows use of /games'
-    default: true
-  tbtickets.server.caveblock:
-    description: 'Allows use of /caveblock'
-    default: true
   
 ```
 
@@ -114,20 +84,6 @@ permissions:
   /tbTicketAdmin delete <ticket number> - Removes ticket from database, no questions asked.
   /tbTicketAdmin update <ticket number> <Message> - As with tbta this will add a comment to the ticket, but will ignore the assigned staff requirement              
   /tbTicketAdmin stats - Lists total tickets, assigned tickets, unassigned tickets, open tickets, closed tickets.                         
-
-  ### Movement:
-  /skyblock - Teleport you to Sky Server
-  /skygrid - Teleport you to Sky Server
-  /acisislands - Teleport you to Sky Server
-  /prison - Teleport you to Prison Server
-  /survial - Teleport you to Survival Server
-  /hardcore - Teleport you to Hardcore Server
-  /creative - Teleport you to Creative Server
-  /plots - Teleport you to Creative Server
-  /comp - Teleports you to the Creative Competition Plots world.
-  /test- Teleport you to Test Server
-  /lobby - Teleport you to Hub Server
-  /games - Teleport you to Games Server
 
   ### Misc:
   /remoteexecute <command> <server> <args> - issues a command to another server (can only be used from console)
