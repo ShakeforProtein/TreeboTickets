@@ -33,24 +33,24 @@ public class PlayerUpdate {
                             String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + ", `ATTN` = 'Staff' WHERE  `ID` =" + tId);
                             try {
                                 pl.connection.createStatement().executeUpdate(query2);
-                                p.sendMessage("Ticket " + t + " updated.");
+                                p.sendMessage(pl.badge + "Ticket " + t + " updated.");
                             } catch (SQLException e) {
-                                p.sendMessage(ChatColor.RED + "Something went wrong");
-                                System.out.println("Encountered " + e.toString() + " during playerUpdate()");
+                                p.sendMessage(pl.err + "Something went wrong");
+                                System.out.println(pl.err + "Encountered " + e.toString() + " during playerUpdate()");
                                 pl.makeLog(e);
                             }
                         } else {
-                            p.sendMessage(ChatColor.RED + "Sorry " + p.getName() + " you do not own this ticket.");
+                            p.sendMessage(pl.err + "Sorry " + p.getName() + " you do not own this ticket.");
                         }
                     }
                 } catch (SQLException e) {
-                    p.sendMessage(ChatColor.RED + "Something went wrong");
-                    System.out.println("Encountered " + e.toString() + " during playerUpdate()");
+                    p.sendMessage(pl.err + "Something went wrong");
+                    System.out.println(pl.err + "Encountered " + e.toString() + " during playerUpdate()");
                     pl.makeLog(e);
                 }
             }
         } else {
-            p.sendMessage("You don't have the required permissions to run this command.");
+            p.sendMessage(pl.err + "You don't have the required permissions to run this command.");
         }
     }
 }

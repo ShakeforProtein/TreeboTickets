@@ -25,18 +25,18 @@ public class StaffUnclaim {
                         String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFF` =  'UNASSIGNED' WHERE  `ID` =" + tId);
                         try {
                             pl.connection.createStatement().executeUpdate(query2);
-                            p.sendMessage("Ticket " + t + " unclaimed.");
+                            p.sendMessage(pl.badge + "Ticket " + t + " unclaimed.");
                         } catch (SQLException e) {
-                            p.sendMessage(ChatColor.RED + "Something went wrong");
-                            System.out.println("Encountered " + e.toString() + " during staffUnclaim()");
+                            p.sendMessage(pl.err + "Something went wrong");
+                            System.out.println(pl.err + "Encountered " + e.toString() + " during staffUnclaim()");
                         }
                     } else {
-                        p.sendMessage(ChatColor.RED + "That ticket is assigned to " + tStaff);
+                        p.sendMessage(pl.err + "That ticket is assigned to " + tStaff);
                     }
                 }
             } catch (SQLException e) {
-                p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during staffUnclaim()");
+                p.sendMessage(pl.err + "Something went wrong");
+                System.out.println(pl.err + "Encountered " + e.toString() + " during staffUnclaim()");
                 pl.makeLog(e);
             }
         }

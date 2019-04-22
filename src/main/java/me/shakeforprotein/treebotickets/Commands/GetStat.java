@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 
 public class GetStat implements CommandExecutor {
 
-    private TreeboTickets plugin;
+    private TreeboTickets pl;
     private GetStatistic getStatistic;
 
     public GetStat(TreeboTickets main) {
-        this.plugin = main;
+        this.pl = main;
         this.getStatistic = new GetStatistic(main);
     }
 
@@ -25,10 +25,10 @@ public class GetStat implements CommandExecutor {
                     sender.sendMessage(getStatistic.getStatistic(args[0], args[1], (Player) sender));
 
                 } else if (args.length == 1) {
-                    sender.sendMessage("No playername detected, getting own stat");
+                    sender.sendMessage(pl.err + "No playername detected, getting own stat");
                     sender.sendMessage(getStatistic.getStatistic(args[0], sender.getName(), (Player) sender));
                 } else {
-                    sender.sendMessage("Incorrect command usage. Please specify stat and player.");
+                    sender.sendMessage(pl.err + "Incorrect command usage. Please specify stat and player.");
                     sender.sendMessage("/getstat <stat> <playername>");
                 }
             }
@@ -36,10 +36,10 @@ public class GetStat implements CommandExecutor {
                 if (args.length == 3) {
                     getStatistic.getStatistic2(args[0], args[1], args[2]);
                 } else if (args.length == 1) {
-                    sender.sendMessage("This command requires a player argument and server name / skyblock gamemode name when run from console");
+                    sender.sendMessage(pl.err + "This command requires a player argument and server name / skyblock gamemode name when run from console");
                     sender.sendMessage("/getstat <stat> <playername> <tableName>");
                 } else {
-                    sender.sendMessage("Incorrect command usage. Please specify stat and player.");
+                    sender.sendMessage(pl.err + "Incorrect command usage. Please specify stat and player.");
                     sender.sendMessage("/getstat <stat> <playername> <tableName>");
                 }
 

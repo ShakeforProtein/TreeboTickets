@@ -30,25 +30,25 @@ public class BuilderUpdate {
                             String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFFSTEPS` =  '" + newStaffSteps + "' WHERE  `ID` =" + tId);
                             try {
                                 pl.connection.createStatement().executeUpdate(query2);
-                                p.sendMessage("Ticket " + t + " updated.");
+                                p.sendMessage(pl.badge + "Ticket " + t + " updated.");
                             } catch (SQLException e) {
-                                p.sendMessage(ChatColor.RED + "Something went wrong");
-                                System.out.println("Encountered " + e.toString() + " during builderUpdate()");
+                                p.sendMessage(pl.err + "Something went wrong");
+                                System.out.println(pl.err + "Encountered " + e.toString() + " during builderUpdate()");
                                 pl.makeLog(e);
                             }
                         }
                     } else {
-                        p.sendMessage(ChatColor.RED + "That ticket is assigned to " + tStaff + " so you are not able to update it.");
+                        p.sendMessage(pl.err + "That ticket is assigned to " + tStaff + " so you are not able to update it.");
                     }
                 }
             } catch (SQLException e) {
-                p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during builderUpdate()");
+                p.sendMessage(pl.err + "Something went wrong");
+                System.out.println(pl.err + "Encountered " + e.toString() + " during builderUpdate()");
                 pl.makeLog(e);
 
             }
         }
         }
-        else{p.sendMessage("You lack the required permissions to use this command.");}
+        else{p.sendMessage(pl.err + "You lack the required permissions to use this command.");}
     }
 }

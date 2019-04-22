@@ -41,7 +41,7 @@ public class LogJoin implements Listener {
             public void run() {
 
 
-                if (pl.getConfig().getString("serverName").equalsIgnoreCase("games")) {
+                if (pl.getConfig().getString("serverName").equalsIgnoreCase("games") || pl.getConfig().getString("serverName").equalsIgnoreCase("hub")) {
                     if (e.getPlayer().hasPermission("tbtickets.staffmanager") || e.getPlayer().getName().equalsIgnoreCase("ShakeforProtein")) {
 
                         File listFile = new File(pl.getDataFolder(), "staffList.yml");
@@ -63,8 +63,8 @@ public class LogJoin implements Listener {
                         totalRows = countResponse.getInt("TOTALROWS");
                     }
                 } catch (SQLException err) {
-                    e.getPlayer().sendMessage(ChatColor.RED + "Something went wrong");
-                    System.out.println("Encountered " + e.toString() + " during Retrieve Player Ticket Count - LogJoin");
+                    e.getPlayer().sendMessage(pl.err + "Something went wrong");
+                    System.out.println(pl.err + "Encountered " + e.toString() + " during Retrieve Player Ticket Count - LogJoin");
                     pl.makeLog(err);
                 }
 
@@ -80,11 +80,11 @@ public class LogJoin implements Listener {
                         }
                         if(ticketNumbers.length() > 0) {ticketNumbers = ticketNumbers.substring(0, ticketNumbers.length() - 1);}
                     } catch (SQLException err) {
-                        e.getPlayer().sendMessage(ChatColor.RED + "Something went wrong");
-                        System.out.println("Encountered " + e.toString() + " during NotifyPlayer - LogJoin");
+                        e.getPlayer().sendMessage(pl.err + "Something went wrong");
+                        System.out.println(pl.err + "Encountered " + e.toString() + " during NotifyPlayer - LogJoin");
                         pl.makeLog(err);
                     }
-                    if(ticketNumbers.length() > 0){e.getPlayer().sendMessage(ChatColor.GOLD + "The following ticket numbers require your input: " + ChatColor.GREEN + ticketNumbers);}
+                    if(ticketNumbers.length() > 0){e.getPlayer().sendMessage(pl.badge + "The following ticket numbers require your input: " + ChatColor.GREEN + ticketNumbers);}
                 }
             }
         }, 120L);

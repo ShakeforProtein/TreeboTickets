@@ -28,14 +28,14 @@ public class RemoteExecute implements CommandExecutor {
                     for (int i = 1; i < args.length; i++) {
                         commandString = commandString.append(args[i] + " ");
                     }
-                    sender.sendMessage("Executing command \"" + commandString.toString() + "\" on server - " + args[0]);
+                    sender.sendMessage(pl.badge + "Executing command \"" + commandString.toString() + "\" on server - " + args[0]);
 
                     Bukkit.dispatchCommand(console, commandString.toString());
                 } else {
-                    sender.sendMessage("Command does not apply to this server - " + pl.getConfig().getString("serverName") + ". Skipping execute");
+                    sender.sendMessage(pl.err + "Command does not apply to this server - " + pl.getConfig().getString("serverName") + ". Skipping execute");
                 }
             } else {
-                sender.sendMessage("This command only runs from console");
+                sender.sendMessage(pl.err + "This command only runs from console");
             }
         }
         return true;

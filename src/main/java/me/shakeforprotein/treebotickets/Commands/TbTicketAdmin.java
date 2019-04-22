@@ -126,7 +126,7 @@ public class TbTicketAdmin implements CommandExecutor {
                 }
                 else{ticketAdminHelp.tbTicketAdminHelp(p);}
             }
-            else if (cmd.getName().equalsIgnoreCase("tbticketadmin") && !p.hasPermission("tbtickets.admin")){p.sendMessage(ChatColor.RED + "You lack the required permissions for these commands");}
+            else if (cmd.getName().equalsIgnoreCase("tbticketadmin") && !p.hasPermission("tbtickets.admin")){p.sendMessage(pl.err + "You lack the required permissions for these commands");}
         }
         return true;
     }

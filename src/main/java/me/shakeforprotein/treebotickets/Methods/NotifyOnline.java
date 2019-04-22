@@ -16,8 +16,8 @@ public class NotifyOnline {
     public void notifyOnline(String perm, String ticketNumber, int pos, int total) {
         for (Player p : getServer().getOnlinePlayers()) {
             if (p.hasPermission("tbtickets." + perm)) {
-                System.out.println(ChatColor.RED + "TicketDb cleanup in progress:  Ticket id - " + ticketNumber + " (" + pos + " of " + total + ") deleted.");
-                p.sendMessage(ChatColor.RED + "TicketDb cleanup in progress:  Ticket id - " + ticketNumber + " (" + pos + " of " + total + ") deleted.");
+                System.out.println(pl.badge  + "TicketDb cleanup in progress:  Ticket id - " + ticketNumber + " (" + pos + " of " + total + ") deleted.");
+                p.sendMessage(pl.badge + "TicketDb cleanup in progress:  Ticket id - " + ticketNumber + " (" + pos + " of " + total + ") deleted.");
             }
         }
     }

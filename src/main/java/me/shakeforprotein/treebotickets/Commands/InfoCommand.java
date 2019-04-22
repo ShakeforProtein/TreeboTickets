@@ -22,13 +22,13 @@ public class InfoCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("tinfo")){
             if(args.length == 0){
-                sender.sendMessage(ChatColor.RED + "Please specify a topic to request information about.");
+                sender.sendMessage(pl.err + "Please specify a topic to request information about.");
             }
 
             if(args.length == 1){
                 infoHelp.infoHelp(args[0], sender);
             }
-            else {sender.sendMessage(ChatColor.RED + "Too many Arguments");
+            else {sender.sendMessage(pl.err + "Too many Arguments");
             }
         }
         return true;

@@ -33,7 +33,7 @@ public class Idea implements CommandExecutor {
                 }
                 pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                 pl.getConfig().set("players." + p.getName() + ".type", "Idea");
-                p.sendMessage("Please give a brief description of your idea.");
+                p.sendMessage(pl.badge + "Please give a brief description of your idea.");
             }
         }
         return true;

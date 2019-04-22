@@ -38,7 +38,7 @@ public class TbTicket implements CommandExecutor {
 
 
     private void noPerms(Player p) {
-        p.sendMessage(ChatColor.RED + "You lack the required permissions to run this command");
+        p.sendMessage(pl.err + "You lack the required permissions to run this command");
     }
 
 
@@ -122,7 +122,7 @@ public class TbTicket implements CommandExecutor {
                     playerClose.closeTicket(p, Integer.parseInt(args[1]));
                 }
                 else {
-                    p.sendMessage(ChatColor.RED + "Please specify a ticket number as your second argument. Ie. /ticket " + args[0] + " 123");
+                    p.sendMessage(pl.err + "Please specify a ticket number as your second argument. Ie. /ticket " + args[0] + " 123");
                 }
             }
             else if (args[0].equalsIgnoreCase("list")){
@@ -139,7 +139,7 @@ public class TbTicket implements CommandExecutor {
                 }
                 else {
                     tbTicketHelp.tbTicketHelp(p);
-                    p.sendMessage(ChatColor.RED + "Please specify a ticket number as your second argument. Ie. /ticket " + args[0] + " 123");
+                    p.sendMessage(pl.err + "Please specify a ticket number as your second argument. Ie. /ticket " + args[0] + " 123");
                 }
             }
             else if (args[0].equalsIgnoreCase("update")){
@@ -147,17 +147,17 @@ public class TbTicket implements CommandExecutor {
                 }
                 else {
                     tbTicketHelp.tbTicketHelp(p);
-                    p.sendMessage(ChatColor.RED + "Please specify a ticket number as your second argument. Ie. /ticket " + args[0] + " 123 Yes it works now");
+                    p.sendMessage(pl.err + "Please specify a ticket number as your second argument. Ie. /ticket " + args[0] + " 123 Yes it works now");
                 }
             }
             else{
                 tbTicketHelp.tbTicketHelp(p);
-                p.sendMessage("Starting new ticket. Enter cancel into chat to cancel anytime.");
+                p.sendMessage(pl.badge + "Starting new ticket. Enter cancel into chat to cancel anytime.");
                 startTicketLogic.startTicketLogic(p);
             }
         }
         else{
-            sender.sendMessage("These commands can only be run as a player");
+            sender.sendMessage(pl.err + "These commands can only be run as a player");
         }
         return true;
 

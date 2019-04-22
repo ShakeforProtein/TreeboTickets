@@ -31,7 +31,7 @@ public class CleanupDatabase {
                 total = response.getInt("TOTAL");
             }
             if(total > size){
-                System.out.println("Total (" + total + ") > size (" + size + ")");
+                System.out.println(pl.badge + "Total (" + total + ") > size (" + size + ")");
                 response2 = pl.connection.createStatement().executeQuery("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STATUS = 'CLOSED' AND STAFF != 'DELETED' ORDER BY ID ASC");
                 while(response2.next()) {
                     tIdString = tIdString + response2.getInt("ID") + ",";
@@ -47,8 +47,8 @@ public class CleanupDatabase {
                     try {tIdIntArray[counter] = Integer.parseInt(sID);
                         counter++;}
                     catch(ArrayIndexOutOfBoundsException e){
-                        System.out.println("Error: sID = " + sID);
-                        System.out.println("Error: tID = " + Integer.parseInt(sID));}
+                        System.out.println(pl.err + "sID = " + sID);
+                        System.out.println(pl.err + "tID = " + Integer.parseInt(sID));}
                 }
                 System.out.println("tIdIA =  " + tIdIntArray.length);
 
@@ -69,7 +69,7 @@ public class CleanupDatabase {
             System.out.println("Completed loop");
         }
         catch (SQLException e) {
-            System.out.println("Encountered " + e.toString() + " during cleanupDatabase()");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during cleanupDatabase()");
             pl.makeLog(e);
         }
     }

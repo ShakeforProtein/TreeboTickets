@@ -61,7 +61,7 @@ public class Review implements CommandExecutor {
                 if (args.length == 0) {
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                     pl.getConfig().set("players." + p.getName() + ".type", "Review");
-                    p.sendMessage("Please give a brief description of your build. You can cancel at any time by entering the word \"cancel\" into chat");
+                    p.sendMessage(pl.badge + "Please give a brief description of your build. You can cancel at any time by entering the word \"cancel\" into chat");
                 }
                 else if (args.length == 1 && p.hasPermission("tbtickets.builder")) {
                     if (args[0].equalsIgnoreCase("gui")) {
@@ -77,13 +77,13 @@ public class Review implements CommandExecutor {
                         if (pl.isNumeric(args[1])) {
                             builderClose.builderClose(p, args[1]);
                         } else {
-                            p.sendMessage("Please enter a valid ticket number to close.");
+                            p.sendMessage(pl.err + "Please enter a valid ticket number to close.");
                         }
                     } else if (args[0].equalsIgnoreCase("tp")) {
                         if (pl.isNumeric(args[1])) {
                             builderTp.builderTP(p, "SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF = 'Builders' AND ID='" + args[1] + "'", Integer.parseInt(args[1]));
                         } else {
-                            p.sendMessage("Please enter a valid ticket number for Teleport");
+                            p.sendMessage(pl.err + "Please enter a valid ticket number for Teleport");
                         }
                     } else if (args[0].equalsIgnoreCase("update")) {
                         if (pl.isNumeric(args[1])) {
@@ -97,7 +97,7 @@ public class Review implements CommandExecutor {
                         if (pl.isNumeric(args[1])) {
                             builderViewTicket.builderViewTicket(p, Integer.parseInt(args[1]));
                         } else {
-                            p.sendMessage("Please enter a valid ticket number after the command");
+                            p.sendMessage(pl.err + "Please enter a valid ticket number after the command");
                         }
                     }
                 }
@@ -105,8 +105,8 @@ public class Review implements CommandExecutor {
                 else{
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", (int) 2);
                     pl.getConfig().set("players." + p.getName() + ".type", "Review");
-                    p.sendMessage("Invalid input. Opening review request. Enter 'cancel' into chat at any time to cancel.");
-                    p.sendMessage("Please give a brief description of your build. You can cancel at any time by entering the word \"cancel\" into chat");
+                    p.sendMessage(pl.err + "Invalid input. Opening review request. Enter 'cancel' into chat at any time to cancel.");
+                    p.sendMessage(pl.badge + "Please give a brief description of your build. You can cancel at any time by entering the word \"cancel\" into chat");
                 }
             }
         }

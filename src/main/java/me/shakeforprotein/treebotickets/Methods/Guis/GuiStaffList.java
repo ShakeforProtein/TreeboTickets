@@ -74,8 +74,8 @@ public class GuiStaffList {
         }
 
         catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong getting statistics");
-            System.out.println("Encountered " + e.toString() + " during guiStaffList()");
+            p.sendMessage(pl.err + "Something went wrong getting statistics");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during guiStaffList()");
             pl.makeLog(e);
         }
     }

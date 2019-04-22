@@ -43,7 +43,7 @@ public class TicketConversation implements Listener {
                     ticketState = 0;
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
                     pl.saveConfig();
-                    p.sendMessage("Ticket Canceled");
+                    p.sendMessage(pl.badge + "Ticket Canceled");
                 }
                 String tServer = pl.api.getServer().toString();
                 UUID puuid = p.getUniqueId();
@@ -67,7 +67,7 @@ public class TicketConversation implements Listener {
                         } else if (m.equals("3")) {
                             type = "Other";
                         }
-                        else {p.sendMessage(ChatColor.RED + "Invalid input.");}
+                        else {p.sendMessage(pl.err + "Invalid input.");}
 
 
                         pl.getConfig().set("players." + p.getName() + ".type", type);
@@ -78,7 +78,7 @@ public class TicketConversation implements Listener {
                         p.sendMessage("Your response - " + type);
                         p.sendMessage("");
                         p.sendMessage("");
-                        p.sendMessage("In your own words, please give a short explanation of the issue you are suffering");
+                        p.sendMessage(pl.badge + "In your own words, please give a short explanation of the issue you are suffering");
                     }
                 }
                 if (ticketState == 2) {
@@ -92,11 +92,11 @@ public class TicketConversation implements Listener {
                     p.sendMessage("");
                     p.sendMessage("");
                     if (pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("idea")) {
-                        p.sendMessage("Please list any additional details you'd like to include.");
+                        p.sendMessage(pl.badge + "Please list any additional details you'd like to include.");
                     } else if (pl.getConfig().get("players." + p.getName() + ".type").toString().equalsIgnoreCase("review")) {
-                        p.sendMessage("Please list any additional details you'd like to include.");
+                        p.sendMessage(pl.badge + "Please list any additional details you'd like to include.");
                     } else {
-                        p.sendMessage("Briefly describe what steps you've taken to attempt to fix this issue yourself");
+                        p.sendMessage(pl.badge + "Briefly describe what steps you've taken to attempt to fix this issue yourself");
                     }
                 }
 

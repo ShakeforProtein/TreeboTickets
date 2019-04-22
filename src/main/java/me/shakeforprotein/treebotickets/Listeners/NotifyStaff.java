@@ -36,7 +36,7 @@ public class NotifyStaff implements Listener {
         try {
             pl.openConnection();
         } catch (SQLException | ClassNotFoundException err) {
-            System.out.println("Failed to reconnect to database. This is probably fine.");
+            System.out.println(pl.err + "Failed to reconnect to database. This is probably fine.");
         }
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {

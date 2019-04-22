@@ -21,6 +21,9 @@ public class Discord implements CommandExecutor {
             if (args.length == 0) {
                 commandString += " link";
             }
+            else if (args.length == 1 && args[0].equalsIgnoreCase("unlink")){
+                commandString += " unlink";
+            }
             else if (args.length == 1 && args[0] == "default"){commandString += "";}
             else {
                 for (String argString : args) {

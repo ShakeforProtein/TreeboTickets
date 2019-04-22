@@ -58,18 +58,18 @@ public class Tbta implements CommandExecutor {
                     if (p.hasPermission("tbtickets.mod.view")) {
                         openTicketGui.openTicketGui(p);
                     } else {
-                        p.sendMessage("You lack the permissions required to use this command");
+                        p.sendMessage(pl.err + "You lack the permissions required to use this command");
                     }
                 } else if (args.length < 2) {
-                    p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
-                    p.sendMessage(ChatColor.RED + "INCORRECT USAGE. CORRECT USAGE IS AS FOLLOWS");
-                    p.sendMessage(ChatColor.GOLD + "/tbta list <assigned|unnassigned|open|closed|idea>  -  Lists all tickets assigned to you");
-                    p.sendMessage(ChatColor.GOLD + "/tbta view <ticket_number>  -  Displays details on specific ticket");
-                    p.sendMessage(ChatColor.GOLD + "/tbta <close|reopen> <ticket_number>  -  Close / Reopen ticket with id");
-                    p.sendMessage(ChatColor.GOLD + "/tbta <claim|unclaim> <ticket_number>  -  Assigns an unassigned ticket to yourself");
-                    p.sendMessage(ChatColor.GOLD + "/tbta tp <ticket_number>  -  Teleport to location of ticket number");
-                    p.sendMessage(ChatColor.GOLD + "/tbta update <ticket_number>  <your message> -  Updates a tickets staff steps data.  Remember this can be seen by the ticket submitter");
-                    p.sendMessage(ChatColor.GOLD + "/tbta gui");
+                    p.sendMessage((pl.badge + " XXXNETWORKNAMEXXX - Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
+                    p.sendMessage(pl.err + "INCORRECT USAGE. CORRECT USAGE IS AS FOLLOWS");
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "/tbta list <assigned|unnassigned|open|closed|idea>  -  Lists all tickets assigned to you");
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "/tbta view <ticket_number>  -  Displays details on specific ticket");
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "/tbta <close|reopen> <ticket_number>  -  Close / Reopen ticket with id");
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "/tbta <claim|unclaim> <ticket_number>  -  Assigns an unassigned ticket to yourself");
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "/tbta tp <ticket_number>  -  Teleport to location of ticket number");
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "/tbta update <ticket_number>  <your message> -  Updates a tickets staff steps data.  Remember this can be seen by the ticket submitter");
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "/tbta gui");
 
 
                 } else if (args.length == 2) {
@@ -92,31 +92,31 @@ public class Tbta implements CommandExecutor {
                         if (pl.isNumeric(args[1])) {
                             pl.staffReOpenTicket(p, Integer.parseInt(args[1]));
                         } else {
-                            p.sendMessage("Please include a valid ticket number as your second argument");
+                            p.sendMessage(pl.err + "Please include a valid ticket number as your second argument");
                         }
                     } else if (args[0].equalsIgnoreCase("close") && p.hasPermission("tbtickets.mod.close")) {
                         if (pl.isNumeric(args[1])) {
                             staffClose.staffCloseTicket(p, Integer.parseInt(args[1]));
                         } else {
-                            p.sendMessage("Please include a valid ticket number as your second argument");
+                            p.sendMessage(pl.err + "Please include a valid ticket number as your second argument");
                         }
                     } else if (args[0].equalsIgnoreCase("view") && p.hasPermission("tbtickets.mod.view")) {
                         if (pl.isNumeric(args[1])) {
                             staffViewTicket.staffViewTicket(p, Integer.parseInt(args[1]));
                         } else {
-                            p.sendMessage("Please include a valid ticket number as your second argument");
+                            p.sendMessage(pl.err + "Please include a valid ticket number as your second argument");
                         }
                     } else if (args[0].equalsIgnoreCase("claim")) {
                         if (pl.isNumeric(args[1])) {
                             staffClaim.staffClaim(p, Integer.parseInt(args[1]));
                         } else {
-                            p.sendMessage("Please include a valid ticket number as your second argument");
+                            p.sendMessage(pl.err + "Please include a valid ticket number as your second argument");
                         }
                     } else if (args[0].equalsIgnoreCase("unclaim")) {
                         if (pl.isNumeric(args[1])) {
                             staffUnclaim.staffUnclaim(p, Integer.parseInt(args[1]));
                         } else {
-                            p.sendMessage("Please include a valid ticket number as your second argument");
+                            p.sendMessage(pl.err + "Please include a valid ticket number as your second argument");
                         }
                     } else if (args[0].equalsIgnoreCase("tp")) {
                         if (isNumeric(args[1])) {

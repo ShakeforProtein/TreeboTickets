@@ -39,7 +39,7 @@ public class InfoHelp {
         File infoFile = new File(pl.getDataFolder() + File.separator + "infoFiles" + File.separator, fileName + ".txt");
 
         if (!infoFile.exists()) {
-            p.sendMessage(ChatColor.RED + "No data found on requested topic " + ChatColor.YELLOW + fileName);
+            p.sendMessage(pl.err + "No data found on requested topic " + ChatColor.YELLOW + fileName);
         }
         else {
             try {
@@ -62,7 +62,7 @@ public class InfoHelp {
                     }
 
                 } else {
-                    p.sendMessage(ChatColor.GREEN + "Data found " + ChatColor.RED + "but not configured");
+                    p.sendMessage(pl.err + ChatColor.GREEN + "Data found " + ChatColor.RED + "but not configured");
                 }
             } catch (Exception err) {
                 pl.makeLog(err);

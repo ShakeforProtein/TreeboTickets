@@ -31,13 +31,13 @@ public class StaffList {
                 int tZ = response.getInt("Z");
                 String tWorld = response.getString("WORLD");
                 String tStatus = response.getString("STATUS");
-                p.sendMessage(ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " + tX + " " + tY + " " + tZ + "   -   " + tStaff + "   -   " + tStatus);
+                p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " + tX + " " + tY + " " + tZ + "   -   " + tStaff + "   -   " + tStatus);
 
             }
-            p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
+
         } catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong getting statistics");
-            System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            p.sendMessage(pl.err + "Something went wrong getting statistics");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during genericQuery()");
             pl.makeLog(e);
         }
         return output;

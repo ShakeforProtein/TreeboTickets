@@ -28,7 +28,7 @@ public class Hub implements CommandExecutor {
                     openHubMenu.openHubMenu((Player) sender);
                 }
                 else{
-                    sender.sendMessage("The HUB command does not support additional arguments");
+                    sender.sendMessage(pl.err + "The HUB command does not support additional arguments");
                 }
             }
         }

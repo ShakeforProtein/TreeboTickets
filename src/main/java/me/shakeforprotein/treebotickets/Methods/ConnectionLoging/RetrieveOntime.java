@@ -36,6 +36,7 @@ public class RetrieveOntime {
                 String otherNames = response.getString("OtherNames");
                 String firstJoinRaw = response.getString("FirstJoin");
                 String lastOffRaw = response.getString("LastLeft");
+                String timeAFK = response.getString("AFKTIME");
                 Long totalOn = Long.parseLong(totalOnRaw);
                 Long firstJoin = Long.parseLong((firstJoinRaw));
                 Long lastOff = Long.parseLong(lastOffRaw);
@@ -60,43 +61,51 @@ public class RetrieveOntime {
                 String llDateStr = format.format(new Date(lastOff));
                 String cTime = format.format(new Date(currentTime));
 
+
                 String fjdt = LocalDateTime.ofInstant(Instant.ofEpochMilli(firstJoin),  TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + fjDateStr;
                 String codt = LocalDateTime.ofInstant(Instant.ofEpochMilli(currentOn),  TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + coDateStr;
                 String lldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastOff),    TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + llDateStr;
                 String cdt =  LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTime), TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + cTime;
 
                 if (t.equalsIgnoreCase("minimal")){
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "User: " + ChatColor.RESET + currentName);
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
+                    //s.sendMessage(pl.badge + "Retrieving data for " + currentName);
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "User: " + ChatColor.RESET + currentName);
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
                 }
 
                 else if (t.equalsIgnoreCase("true")){
+                    //s.sendMessage(pl.badge + "Retrieving data for " + currentName);
                     if(cColour.equals(ChatColor.YELLOW + "") || cColour.equals(ChatColor.RED + "")) {
-                        s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "User: " + ChatColor.RESET + currentName);
-                        s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
-                        s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
+                        s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "User: " + ChatColor.RESET + currentName);
+                        s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
+                        s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
+                        s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
                     }
                 }
 
                 else {
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "Current Time  -  " + ChatColor.RESET + cdt + " - (" + cTime + ")");
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "UUID  -  " + ChatColor.RESET + uUID);
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "CurrentName  -  " + ChatColor.RESET + currentName);
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "OtherNames  -  " + ChatColor.RESET + otherNames);
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "CurrentIP  -  " + ChatColor.RESET + currentIP);
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "FirstJoin  -  " + ChatColor.RESET + "" + fjdt + " - (" + firstJoin + ")");
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "LatestOntime  -  " + ChatColor.RESET + ChatColor.GREEN + codt + " - (" + currentOn + ")");
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
-                    s.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "TotalOntime  -  " + ChatColor.RESET + ChatColor.GOLD + formatTime(totalOn));
+                    s.sendMessage(pl.badge + "Retrieving data for " + currentName);
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Current Time  -  " + ChatColor.RESET + cdt + " - (" + cTime + ")");
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "UUID  -  " + ChatColor.RESET + uUID);
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "CurrentName  -  " + ChatColor.RESET + currentName);
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "OtherNames  -  " + ChatColor.RESET + otherNames);
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "CurrentIP  -  " + ChatColor.RESET + currentIP);
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "FirstJoin  -  " + ChatColor.RESET + "" + fjdt + " - (" + firstJoin + ")");
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Latest Connect  -  " + ChatColor.RESET + ChatColor.GREEN + codt + " - (" + currentOn + ")");
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Latest Disconnect  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "TotalOntime  -  " + ChatColor.RESET + ChatColor.GOLD + formatTime(totalOn));
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
+                    s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Adjusted On Time - " + ChatColor.RESET + cColour + formatTime(totalOn - (Integer.parseInt(timeAFK) * 60000)));
                 }
 
             } else {
-                s.sendMessage(ChatColor.RED + "No Data Matching that player name");
+                s.sendMessage(pl.err + "No Data Matching that player name");
             }
         } catch (SQLException e) {
-            System.out.println("Encountered " + e.toString() + " during retrieveOntime()");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during retrieveOntime()");
             pl.makeLog(e);
         }
     }

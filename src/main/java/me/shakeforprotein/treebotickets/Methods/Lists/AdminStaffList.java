@@ -18,7 +18,7 @@ public class AdminStaffList {
         String output = "";
         if (p.hasPermission("tbtickets.admin")) {
             p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
-            p.sendMessage(ChatColor.AQUA + "Assigned to " + staff);
+            p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + ChatColor.AQUA + "Assigned to " + staff);
             p.sendMessage(ChatColor.AQUA + "Id  -   Player  -   World   -   Coordinates -   Status");
 
             try {
@@ -31,15 +31,13 @@ public class AdminStaffList {
                     int tZ = response.getInt("Z");
                     String tWorld = response.getString("WORLD");
                     String tStatus = response.getString("STATUS");
-                    p.sendMessage(ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " + tX + " " + tY + " " + tZ + "   -   " + tStatus);
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "    -   " + tX + " " + tY + " " + tZ + "   -   " + tStatus);
                 }
 
-                p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
             } catch (SQLException e) {
-                p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during genericQuery()");
+                p.sendMessage(pl.err + "Something went wrong");
+                System.out.println(pl.err + "Encountered " + e.toString() + " during genericQuery()");
                 pl.makeLog(e);
-
             }
         }
         return output;

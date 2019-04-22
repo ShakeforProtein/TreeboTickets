@@ -18,19 +18,19 @@ public class BuilderStats {
             response = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF= 'Builders'");
             while (response.next()) {
                 p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
-                p.sendMessage("TOTAL Review tickets: " + response.getInt("TOTAL"));
+                p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "TOTAL Review tickets: " + response.getInt("TOTAL"));
             }
             response = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF= 'Builders' AND STATUS='OPEN'");
             while (response.next()) {
-                p.sendMessage("OPEN ReviewTickets: " + response.getInt("TOTAL"));
+                p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "OPEN ReviewTickets: " + response.getInt("TOTAL"));
             }
             response = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF= 'Builders' AND STATUS='CLOSED'");
             while (response.next()) {
-                p.sendMessage("CLOSED review Tickets: " + response.getInt("TOTAL"));
+                p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + "CLOSED review Tickets: " + response.getInt("TOTAL"));
             }
         } catch (SQLException e) {
             // p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during BuilderStats()");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during BuilderStats()");
             pl.makeLog(e);
         }
     }

@@ -24,17 +24,17 @@ public class CreateTicket {
             int tID = 0;
             while (response.next()) {
                 tID = response.getInt("ID");
-                p.sendMessage("Your Ticket number is " + tID + ". Use /ticket view " + tID + " to view any updates");
+                p.sendMessage(pl.badge + "Your Ticket number is " + tID + ". Use /ticket view " + tID + " to view any updates");
                 while (staffResponse.next()){
                     String staff = staffResponse.getString("IGNAME");
                     pl.api.sendMessage(staff, "Player " + p.getName() + "Has just submitted ticket number " + tID);
                 }
             }
-            p.sendMessage(ChatColor.GREEN + "Your ticket has been successfully submitted");
+            p.sendMessage(pl.badge + "Your ticket has been successfully submitted");
         } catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong while sending your ticket to the database");
+            p.sendMessage(pl.err + "Something went wrong while sending your ticket to the database");
             pl.makeLog(e);
-            System.out.println("Encountered " + e.toString() + " during addTicketToDB()");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during addTicketToDB()");
         }
     }
 }

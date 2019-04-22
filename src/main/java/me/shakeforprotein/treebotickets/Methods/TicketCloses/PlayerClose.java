@@ -24,14 +24,14 @@ public class PlayerClose {
                 tPlayer = response.getString("IGNAME");
                 if (tPlayer.trim().equalsIgnoreCase(p.getName().trim())) {
                     pl.connection.createStatement().executeUpdate("UPDATE `" + pl.table + "` SET STATUS = 'CLOSED' WHERE ID =" + tId);
-                    p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Closed.");
+                    p.sendMessage(pl.badge + "Ticket " + t + " Closed.");
                 } else {
-                    p.sendMessage(ChatColor.RED + "This is not your ticket to close");
+                    p.sendMessage(pl.err + "This is not your ticket to close");
                 }
             }
         } catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during closeTicket()");
+            p.sendMessage(pl.err + "Something went wrong");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during closeTicket()");
             pl.makeLog(e);
         }
     }

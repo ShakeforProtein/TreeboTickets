@@ -36,13 +36,12 @@ public class PlayerListOwn {
                         tStatus = ChatColor.RED + tStatus + ChatColor.WHITE;
                     }
                     String tWorld = response.getString("WORLD");
-                    p.sendMessage(ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "     -   " + tX + " " + tY + " " + tZ + "   -   " + tStatus);
+                    p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.WHITE + "" + tId + "  -   " + tPlayer + "    -   " + tWorld + "     -   " + tX + " " + tY + " " + tZ + "   -   " + tStatus);
                 }
             }
-            p.sendMessage(ChatColor.DARK_BLUE + "#EndOfList");
         } catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            p.sendMessage(pl.err + "Something went wrong");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during genericQuery()");
             pl.makeLog(e);
         }
         return output;

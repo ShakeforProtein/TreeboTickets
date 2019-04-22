@@ -35,6 +35,7 @@ import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import me.shakeforprotein.treebotickets.Commands.*;
 import me.shakeforprotein.treebotickets.Listeners.*;
@@ -100,8 +101,15 @@ public final class TreeboTickets extends JavaPlugin {
     private UpdateChecker uc;
     public BungeeChannelApi api = BungeeChannelApi.of(this);
 
+
+    public HashMap afkHash = new HashMap<String, Integer>();
+    public HashMap counterHash = new HashMap<String, Integer>();
+    public HashMap timerHash = new HashMap<String, Integer>();
+    public String badge = ChatColor.translateAlternateColorCodes('&', getConfig().getString("badge"));
+    public String err = badge + ChatColor.RED + "Error: " + ChatColor.RESET;
     @Override
     public void onEnable() {
+        badge = badge + " ";
         //Register Command Executors
         this.cmds = new Commands(this);
         this.tbTicket = new TbTicket(this);
@@ -191,7 +199,7 @@ public final class TreeboTickets extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         getConfig().set("version", this.getDescription().getVersion());
         for (String player : getConfig().getConfigurationSection("players").getKeys(false)) {
-            getConfig().set("players." + player + ".ticketstate", 0);
+            getConfig().set("players." + player + ".ticketstate", null);
         }
         saveConfig();
         defineMobList();
@@ -250,6 +258,7 @@ public final class TreeboTickets extends JavaPlugin {
                 }
             }
         }
+        activateAfkChecker();
         System.out.println("TreeboTickets Started");
     }
 
@@ -261,9 +270,9 @@ public final class TreeboTickets extends JavaPlugin {
         saveConfig();
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if ((getConfig().getString("serverName") != null) && (!getConfig().getString("serverName)").equalsIgnoreCase("hub"))) {
-                player.sendMessage("Server is going down for restart, moving you to Hub");
+                player.sendMessage(badge + "Server is going down for restart, moving you to Hub");
             } else {
-                player.sendMessage("Server is going down for restart, moving you to Survival");
+                player.sendMessage(badge + "Server is going down for restart, moving you to Survival");
             }
         }
         pushToLobby.pushToLobby();
@@ -272,7 +281,7 @@ public final class TreeboTickets extends JavaPlugin {
         } catch (SQLException e) {
             makeLog(e);
         }
-        System.out.println("TreeboTickets Stopped");
+        System.out.println(badge + "TreeboTickets Stopped");
         getPluginLoader().disablePlugin(this);
     }
 
@@ -311,8 +320,8 @@ public final class TreeboTickets extends JavaPlugin {
         try {
             response = connection.createStatement().executeQuery(query);
         } catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            p.sendMessage(err + "Something went wrong");
+            System.out.println(err + "Encountered " + e.toString() + " during genericQuery()");
             makeLog(e);
         }
     }
@@ -324,7 +333,7 @@ public final class TreeboTickets extends JavaPlugin {
         try {
             response = connection.createStatement().executeQuery(query);
         } catch (SQLException e) {
-            System.out.println("Encountered " + e.toString() + " during genericQuery()");
+            System.out.println(err + "Encountered " + e.toString() + " during genericQuery()");
             makeLog(e);
         }
     }
@@ -348,12 +357,12 @@ public final class TreeboTickets extends JavaPlugin {
                 while (response.next()) {
                     tId = response.getInt("ID");
                     connection.createStatement().executeUpdate("UPDATE `" + table + "` SET STATUS = 'OPEN' WHERE ID =" + tId);
-                    p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Re-Opened.");
+                    p.sendMessage(badge + "Ticket " + t + " Re-Opened.");
 
                 }
             } catch (SQLException e) {
-                p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during staffReOpen()");
+                p.sendMessage(err + "Something went wrong");
+                System.out.println(err + "Encountered " + e.toString() + " during staffReOpen()");
                 makeLog(e);
             }
         }
@@ -368,11 +377,11 @@ public final class TreeboTickets extends JavaPlugin {
             PrintStream ps = new PrintStream(file);
             tr.printStackTrace(ps);
             System.out.println(this.getDescription().getName() + " - " + this.getDescription().getVersion() + "Encountered Error of type: " + tr.getCause());
-            System.out.println("A log file has been generated at " + this.getDataFolder() + File.separator + "logs" + File.separator + dateTimeString + "-" + tr.getCause() + ".log");
+            System.out.println(badge + "A log file has been generated at " + this.getDataFolder() + File.separator + "logs" + File.separator + dateTimeString + "-" + tr.getCause() + ".log");
             ps.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Error creating new log file for " + getDescription().getName() + " - " + getDescription().getVersion());
-            System.out.println("Error was as follows");
+            System.out.println(err + "Creating new log file for " + getDescription().getName() + " - " + getDescription().getVersion());
+            System.out.println(ChatColor.GOLD + "[X]" + ChatColor.RESET +"Error was as follows");
             System.out.println(e.getMessage());
         }
     }
@@ -499,5 +508,45 @@ public final class TreeboTickets extends JavaPlugin {
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
             e.printStackTrace();
         }
+    }
+
+    private void activateAfkChecker(){
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    if(!afkHash.containsKey(p.getUniqueId().toString())){
+                        afkHash.put(p.getUniqueId().toString(), p.getLocation());
+                        counterHash.put(p.getUniqueId().toString(), 0);
+                    }
+                    else{
+                        if(p.getLocation().equals(afkHash.get(p.getUniqueId().toString()))){
+                            Integer counter = (Integer) counterHash.get(p.getUniqueId().toString());
+                            counterHash.remove(p.getUniqueId().toString());
+                            counterHash.put(p.getUniqueId().toString(), counter +1);
+                            if(counter == 5){
+                                p.sendMessage(badge + "AFK STATE ACTIVATED");
+                            }
+                            if(counter > 4){
+                                if(timerHash.containsKey(p.getUniqueId().toString())){
+                                    int currentTimer = (Integer) timerHash.get(p.getUniqueId().toString());
+                                    timerHash.remove(p.getUniqueId().toString());
+                                    timerHash.put(p.getUniqueId().toString(), (currentTimer + counter));
+                                }
+                                else{
+                                    timerHash.put(p.getUniqueId().toString(), 5);
+                                }
+                            }
+                        }
+                        else{
+                            afkHash.remove(p.getUniqueId().toString());
+                            afkHash.put(p.getUniqueId().toString(), p.getLocation());
+                            counterHash.remove(p.getUniqueId().toString());
+                            counterHash.put(p.getUniqueId().toString(), 0);
+                        }
+                    }
+                }
+            }
+        }, 100L, 1200L);
     }
 }

@@ -26,18 +26,18 @@ public class StaffClaim {
                         String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFF` =  '" + p.getName() + "' WHERE  `ID` =" + tId);
                         try {
                             pl.connection.createStatement().executeUpdate(query2);
-                            p.sendMessage("Ticket " + t + " Claimed.");
+                            p.sendMessage(pl.badge + "Ticket " + t + " Claimed.");
                         } catch (SQLException e) {
                             p.sendMessage(ChatColor.RED + "Something went wrong");
-                            System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                            System.out.println(pl.err + "Encountered " + e.toString() + " during staffClaim()");
                         }
                     } else {
                         p.sendMessage(ChatColor.RED + "That ticket is already assigned to " + tStaff);
                     }
                 }
             } catch (SQLException e) {
-                p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during staffClaim()");
+                p.sendMessage(pl.err + "Something went wrong");
+                System.out.println(pl.err + "Encountered " + e.toString() + " during staffClaim()");
                 pl.makeLog(e);
 
             }

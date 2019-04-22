@@ -19,14 +19,14 @@ public class StaffStats {
             response = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "'");
             while (response.next()) {
                 if (!p.hasPermission("tbtickets.admin")) {
-                    p.sendMessage(("XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
+                    p.sendMessage((pl.badge + "XXXNETWORKNAMEXXX - " + ChatColor.RED + "Ticket System").replace("XXXNETWORKNAMEXXX", ChatColor.GOLD + pl.getConfig().getString("networkName")));
                 }
                 /*p.sendMessage(ChatColor.UNDERLINE + "Your" + ChatColor.RESET + " TOTAL assigned tickets: " + response.getInt("TOTAL"));
                  */
             }
             response = pl.connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + pl.getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "' AND STATUS='OPEN'");
             while (response.next()) {
-                p.sendMessage(ChatColor.UNDERLINE + "Your" + ChatColor.RESET + ChatColor.RED + " OPEN" + ChatColor.RESET + " Tickets: " + response.getInt("TOTAL"));
+                p.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.RESET + ChatColor.UNDERLINE + "Your" + ChatColor.RESET + ChatColor.RED + " OPEN" + ChatColor.RESET + " Tickets: " + response.getInt("TOTAL"));
             }
             /*response = connection.createStatement().executeQuery("SELECT Count(*) AS TOTAL FROM `" + getConfig().getString("table") + "` WHERE STAFF= '" + p.getName() + "' AND STATUS='CLOSED'");
             while (response.next()) {
@@ -34,7 +34,7 @@ public class StaffStats {
             }*/
         } catch (SQLException e) {
             // p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during staffStats()");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during staffStats()");
             pl.makeLog(e);
         }
     }

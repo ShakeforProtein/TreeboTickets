@@ -31,13 +31,13 @@ public class GetStatistic {
             /*sender.sendMessage(ChatColor.RED + "Something went wrong");
             System.out.println("Encountered " + e.toString() + " during genericQuery()");
             pl.makeLog(e);*/
-            returnedStat = ChatColor.RED + "No statistic data matching those search terms";
+            returnedStat = pl.err + "No statistic data matching those search terms";
         }
 
 
         return playerName + " - " + stat + " - " + returnedStat;}
         else{
-            return "You may not look up a player's UUID";
+            return pl.err + "You may not look up a player's UUID";
         }
     }
 
@@ -54,15 +54,15 @@ public class GetStatistic {
                     returnedStat = response.getString(stat.toUpperCase());
                 }
             } catch (SQLException e) {
-                System.out.println(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during genericQuery()");
+                System.out.println(pl.err + "Something went wrong");
+                System.out.println(pl.err + "Encountered " + e.toString() + " during genericQuery()");
                 pl.makeLog(e);
             }
 
 
             return playerName + " - " + stat + " - " + returnedStat;}
         else{
-            return "You may not look up a player's UUID";
+            return pl.err + "You may not look up a player's UUID";
         }
     }
 

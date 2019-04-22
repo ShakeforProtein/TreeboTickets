@@ -25,12 +25,12 @@ public class BuilderClose {
                     if (tstaff.equalsIgnoreCase("Builders")) {
                         tId = response.getInt("ID");
                         pl.connection.createStatement().executeUpdate("UPDATE `" + pl.table + "` SET STATUS = 'CLOSED' WHERE ID =" + tId);
-                        p.sendMessage(ChatColor.BLUE + "Ticket " + t + " Closed.");
+                        p.sendMessage(pl.badge + "Ticket " + t + " Closed.");
                     }
                 }
             } catch (SQLException e) {
-                p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during staffCloseTicket()");
+                p.sendMessage(pl.err + "Something went wrong");
+                System.out.println(pl.err + "Encountered " + e.toString() + " during staffCloseTicket()");
                 pl.makeLog(e);
             }
         }

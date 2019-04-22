@@ -26,18 +26,18 @@ public class AdminAssign {
                         String query2 = ("UPDATE  `" + pl.table + "` SET  `STAFF` =  '" + staffName + "' WHERE  `ID` =" + tId);
                         try {
                             pl.connection.createStatement().executeUpdate(query2);
-                            p.sendMessage("Ticket " + t + " assigned to " + staffName + ".");
+                            p.sendMessage(pl.badge + "Ticket " + t + " assigned to " + staffName + ".");
                         } catch (SQLException e) {
-                            p.sendMessage(ChatColor.RED + "Something went wrong");
-                            System.out.println("Encountered " + e.toString() + " during adminAssign()");
+                            p.sendMessage(pl.err + "Something went wrong");
+                            System.out.println(pl.err + "Encountered " + e.toString() + " during adminAssign()");
                         }
                     } else {
-                        p.sendMessage(ChatColor.RED + "That ticket is already assigned to " + tStaff);
+                        p.sendMessage(pl.err + "That ticket is already assigned to " + tStaff);
                     }
                 }
             } catch (SQLException e) {
-                p.sendMessage(ChatColor.RED + "Something went wrong");
-                System.out.println("Encountered " + e.toString() + " during adminAssign()");
+                p.sendMessage(pl.err + "Something went wrong");
+                System.out.println(pl.err + "Encountered " + e.toString() + " during adminAssign()");
                 pl.makeLog(e);
             }
         }

@@ -38,8 +38,8 @@ public class SpecificTicketGui {
         try {
             response = pl.connection.createStatement().executeQuery("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + t + "'");
             if (!response.isBeforeFirst()) {
-                p.sendMessage("No Data Matching ticket number " + t);
-                System.out.println("No Data Matching ticket number " + t);
+                p.sendMessage(pl.err + "No Data Matching ticket number " + t);
+                System.out.println(pl.err + "No Data Matching ticket number " + t);
             }
             while (response.next()) {
                 tStaff = response.getString("STAFF");
@@ -213,8 +213,8 @@ public class SpecificTicketGui {
 
             }
         } catch (SQLException e) {
-            p.sendMessage(ChatColor.RED + "Something went wrong");
-            System.out.println("Encountered " + e.toString() + " during staffViewTicket()");
+            p.sendMessage(pl.err + "Something went wrong");
+            System.out.println(pl.err + "Encountered " + e.toString() + " during staffViewTicket()");
             pl.makeLog(e);
         }
     }

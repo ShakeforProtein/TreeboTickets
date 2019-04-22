@@ -31,7 +31,7 @@ public class MultipleCommands implements CommandExecutor {
                     Bukkit.dispatchCommand(sender, command);
                 }
             }
-            else {sender.sendMessage("No command arguments detected");
+            else {sender.sendMessage(pl.err + "No command arguments detected");
             }
         }
         return true;

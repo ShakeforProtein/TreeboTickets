@@ -34,7 +34,7 @@ public class RestartTimed implements CommandExecutor {
 
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
                 public void run() {
-                    sender.sendMessage("Restarting Now");
+                    sender.sendMessage(pl.badge + "Restarting Now");
                     ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                     Bukkit.dispatchCommand(console, command);
                 }
