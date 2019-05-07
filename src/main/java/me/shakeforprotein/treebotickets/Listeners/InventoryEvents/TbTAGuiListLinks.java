@@ -26,7 +26,7 @@ public class TbTAGuiListLinks implements Listener {
     public void invClickEvent(InventoryClickEvent e) {
         Inventory inv = e.getInventory();
         Player p = (Player) e.getWhoClicked();
-        String name = inv.getName();
+        String name = e.getView().getTitle();
         int slot = e.getSlot();
         if (slot < 0) {
             p.closeInventory();

@@ -524,14 +524,11 @@ public final class TreeboTickets extends JavaPlugin {
                             Integer counter = (Integer) counterHash.get(p.getUniqueId().toString());
                             counterHash.remove(p.getUniqueId().toString());
                             counterHash.put(p.getUniqueId().toString(), counter +1);
-                            if(counter == 5){
-                                p.sendMessage(badge + "AFK STATE ACTIVATED");
-                            }
                             if(counter > 4){
                                 if(timerHash.containsKey(p.getUniqueId().toString())){
                                     int currentTimer = (Integer) timerHash.get(p.getUniqueId().toString());
                                     timerHash.remove(p.getUniqueId().toString());
-                                    timerHash.put(p.getUniqueId().toString(), (currentTimer + counter));
+                                    timerHash.put(p.getUniqueId().toString(), (currentTimer + 1));
                                 }
                                 else{
                                     timerHash.put(p.getUniqueId().toString(), 5);

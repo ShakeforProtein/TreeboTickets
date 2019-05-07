@@ -29,10 +29,10 @@ public class HubMenuInventoryListener implements Listener {
     public void invClickEvent(InventoryClickEvent e) {
         Inventory inv = e.getInventory();
         Player p = (Player) e.getWhoClicked();
-        String name = inv.getName();
+        String name = e.getView().getTitle();
         String clickedButton = "";
         int slot = e.getSlot();
-        if(inv.getName().toLowerCase().equals("hubmenu")){
+        if(e.getView().getTitle().toLowerCase().equals("hubmenu")){
             File menuYml = new File(pl.getDataFolder(), File.separator + "hubMenu.yml");
             FileConfiguration hubMenu = YamlConfiguration.loadConfiguration(menuYml);
 

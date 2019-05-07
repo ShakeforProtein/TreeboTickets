@@ -28,12 +28,14 @@ public class LogDisconnection {
             long totalOn = 0;
             long currentOn = 0;
             long playTime = 0;
+            int dbAFK = 0;
             UUID uUID = p.getUniqueId();
             response = pl.connection.createStatement().executeQuery("SELECT * FROM `" + pl.ontimetable + "` WHERE UUID = '"+ uUID +"'");
             response2 = pl.connection.createStatement().executeQuery("SELECT * FROM `stats_" + pl.getServerName(p) + "` WHERE UUID = '"+ uUID +"'");
             while (response.next()) {
                 totalOn = response.getLong("TotalOn");
                 currentOn = response.getLong("CurrentOn");
+                dbAFK = response.getInt("AFKTIME");
             }
             while (response2.next()) {
                 playTime = response2.getLong("PLAYTIME");
@@ -46,6 +48,7 @@ public class LogDisconnection {
                 pl.afkHash.remove(p.getUniqueId().toString());
                 pl.counterHash.remove(p.getUniqueId().toString());
             }
+            afkTimer = dbAFK + afkTimer;
             totalOn = totalOn + (lastLeft - currentOn);
             playTime = playTime + ((lastLeft - currentOn) - (afkTimer * 60000));
             query = "UPDATE `" + pl.ontimetable + "` SET  `LastLeft` = '" + lastLeft + "', `TotalOn` = '" + totalOn + "', `AFKTIME` = '" + afkTimer + "' WHERE  `UUID` = '" + uUID + "'";

@@ -26,7 +26,7 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
         Inventory inv = e.getInventory();
         Player p = (Player) e.getWhoClicked();
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        String name = inv.getName();
+        String name = e.getView().getTitle();
         int slot = e.getSlot();
         if (slot < 0) {
             p.closeInventory();

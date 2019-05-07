@@ -2,6 +2,7 @@ package me.shakeforprotein.treebotickets.Commands;
 
 import me.shakeforprotein.treebotickets.Methods.PlayerStatistics.GetStatistic;
 import me.shakeforprotein.treebotickets.TreeboTickets;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,9 +26,13 @@ public class GetStat implements CommandExecutor {
                     sender.sendMessage(getStatistic.getStatistic(args[0], args[1], (Player) sender));
 
                 } else if (args.length == 1) {
-                    sender.sendMessage(pl.err + "No playername detected, getting own stat");
-                    sender.sendMessage(getStatistic.getStatistic(args[0], sender.getName(), (Player) sender));
-                } else {
+                    if(args[0].equalsIgnoreCase("bukkit")){
+                        sender.sendMessage(Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3]);
+                    }
+                    else {
+                        sender.sendMessage(pl.err + "No playername detected, getting own stat");
+                        sender.sendMessage(getStatistic.getStatistic(args[0], sender.getName(), (Player) sender));
+                    }} else {
                     sender.sendMessage(pl.err + "Incorrect command usage. Please specify stat and player.");
                     sender.sendMessage("/getstat <stat> <playername>");
                 }

@@ -17,7 +17,7 @@ public class GuiDragStealBlock implements Listener {
     @EventHandler
     public void invDragEvent(InventoryDragEvent e) {
         Inventory inv = e.getInventory();
-        String name = inv.getName();
+        String name = e.getView().getTitle();
         if (name.equalsIgnoreCase("Your assigned tickets") ||
                 name.equalsIgnoreCase("Unassigned tickets") ||
                 name.equalsIgnoreCase("All open tickets") ||

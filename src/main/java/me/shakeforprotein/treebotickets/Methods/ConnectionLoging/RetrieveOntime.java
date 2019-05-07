@@ -62,30 +62,26 @@ public class RetrieveOntime {
                 String cTime = format.format(new Date(currentTime));
 
 
-                String fjdt = LocalDateTime.ofInstant(Instant.ofEpochMilli(firstJoin),  TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + fjDateStr;
-                String codt = LocalDateTime.ofInstant(Instant.ofEpochMilli(currentOn),  TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + coDateStr;
-                String lldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastOff),    TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + llDateStr;
-                String cdt =  LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTime), TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + cTime;
+                String fjdt = LocalDateTime.ofInstant(Instant.ofEpochMilli(firstJoin), TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + fjDateStr;
+                String codt = LocalDateTime.ofInstant(Instant.ofEpochMilli(currentOn), TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + coDateStr;
+                String lldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastOff), TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + llDateStr;
+                String cdt = LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTime), TimeZone.getDefault().toZoneId()).toString().split("T")[1] + " - " + cTime;
 
-                if (t.equalsIgnoreCase("minimal")){
+                if (t.equalsIgnoreCase("minimal")) {
                     //s.sendMessage(pl.badge + "Retrieving data for " + currentName);
                     s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "User: " + ChatColor.RESET + currentName);
                     s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
                     s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
                     s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
-                }
-
-                else if (t.equalsIgnoreCase("true")){
+                } else if (t.equalsIgnoreCase("true")) {
                     //s.sendMessage(pl.badge + "Retrieving data for " + currentName);
-                    if(cColour.equals(ChatColor.YELLOW + "") || cColour.equals(ChatColor.RED + "")) {
+                    if (cColour.equals(ChatColor.YELLOW + "") || cColour.equals(ChatColor.RED + "")) {
                         s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "User: " + ChatColor.RESET + currentName);
                         s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
                         s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
                         s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
                     }
-                }
-
-                else {
+                } else {
                     s.sendMessage(pl.badge + "Retrieving data for " + currentName);
                     s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Current Time  -  " + ChatColor.RESET + cdt + " - (" + cTime + ")");
                     s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "UUID  -  " + ChatColor.RESET + uUID);
@@ -112,26 +108,30 @@ public class RetrieveOntime {
 
 
     public static String formatTime(long millis) {
-        long seconds = Math.round((double) millis / 1000);
-        long days = seconds / 86400;
-        seconds = seconds - (days * 86400);
-        long hours = seconds / 3600;
-        seconds = seconds - (hours * 3600);
-        long minutes = seconds / 60;
-        seconds = seconds - (minutes * 60);
-        String output = "";
-        if (days > 0) {
-            output += days + "D:" + hours + "H:" + minutes + "M:" + seconds + "S";
-        } else if (hours > 0) {
-            output += hours + "H:" + minutes + "M:" + seconds + "S";
-        } else if (minutes > 0) {
-            output += minutes + "M:" + seconds + "S";
-        } else if (seconds > 0) {
-            output += seconds + "S";
+        if (millis == 0) {
+            return "0S";
         } else {
-            output += "ERROR ERROR ERROR ERROR ERROR";
-        }
+            long seconds = Math.round((double) millis / 1000);
+            long days = seconds / 86400;
+            seconds = seconds - (days * 86400);
+            long hours = seconds / 3600;
+            seconds = seconds - (hours * 3600);
+            long minutes = seconds / 60;
+            seconds = seconds - (minutes * 60);
+            String output = "";
+            if (days > 0) {
+                output += days + "D:" + hours + "H:" + minutes + "M:" + seconds + "S";
+            } else if (hours > 0) {
+                output += hours + "H:" + minutes + "M:" + seconds + "S";
+            } else if (minutes > 0) {
+                output += minutes + "M:" + seconds + "S";
+            } else if (seconds > 0) {
+                output += seconds + "S";
+            } else {
+                output += "ERROR ERROR ERROR ERROR ERROR";
+            }
 
-        return output;
+            return output;
+        }
     }
 }
