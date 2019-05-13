@@ -268,7 +268,7 @@ public final class TreeboTickets extends JavaPlugin {
     @Override
     public void onDisable() {
         saveConfig();
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        /*for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if ((getConfig().getString("serverName") != null) && (!getConfig().getString("serverName)").equalsIgnoreCase("hub"))) {
                 player.sendMessage(badge + "Server is going down for restart, moving you to Hub");
             } else {
@@ -276,13 +276,14 @@ public final class TreeboTickets extends JavaPlugin {
             }
         }
         pushToLobby.pushToLobby();
+        */
         try {
+
             connection.close();
         } catch (SQLException e) {
             makeLog(e);
         }
         System.out.println(badge + "TreeboTickets Stopped");
-        getPluginLoader().disablePlugin(this);
     }
 
 
