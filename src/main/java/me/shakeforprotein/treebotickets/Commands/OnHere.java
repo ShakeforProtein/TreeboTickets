@@ -26,7 +26,7 @@ public class OnHere implements CommandExecutor {
             if (sender.hasPermission("tbtickets.staffmanager") || sender.getName().equalsIgnoreCase("ShakeforProtein")) {
                 if (args.length == 1) {
                     if(args[0].equalsIgnoreCase("staff")){
-                    if (pl.getConfig().getString("serverName").equalsIgnoreCase("hub")) {
+                    if (pl.getConfig().getString("serverName").equalsIgnoreCase("hub") || pl.getConfig().getString("serverName").equalsIgnoreCase("test")) {
                         File listFile = new File(pl.getDataFolder(), "staffList.yml");
                         FileConfiguration staffList = YamlConfiguration.loadConfiguration(listFile);
 

@@ -19,6 +19,6 @@ public class LogLeave implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         logDisconnection.logDisconnection(e.getPlayer());
-        pl.getConfig().set("players." + e.getPlayer().getName() + ".ticketstate", 0);
+        pl.getConfig().set("players." + e.getPlayer().getName() + ".ticketstate", null);
     }
 }

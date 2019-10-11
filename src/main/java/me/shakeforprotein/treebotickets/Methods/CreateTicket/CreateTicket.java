@@ -17,6 +17,10 @@ public class CreateTicket {
     public CreateTicket(TreeboTickets main){this.pl = main;}
 
     public void addTicketToDB(Player p, String ticketData) {
+        Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
+            @Override
+            public void run() {
+
         try {
             String output = "" + pl.connection.createStatement().executeUpdate(pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
             ResultSet response = pl.connection.createStatement().executeQuery("SELECT * FROM `tickets`WHERE `IGNAME`=\"" + p.getName() + "\" ORDER BY id DESC LIMIT 1");
@@ -36,5 +40,8 @@ public class CreateTicket {
             pl.makeLog(e);
             System.out.println(pl.err + "Encountered " + e.toString() + " during addTicketToDB()");
         }
+
+            }
+        });
     }
 }

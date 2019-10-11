@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class Discord implements CommandExecutor {
+public class    Discord implements CommandExecutor {
 
     private TreeboTickets plugin;
 

@@ -20,7 +20,7 @@ public class NotifyHub implements Listener {
     private void onPlayerJoin(PlayerJoinEvent e) {
 
         if ((pl.getConfig().getString("isLobbyServer").equalsIgnoreCase("true")) && (!e.getPlayer().hasPlayedBefore())) {
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+            Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(pl, new Runnable() {
                 public void run() {
                     String command;
                     Player p = e.getPlayer();

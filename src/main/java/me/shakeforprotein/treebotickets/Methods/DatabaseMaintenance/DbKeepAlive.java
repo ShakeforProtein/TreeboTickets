@@ -10,7 +10,7 @@ public class DbKeepAlive {
 
 
     public void dbKeepAlive() {
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(pl, new Runnable() {
             public void run() {
                 try {
 

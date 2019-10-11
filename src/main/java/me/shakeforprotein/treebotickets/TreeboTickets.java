@@ -229,7 +229,7 @@ public final class TreeboTickets extends JavaPlugin {
             createTables.createServerStatsTable("AcidIsland");
             createTables.createServerStatsTable("SkyGrid");
             createTables.createServerStatsTable("CaveBlock");
-        } else {
+        } else if (!getConfig().getString("serverName").equalsIgnoreCase("test")){
             createTables.createServerStatsTable(getConfig().getString("serverName"));
         }
         if (getServer().getName().equalsIgnoreCase(getConfig().getString("lobbyServerName"))) {

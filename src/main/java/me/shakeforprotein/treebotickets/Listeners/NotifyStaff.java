@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class NotifyStaff implements Listener {
 
@@ -20,6 +21,7 @@ public class NotifyStaff implements Listener {
     private AdminStats adminStats;
     private StaffStats staffStats;
     private BuilderStats builderStats;
+
 
     public NotifyStaff(TreeboTickets main) {
         this.pl = main;
@@ -39,7 +41,7 @@ public class NotifyStaff implements Listener {
             System.out.println(pl.err + "Failed to reconnect to database. This is probably fine.");
         }
 
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(pl, new Runnable() {
             public void run() {
                 Player p = e.getPlayer();
 
@@ -53,25 +55,9 @@ public class NotifyStaff implements Listener {
                         builderStats.builderStats(e.getPlayer());
                     }
                     if (e.getPlayer().hasPermission(uc.requiredPermission)) {
-                        uc.getCheckDownloadURL(e.getPlayer());
-                        pl.getConfig().set(e.getPlayer().getName(), "true");
-                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
-                            public void run() {
-                                pl.getConfig().set(e.getPlayer().getName(), "false");
-                            }
-                        }, 75L);
+                            uc.checkUpdates(e.getPlayer());
                     }
-                } else {
-                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
-                        public void run() {
-                            try {
-                                pl.getConfig().set(e.getPlayer().getName(), null);
-                            } catch (NullPointerException e) {
-                            }
-                        }
-                    }, 120L);
                 }
-
             }
         }, 200L);
     }

@@ -1,6 +1,9 @@
 package me.shakeforprotein.treebotickets.UpdateChecker;
 
 import me.shakeforprotein.treebotickets.TreeboTickets;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,76 +14,32 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 
 
 public class UpdateChecker {
 
-
-    //These two need to be changed for different plugins
     private TreeboTickets pl;
+
+    public String requiredPermission = "tbtickets.admin.updatechecker";
+    public HashMap runningVersion = new HashMap<Integer, Integer>();
+    public HashMap currentVersion = new HashMap<Integer, Integer>();
+    public HashMap updateNotified = new HashMap<Player, Boolean>();
 
     public UpdateChecker(TreeboTickets main) {
         this.pl = main;
     }
 
-    public String requiredPermission = "tbtickets.admin.updatechecker";
-
-    public Boolean getCheckDownloadURL(Player p) {
-        // Code courtesy of Spigot user Ftbastler
-        // Adjustments by ShakeforProtein
-        if (pl.getConfig().getString("checkUpdates").equalsIgnoreCase("true")) {
-            try {
-                URL url = new URL(pl.getConfig().getString("apiLink"));
-                URLConnection conn = url.openConnection();
-                conn.setRequestProperty("User-Agent", "Mozilla/1.0");
-                conn.setConnectTimeout(5000);
-                conn.connect();
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String inputLine = in.readLine();
-                String gitVersion = "";
-                Boolean getLinkNow = false;
-
-                while (inputLine != null) {
-
-                    JSONParser parser = new JSONParser();
-                    JSONObject json = (JSONObject) parser.parse(inputLine);
-                    gitVersion = json.get("tag_name").toString();
-                    if (!gitVersion.equalsIgnoreCase(pl.getDescription().getVersion())) {
-                        p.sendMessage("Latest " + pl.getDescription().getName() + " Version is " + gitVersion);
-                        p.sendMessage("Your " + pl.getDescription().getName() + " Version is " + pl.getDescription().getVersion());
-                        p.sendMessage(ChatColor.GOLD + "Please update " + pl.getDescription().getName() + " with version at " + pl.getConfig().getString("releasePage"));
-                    }
-
-                    break;
-                }
-
-                if (!gitVersion.equalsIgnoreCase(pl.getDescription().getVersion())) {
-                    Bukkit.getConsoleSender().sendMessage("Latest " + pl.getDescription().getName() + " Version is " + gitVersion);
-                    Bukkit.getConsoleSender().sendMessage("Your " + pl.getDescription().getName() + " Version is " + pl.getDescription().getVersion());
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "Please consider updating " + pl.getDescription().getName() + " with version at " + pl.getConfig().getString("releasePage"));
-                }
-                in.close();
-
-                return true;
-            } catch (Exception e) {
-                if (p != null) {
-                    p.sendMessage(pl.getDescription().getName() + " Failed to check for updates");
-                }
-                pl.getServer().getLogger().warning("Something went wrong while downloading an update.");
-                pl.getServer().getLogger().info("Please check the plugin's release page to see if there are any updates available.");
-                pl.getServer().getLogger().info("" + pl.getConfig().getString("releasePage"));
-                pl.getServer().getLogger().fine(e.getMessage());
-                return false;
-            }
-        }
-        return false;
-    }
+    static public boolean isOutOfDate;
+    static public String gitVersion = "";
+    public String newVersion = "";
 
     public Boolean getCheckDownloadURL() {
         // Code courtesy of Spigot user Ftbastler
         // Adjustments by ShakeforProtein
         if (pl.getConfig().getString("checkUpdates").equalsIgnoreCase("true")) {
             try {
+                System.out.println(pl.badge + "Checking for updates");
                 URL url = new URL(pl.getConfig().getString("apiLink"));
                 URLConnection conn = url.openConnection();
                 conn.setRequestProperty("User-Agent", "Mozilla/1.0");
@@ -88,20 +47,41 @@ public class UpdateChecker {
                 conn.connect();
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String inputLine = in.readLine();
-                String gitVersion = "";
+
                 Boolean getLinkNow = false;
-
                 while (inputLine != null) {
-
                     JSONParser parser = new JSONParser();
                     JSONObject json = (JSONObject) parser.parse(inputLine);
                     gitVersion = json.get("tag_name").toString();
+                    String fullGitVersion = gitVersion;
+                    gitVersion = gitVersion.split(" ")[0].split("-")[0];
+                    currentVersion.put(0, Integer.parseInt(gitVersion.split("\\.")[0]));
+                    currentVersion.put(1, Integer.parseInt(gitVersion.split("\\.")[1]));
+                    currentVersion.put(2, Integer.parseInt(gitVersion.split("\\.")[2]));
+                    String thisVersion = pl.getDescription().getVersion();
+                    thisVersion = thisVersion.split(" ")[0].split("-")[0];
+                    runningVersion.put(0, Integer.parseInt(thisVersion.split("\\.")[0]));
+                    runningVersion.put(1, Integer.parseInt(thisVersion.split("\\.")[1]));
+                    runningVersion.put(2, Integer.parseInt(thisVersion.split("\\.")[2]));
+                    int cv0 = (int) currentVersion.get(0);
+                    int cv1 = (int) currentVersion.get(1);
+                    int cv2 = (int) currentVersion.get(2);
+                    int rv0 = (int) runningVersion.get(0);
+                    int rv1 = (int) runningVersion.get(1);
+                    int rv2 = (int) runningVersion.get(2);
+                    if (cv0 > rv0) {
+                        isOutOfDate = true;
+                    } else if (cv0 == rv0 && cv1 > rv1) {
+                        isOutOfDate = true;
+                    } else if (cv0 == rv0 && cv1 == rv1 && cv2 > rv2) {
+                        isOutOfDate = true;
+                    }
 
-
-                    if (!gitVersion.equalsIgnoreCase(pl.getDescription().getVersion())) {
-                        Bukkit.getConsoleSender().sendMessage("Latest " + pl.getDescription().getName() + " Version is " + gitVersion);
-                        Bukkit.getConsoleSender().sendMessage("Your " + pl.getDescription().getName() + " Version is " + pl.getDescription().getVersion());
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "Please consider updating " + pl.getDescription().getName() + " with version at " + pl.getConfig().getString("releasePage"));
+                    if (isOutOfDate) {
+                        newVersion = pl.badge + ChatColor.RED + "is out of date. Please update to version " + fullGitVersion + " from " + pl.getConfig().getString("releasePage");
+                        System.out.println(newVersion);}
+                    else{
+                        System.out.println(pl.badge +  "is up to date");
                     }
                     break;
                 }
@@ -109,6 +89,7 @@ public class UpdateChecker {
 
                 return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 pl.getServer().getLogger().warning("Something went wrong while downloading an update.");
                 pl.getServer().getLogger().info("Please check the plugin's release page to see if there are any updates available.");
                 pl.getServer().getLogger().info("" + pl.getConfig().getString("releasePage"));
@@ -117,5 +98,16 @@ public class UpdateChecker {
             }
         }
         return false;
+    }
+
+    public void checkUpdates(Player p) {
+        if (isOutOfDate) {
+            TextComponent updateMessage = new net.md_5.bungee.api.chat.TextComponent(pl.badge + ChatColor.RED + "is out of date." + ChatColor.BOLD +" [Update - " + gitVersion + "]");
+            ClickEvent updateClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, pl.getConfig().getString("releasePage"));
+            updateMessage.setClickEvent(updateClickEvent);
+            p.spigot().sendMessage(updateMessage);
+            //newVersion = pl.badge + ChatColor.RED + "is out of date. Please update to version at " + pl.getConfig().getString("releasePage");
+            //p.sendMessage(newVersion);}
+        }
     }
 }

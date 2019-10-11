@@ -37,12 +37,12 @@ public class LogJoin implements Listener {
     private void onPlayerJoin(PlayerJoinEvent e) {
         logConnection.logConnection(e.getPlayer());
 
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(pl, new Runnable() {
             public void run() {
 
 
                 if (pl.getConfig().getString("serverName").equalsIgnoreCase("games") || pl.getConfig().getString("serverName").equalsIgnoreCase("hub")) {
-                    if (e.getPlayer().hasPermission("tbtickets.staffmanager") || e.getPlayer().getName().equalsIgnoreCase("ShakeforProtein")) {
+                    if (e.getPlayer().hasPermission("tbtickets.staffmanager")) {
 
                         File listFile = new File(pl.getDataFolder(), "staffList.yml");
                         FileConfiguration staffList = YamlConfiguration.loadConfiguration(listFile);
