@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
 
@@ -46,7 +48,7 @@ public class InfoHelp {
                 BufferedReader in = new BufferedReader(new FileReader(infoFile));
 
                 String line = null;
-
+                
                 if (infoList.get(fileName) != null) {
                     if (infoList.getString(fileName).equalsIgnoreCase("text")) {
 

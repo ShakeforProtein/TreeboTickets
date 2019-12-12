@@ -10,8 +10,10 @@
 
 apiLink: 'https://api.github.com/repos/TreeboMC/TreeboTickets/releases/latest'
 releasePage: 'https://github.com/TreeboMC/TreeboTickets/releases/latest'
+discordHook: 'https://tickets.treebomc.com/discord.php'
 checkUpdates: 'true'
 badge: '&3&l[&2Treebo Tickets&3&l]&r'
+usePapi: false
 
 host: 'Host'
 port: '3306'

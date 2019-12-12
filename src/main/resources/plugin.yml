@@ -5,8 +5,8 @@ prefix: TreeboTickets
 authors: [ShakeforProtein]
 description: Light weight ticket plugin
 website: http://minecraft.treebo.games
-api-version: 1.13
-
+api-version: 1.15
+softdepend: [PlaceholderAPI]
 
 commands:
   discord:

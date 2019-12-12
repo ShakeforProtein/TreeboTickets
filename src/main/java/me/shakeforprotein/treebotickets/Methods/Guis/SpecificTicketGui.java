@@ -24,9 +24,6 @@ public class SpecificTicketGui {
     }
 
     public void specificTicketGui(Player p, int t, String menuName, String fromMenu) {
-        Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
-            @Override
-            public void run() {
                 Inventory individualTicketGui = Bukkit.createInventory(null, 27, menuName);
                 int tId = -1;
                 String tPlayer = "";
@@ -242,7 +239,5 @@ public class SpecificTicketGui {
                     System.out.println(pl.err + "Encountered " + e.toString() + " during staffViewTicket()");
                     pl.makeLog(e);
                 }
-            }
-        });
     }
 }

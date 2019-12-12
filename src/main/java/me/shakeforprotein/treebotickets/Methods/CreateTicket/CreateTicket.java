@@ -1,22 +1,27 @@
 package me.shakeforprotein.treebotickets.Methods.CreateTicket;
 
-import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
+
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class CreateTicket {
 
     private TreeboTickets pl;
 
+
     public CreateTicket(TreeboTickets main){this.pl = main;}
 
-    public void addTicketToDB(Player p, String ticketData) {
+    public void addTicketToDB(Player p, String ticketData, String type, String contents) {
         Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
             @Override
             public void run() {
@@ -29,6 +34,28 @@ public class CreateTicket {
             while (response.next()) {
                 tID = response.getInt("ID");
                 p.sendMessage(pl.badge + "Your Ticket number is " + tID + ". Use /ticket view " + tID + " to view any updates");
+                try {
+                    String discordHook = pl.getConfig().getString("discordHook");
+                    discordHook = discordHook + "?id=" + tID + "&user=" + p.getName() + "&type=" + type + "&contents=" +contents.replace(" ", "%20");
+
+
+                    URL url = new URL(null, discordHook, new sun.net.www.protocol.https.Handler());
+
+                    HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
+                    httpsURLConnection.setRequestMethod("POST");
+                    httpsURLConnection.setRequestProperty("User-Agent", "ShakeBrowser/5.0");
+                    httpsURLConnection.setRequestProperty("Referer", "no-referer");
+                    httpsURLConnection.setConnectTimeout(5000);
+                    httpsURLConnection.connect();
+                    System.out.println(httpsURLConnection.getResponseMessage());
+                    if(httpsURLConnection.getErrorStream() != null){
+                        System.out.println(discordHook);
+                    }
+                }
+                catch(IOException e){
+                    pl.makeLog(e);
+                }
+
                 while (staffResponse.next()){
                     String staff = staffResponse.getString("IGNAME");
                     pl.api.sendMessage(staff, "Player " + p.getName() + "Has just submitted ticket number " + tID);
@@ -43,5 +70,7 @@ public class CreateTicket {
 
             }
         });
+
     }
+
 }

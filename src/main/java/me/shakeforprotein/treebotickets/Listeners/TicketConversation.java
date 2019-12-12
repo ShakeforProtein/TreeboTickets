@@ -128,7 +128,9 @@ public class TicketConversation implements Listener {
                     pl.getConfig().set("players." + p.getName() + "lastQuery", pl.baseInsert.replace("XXXVALUESPLACEHOLDERXXX", ticketData));
                     pl.getConfig().set("players." + p.getName() + ".ticketstate", 0);
                     pl.saveConfig();
-                    createTicket.addTicketToDB(p, ticketData);
+                    String discordString = "&type=" + type +"&user=" + p.getName() + "&contents=" + (description + " " + usersteps).replace("&", "AND");
+
+                    createTicket.addTicketToDB(p, ticketData, type, description + " " + usersteps);
                 }
             }
         }

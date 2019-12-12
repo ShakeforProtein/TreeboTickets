@@ -1,19 +1,16 @@
 package me.shakeforprotein.treebotickets;
 
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.shakeforprotein.treebotickets.Commands.Commands;
 import me.shakeforprotein.treebotickets.Commands.TabComplete.*;
-import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.HubMenuInventoryListener;
-import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiIndividualTicketLinks;
-import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiListLinks;
-import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.TbTAGuiMainMenuLinks;
+import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.*;
 import me.shakeforprotein.treebotickets.Listeners.PlayerInput;
 import me.shakeforprotein.treebotickets.Listeners.StatTracking.*;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CleanupDatabase;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CreateTables;
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.DbKeepAlive;
 import me.shakeforprotein.treebotickets.Methods.Teleports.PushToLobby;
-//import me.shakeforprotein.treebotickets.Methods.Teleports.ToWorld;
 import me.shakeforprotein.treebotickets.UpdateChecker.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,12 +21,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -40,7 +41,7 @@ import java.util.HashMap;
 import me.shakeforprotein.treebotickets.Commands.*;
 import me.shakeforprotein.treebotickets.Listeners.*;
 
-public final class TreeboTickets extends JavaPlugin {
+public final class TreeboTickets extends JavaPlugin implements Listener {
 
 
     //Listener Classes
@@ -101,12 +102,12 @@ public final class TreeboTickets extends JavaPlugin {
     private UpdateChecker uc;
     public BungeeChannelApi api = BungeeChannelApi.of(this);
 
-
     public HashMap afkHash = new HashMap<String, Integer>();
     public HashMap counterHash = new HashMap<String, Integer>();
     public HashMap timerHash = new HashMap<String, Integer>();
     public String badge = ChatColor.translateAlternateColorCodes('&', getConfig().getString("badge"));
     public String err = badge + ChatColor.RED + "Error: " + ChatColor.RESET;
+
     @Override
     public void onEnable() {
         badge = badge + " ";
@@ -194,6 +195,7 @@ public final class TreeboTickets extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnPlayerChangeWorld(this), this);
         getServer().getPluginManager().registerEvents(new OnPlayerDisconnect(this), this);
         getServer().getPluginManager().registerEvents(new HubMenuInventoryListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerUseItem(this), this);
 
 
         getConfig().options().copyDefaults(true);
@@ -229,7 +231,7 @@ public final class TreeboTickets extends JavaPlugin {
             createTables.createServerStatsTable("AcidIsland");
             createTables.createServerStatsTable("SkyGrid");
             createTables.createServerStatsTable("CaveBlock");
-        } else if (!getConfig().getString("serverName").equalsIgnoreCase("test")){
+        } else if (!getConfig().getString("serverName").equalsIgnoreCase("test")) {
             createTables.createServerStatsTable(getConfig().getString("serverName"));
         }
         if (getServer().getName().equalsIgnoreCase(getConfig().getString("lobbyServerName"))) {
@@ -259,6 +261,19 @@ public final class TreeboTickets extends JavaPlugin {
             }
         }
         activateAfkChecker();
+
+        System.out.println(badge + " Attempting to Hook PAPI");
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            System.out.println(badge + " Hooked PAPI successfully");
+            /*
+             * We register the EventListeneres here, when PlaceholderAPI is installed.
+             * Since all events are in the main class (this class), we simply use "this"
+             */
+            Bukkit.getPluginManager().registerEvents(this, this);
+        } else {
+            System.out.println(badge + err + " Failed to hook PAPI, Placeholders will not be accessible");
+        }
+
         System.out.println("TreeboTickets Started");
     }
 
@@ -382,7 +397,7 @@ public final class TreeboTickets extends JavaPlugin {
             ps.close();
         } catch (FileNotFoundException e) {
             System.out.println(err + "Creating new log file for " + getDescription().getName() + " - " + getDescription().getVersion());
-            System.out.println(ChatColor.GOLD + "[X]" + ChatColor.RESET +"Error was as follows");
+            System.out.println(ChatColor.GOLD + "[X]" + ChatColor.RESET + "Error was as follows");
             System.out.println(e.getMessage());
         }
     }
@@ -511,32 +526,29 @@ public final class TreeboTickets extends JavaPlugin {
         }
     }
 
-    private void activateAfkChecker(){
+    private void activateAfkChecker() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-                for(Player p : Bukkit.getOnlinePlayers()){
-                    if(!afkHash.containsKey(p.getUniqueId().toString())){
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (!afkHash.containsKey(p.getUniqueId().toString())) {
                         afkHash.put(p.getUniqueId().toString(), p.getLocation());
                         counterHash.put(p.getUniqueId().toString(), 0);
-                    }
-                    else{
-                        if(p.getLocation().equals(afkHash.get(p.getUniqueId().toString()))){
+                    } else {
+                        if (p.getLocation().equals(afkHash.get(p.getUniqueId().toString()))) {
                             Integer counter = (Integer) counterHash.get(p.getUniqueId().toString());
                             counterHash.remove(p.getUniqueId().toString());
-                            counterHash.put(p.getUniqueId().toString(), counter +1);
-                            if(counter > 4){
-                                if(timerHash.containsKey(p.getUniqueId().toString())){
+                            counterHash.put(p.getUniqueId().toString(), counter + 1);
+                            if (counter > 4) {
+                                if (timerHash.containsKey(p.getUniqueId().toString())) {
                                     int currentTimer = (Integer) timerHash.get(p.getUniqueId().toString());
                                     timerHash.remove(p.getUniqueId().toString());
                                     timerHash.put(p.getUniqueId().toString(), (currentTimer + 1));
-                                }
-                                else{
+                                } else {
                                     timerHash.put(p.getUniqueId().toString(), 5);
                                 }
                             }
-                        }
-                        else{
+                        } else {
                             afkHash.remove(p.getUniqueId().toString());
                             afkHash.put(p.getUniqueId().toString(), p.getLocation());
                             counterHash.remove(p.getUniqueId().toString());
@@ -546,5 +558,88 @@ public final class TreeboTickets extends JavaPlugin {
                 }
             }
         }, 100L, 1200L);
+    }
+
+
+    @EventHandler
+    public void PapiJoinListener(PlayerJoinEvent e) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+                @Override
+                public void run() {
+                    if (getConfig().getBoolean("usePapi")) {
+                        if (Bukkit.getPluginManager().getPlugin("EZRanksPro") != null) {
+                            String ezRanksRank = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%ezrankspro_rank%");
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.EzRank", ezRanksRank);
+                            String ezRanksProgressExact = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%ezrankspro_progressexact%");
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.EzProgress", ezRanksProgressExact);
+                        }
+                        if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+                            String vaultBal = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%vault_eco_balance%");
+
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.vaultBal", vaultBal);
+                        }
+                        if (Bukkit.getPluginManager().getPlugin("NPC_Police") != null) {
+                          //  String npcpoliceTotalArrests = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_ttl_arrests%");
+                          //  getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.npcPoliceArrests", npcpoliceTotalArrests);
+
+                            String bounty = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_bounty%");
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.bounty", bounty);
+
+                            String totalBounty = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_totalbounty%");
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.totalBounty", totalBounty);
+
+                            String murders = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_ttl_murders%");
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.murders", murders);
+
+                            String timeRemaining = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_jailtime%");
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.timeRemaining", timeRemaining);
+
+                            String status = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_status%");
+                            getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.status", status);
+                         }
+
+                        saveConfig();
+                    }
+                }
+            }, 100L);
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PapiQuitListener(PlayerQuitEvent e) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            if (getConfig().getBoolean("usePapi")) {
+                if (Bukkit.getPluginManager().getPlugin("EZRanksPro") != null) {
+                    String ezRanksRank = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%ezrankspro_rank%");
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.EzRank", ezRanksRank);
+                    String ezRanksProgressExact = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%ezrankspro_progressexact%");
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.EzProgress", ezRanksProgressExact);
+                }
+                if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+                    String vaultBal = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%vault_eco_balance%");
+
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.vaultBal", vaultBal);
+                }
+                if (Bukkit.getPluginManager().getPlugin("NPC_Police") != null) {
+                    //  String npcpoliceTotalArrests = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_ttl_arrests%");
+                    //  getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.npcPoliceArrests", npcpoliceTotalArrests);
+
+                    String bounty = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_bounty%");
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.bounty", bounty);
+
+                    String totalBounty = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_totalbounty%");
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.totalBounty", totalBounty);
+
+                    String murders = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_ttl_murders%");
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.murders", murders);
+
+                    String timeRemaining = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_jailtime%");
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.timeRemaining", timeRemaining);
+
+                    String status = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_status%");
+                    getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.status", status);
+                }
+            }
+        }
     }
 }

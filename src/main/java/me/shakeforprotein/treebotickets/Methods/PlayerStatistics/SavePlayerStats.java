@@ -48,11 +48,42 @@ public class SavePlayerStats {
                             pl.getConfig().set("playerStats." + pl.getServerName(p) + "." + p.getName() + ".deaths." + column, null);
                         }
                     }
+                    if (pl.getConfig().getConfigurationSection("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi") != null) {
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.EzRank") != null){
+                            statsAddQuery += " `EZRANK` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.EzRank") + "\",";
+                        }
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.EzProgress") != null){
+                            statsAddQuery += " `EZPROGRESS` =  \""+ pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.EzProgress") + "\",";
+                        }
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.vaultBal") != null){
+                            statsAddQuery += " `BALANCE` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.vaultBal") + "\",";
+                        }
+                       /* if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.npcPoliceArrests") != null){
+                            statsAddQuery += " `TOTALARRESTS` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.npcPoliceArrests") + "\",";
+                        }*/
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.bounty") != null){
+                            statsAddQuery += " `BOUNTY` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.bounty") + "\",";
+                        }
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.totalBounty") != null){
+                            statsAddQuery += " `ALLTIMEBOUNTY` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.totalBounty") + "\",";
+                        }
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.murders") != null){
+                            statsAddQuery += " `MURDERS` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.murders") + "\",";
+                        }
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.timeRemaining") != null){
+                            statsAddQuery += " `SENTENCEREMAINING` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.timeRemaining") + "\",";
+                        }
+
+                        if(pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.status") != null){
+                            statsAddQuery += " `STATUS` = \"" + pl.getConfig().getString("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi.status") + "\",";
+                        }
+                    }
+
 
                     statsAddQuery += " `IGNAME` = IGNAME WHERE `UUID` ='" + p.getUniqueId() + "'";
                     pl.getConfig().set("playerStats." + pl.getServerName(p) + "." + p.getName() + ".deaths", null);
                     pl.getConfig().set("playerStats." + pl.getServerName(p) + "." + p.getName() + ".kills", null);
-                    pl.getConfig().set("playerStats." + pl.getServerName(p) + "." + p.getName(), null);
+                   // pl.getConfig().set("playerStats." + pl.getServerName(p) + "." + p.getName() + ".papi", null);
 
                     pl.getConfig().set("LastStatEntry", statsAddQuery);
                     pl.saveConfig();
