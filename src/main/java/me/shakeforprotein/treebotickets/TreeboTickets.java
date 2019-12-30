@@ -12,6 +12,7 @@ import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.CreateTables
 import me.shakeforprotein.treebotickets.Methods.DatabaseMaintenance.DbKeepAlive;
 import me.shakeforprotein.treebotickets.Methods.Teleports.PushToLobby;
 import me.shakeforprotein.treebotickets.UpdateChecker.UpdateChecker;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandMap;
@@ -160,6 +161,14 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         this.getCommand("seen").setExecutor(onHere);
         this.getCommand("discord").setExecutor(discord);
         this.getCommand("getstat").setExecutor(getStat);
+
+
+        if(getConfig().get("bstatsIntegration") != null) {
+            if (getConfig().getBoolean("bstatsIntegration")) {
+                Metrics metrics = new Metrics(this);
+            }
+        }
+
 
         File listFile = new File(getDataFolder(), File.separator + "infoList.yml");
         FileConfiguration infoList = YamlConfiguration.loadConfiguration(listFile);

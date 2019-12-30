@@ -14,7 +14,7 @@ discordHook: 'https://tickets.treebomc.com/discord.php'
 checkUpdates: 'true'
 badge: '&3&l[&2Treebo Tickets&3&l]&r'
 usePapi: false
-
+bstatsIntegration: true
 host: 'Host'
 port: '3306'
 username: 'ABC'
