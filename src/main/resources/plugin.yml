@@ -9,6 +9,9 @@ api-version: 1.15
 softdepend: [PlaceholderAPI]
 
 commands:
+  toggledeathdocket:
+    description: Toggles death docket
+    usage: /<command>
   discord:
     description: Overides discordsrv commands.
     usage: /<command> <args>
@@ -58,6 +61,13 @@ commands:
   tbtst:
     description: Not for players to use
     usage: Do not play with this command.
+  restoreplayerinventory:
+    description: Not for players to use
+    usage: Do not play with this command.
+  restartwhenempty:
+    permission: tbtickets.admin.restart
+    description: Sets a timer to restart the server when it detects the server is empty.
+
 permissions:
   tbtickets.staffmanager:
     description:
@@ -65,6 +75,9 @@ permissions:
   tbtickets.admin.ontime:
     description:
     default: op
+  tbtickets.admin.restoreinventory:
+    description:
+    default: false
   tbtickets.admin.restart:
     description:
     default: false

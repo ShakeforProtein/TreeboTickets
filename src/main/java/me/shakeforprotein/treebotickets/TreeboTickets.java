@@ -161,6 +161,8 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         this.getCommand("seen").setExecutor(onHere);
         this.getCommand("discord").setExecutor(discord);
         this.getCommand("getstat").setExecutor(getStat);
+        this.getCommand("toggledeathdocket").setExecutor(new ToggleDeathDocket(this));
+        this.getCommand("restartwhenempty").setExecutor(new RestartWhenEmpty(this));
 
 
         if(getConfig().get("bstatsIntegration") != null) {
@@ -205,6 +207,7 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new OnPlayerDisconnect(this), this);
         getServer().getPluginManager().registerEvents(new HubMenuInventoryListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerUseItem(this), this);
+        getServer().getPluginManager().registerEvents(new RespawnListener(this), this);
 
 
         getConfig().options().copyDefaults(true);

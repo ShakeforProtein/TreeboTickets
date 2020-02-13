@@ -46,6 +46,13 @@ public class PlayerUseItem implements Listener {
                     }
                 }
             }
+            if (e.getPlayer().hasPermission("tbtickets.admin.restoreinventory") && e.getItem() != null && e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasDisplayName() && e.getItem().getItemMeta().getDisplayName().contains("Death Docket -")) {
+                if (e.getItem().getItemMeta().getLore().get(4) != null) {
+                    String cmd = "tellraw " + e.getPlayer().getName() + " [\"\",{\"text\":\"Click \"},{\"text\":\"[HERE]\",\"color\":\"green\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/restoreplayerinventory " + e.getItem().getItemMeta().getLore().get(0).split(" - ")[1] + " " + e.getItem().getItemMeta().getLore().get(4).split(" - ")[1] + "\"}},{\"text\":\" to restore player inventory.\"}]";
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+
+                }
+            }
         }
     }
 
