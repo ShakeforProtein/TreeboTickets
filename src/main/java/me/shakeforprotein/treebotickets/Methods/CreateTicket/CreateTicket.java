@@ -1,18 +1,17 @@
 package me.shakeforprotein.treebotickets.Methods.CreateTicket;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import me.shakeforprotein.treebotickets.TreeboTickets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
-
+import java.io.*;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 public class CreateTicket {
 
@@ -21,7 +20,7 @@ public class CreateTicket {
 
     public CreateTicket(TreeboTickets main){this.pl = main;}
 
-    public void addTicketToDB(Player p, String ticketData, String type, String contents) {
+    public void addTicketToDB(Player p, String ticketData, String type, String contents, String server) {
         Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
             @Override
             public void run() {
@@ -35,22 +34,58 @@ public class CreateTicket {
                 tID = response.getInt("ID");
                 p.sendMessage(pl.badge + "Your Ticket number is " + tID + ". Use /ticket view " + tID + " to view any updates");
                 try {
+                    p.sendMessage("Sending Discord");
                     String discordHook = pl.getConfig().getString("discordHook");
-                    discordHook = discordHook + "?id=" + tID + "&user=" + p.getName() + "&type=" + type + "&contents=" +contents.replace(" ", "%20");
+                    //discordHook = discordHook + "?id=" + tID + "&user=" + p.getName() + "&type=" + type + "&contents=" +contents.replace(" ", "%20");
+
+                    //String urlParameters  = "id=" + tID + "&user=" + p.getName() + "&server=" + server + "&type=" + type + "&contents=" + contents;
+                    String p1 = "id=" + URLEncoder.encode(tID + "", "UTF-8");
+                    String p2 = "&user=" + URLEncoder.encode(p.getName(), "UTF-8");
+                    String p3 = "&server=" + URLEncoder.encode(server, "UTF-8");
+                    String p4 = "&type=" + URLEncoder.encode(type, "UTF-8");
+                    String p5 = "&contents=" + URLEncoder.encode(contents, "UTF-8");
+                    String urlParameters = p1 + p2 + p3 + p4 + p5;
+                    //URL url = new URL(null, discordHook, new sun.net.www.protocol.https.Handler());
+                    //int    postDataLength = postData.length;
 
 
-                    URL url = new URL(null, discordHook, new sun.net.www.protocol.https.Handler());
+                    try {
+                        URL url = new URL(null, discordHook, new sun.net.www.protocol.https.Handler());
+                        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 
-                    HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
-                    httpsURLConnection.setRequestMethod("POST");
-                    httpsURLConnection.setRequestProperty("User-Agent", "ShakeBrowser/5.0");
-                    httpsURLConnection.setRequestProperty("Referer", "no-referer");
-                    httpsURLConnection.setConnectTimeout(5000);
-                    httpsURLConnection.connect();
-                    System.out.println(httpsURLConnection.getResponseMessage());
-                    if(httpsURLConnection.getErrorStream() != null){
-                        System.out.println(discordHook);
+                        con.setDoOutput(true);
+                        con.setRequestMethod("POST");
+                        con.setRequestProperty("User-Agent", "Java client");
+                        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                        try (OutputStream wr = con.getOutputStream()) {
+
+                            wr.write(urlParameters.getBytes(StandardCharsets.UTF_8));
+                            wr.flush();
+                            System.out.println(con.getResponseCode());
+                            p.sendMessage(con.getOutputStream().toString());
+                        }
+
+                        StringBuilder content;
+
+                        try (BufferedReader br = new BufferedReader(
+                                new InputStreamReader(con.getInputStream()))) {
+
+                            String line;
+                            content = new StringBuilder();
+
+                            while ((line = br.readLine()) != null) {
+                                content.append(line);
+                                content.append(System.lineSeparator());
+                            }
+                        }
+
+                        System.out.println(content.toString());
+
+                    } catch (IOException ex){
+
                     }
+
                 }
                 catch(IOException e){
                     pl.makeLog(e);
@@ -72,5 +107,7 @@ public class CreateTicket {
         });
 
     }
+
+
 
 }

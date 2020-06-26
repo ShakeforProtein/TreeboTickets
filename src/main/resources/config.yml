@@ -10,7 +10,7 @@
 
 apiLink: 'https://api.github.com/repos/TreeboMC/TreeboTickets/releases/latest'
 releasePage: 'https://github.com/TreeboMC/TreeboTickets/releases/latest'
-discordHook: 'https://tickets.treebomc.com/discord.php'
+discordHook: ''
 checkUpdates: 'true'
 badge: '&3&l[&2Treebo Tickets&3&l]&r'
 usePapi: false
@@ -26,6 +26,8 @@ ontimetable: 'newontime'
 isLobbyServer: 'false'
 lobbyServerName: 'hub'
 maxClosedTickets: 50
+socketIP: 127.0.0.1
+socketPort: 9999
 
 serverName: 'Test'
 networkName: 'Example Network'

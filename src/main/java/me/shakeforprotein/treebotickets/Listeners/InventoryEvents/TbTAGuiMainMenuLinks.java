@@ -26,7 +26,7 @@ public class TbTAGuiMainMenuLinks implements Listener {
         String name = e.getView().getTitle();
         int slot = e.getSlot();
         if (slot < 0) {
-            p.closeInventory();
+        //    p.closeInventory();
             return;
         }
 

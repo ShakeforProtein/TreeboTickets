@@ -10,8 +10,8 @@ import java.io.IOException;
 
 
 public class Webhook {
+    /*
 
-/*
     private TreeboTickets pl;
 
     public Webhook(TreeboTickets main) {
@@ -27,22 +27,16 @@ public class Webhook {
         String authorName = "TreeboTickets";
         String authorURL = "https://treebomc.com";
         if(type!=null){
-            if(type == "Idea"){
-                hookURL = "https://discordapp.com/api/webhooks/641542183748370442/bIINKwk8_5I9zz4n88r6cmt7h1xHp2zRD4d-F2tH_FjwAeUSWysZdEP1Olkv7jUo04gx";
-                hookPing = "";
-                hookColor = "56DEF1";
-                hookIcon = "http://tickets.treebomc.com/assets/thinking.jpg";
-            }
-
+           hookURL =  pl.getConfig().getString("webhook.hookLink_" + type);
+           hookPing = "";
+           hookColor = pl.getConfig().getString("webhook.hookColor_" + type);
+           hookIcon = pl.getConfig().getString("webhook.hookIcon_" + type);
         }
+
         JsonParser jsonParser = new JsonParser();
         JsonObject hookObject = new JsonObject();
-        JsonElement hId = hookObject.addProperty(); {
+        JsonElement hId = hookObject.addProperty("content", contents); {
         };
-
-
-
-
 
 
         //Curl
@@ -55,5 +49,5 @@ public class Webhook {
             pl.makeLog(e);
         }
     }
-*/
+    */
 }

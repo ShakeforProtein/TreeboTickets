@@ -28,10 +28,10 @@ public class TbTAGuiListLinks implements Listener {
         Player p = (Player) e.getWhoClicked();
         String name = e.getView().getTitle();
         int slot = e.getSlot();
-        if (slot < 0) {
+        /*if (slot < 0) {
             p.closeInventory();
             return;
-        }
+        }*/
 
         if (name.equalsIgnoreCase("Ticket List - Assigned to you") ||
                 name.equalsIgnoreCase("Ticket List - Unassigned ALL") ||

@@ -2,6 +2,8 @@ package me.shakeforprotein.treebotickets;
 
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.shakeforprotein.treebotickets.Bungee.BungeeSend;
+import me.shakeforprotein.treebotickets.Bungee.ShakeSocketSend;
 import me.shakeforprotein.treebotickets.Commands.Commands;
 import me.shakeforprotein.treebotickets.Commands.TabComplete.*;
 import me.shakeforprotein.treebotickets.Listeners.InventoryEvents.*;
@@ -45,6 +47,24 @@ import me.shakeforprotein.treebotickets.Listeners.*;
 public final class TreeboTickets extends JavaPlugin implements Listener {
 
 
+    public BungeeChannelApi api = BungeeChannelApi.of(this);
+    private BungeeSend bungeeSend = new BungeeSend(this);
+    public HashMap afkHash = new HashMap<String, Integer>();
+    public HashMap counterHash = new HashMap<String, Integer>();
+    public HashMap timerHash = new HashMap<String, Integer>();
+    public String badge = ChatColor.translateAlternateColorCodes('&', getConfig().getString("badge"));
+    public String err = badge + ChatColor.RED + "Error: " + ChatColor.RESET;
+    public String ontimetable = getConfig().getString("ontimetable");
+    public Connection connection;
+    public ArrayList<String> mobList = new ArrayList<>();
+    public String table = getConfig().getString("table");
+    public String unusedColumns = "ID, MODIFIED";
+    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `SERVER`,`WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`, `ATTN`, `ACTUALCOMMAND`";
+    public String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
+    public Integer ID, X, Y, Z, SEVERITY = 0;
+    public String OPENED = LocalDateTime.now().toString();
+    //private Bstats bstats = new Bstats(this);
+    public String baseInsert = "INSERT INTO `" + table + "`(" + columns + ") VALUES (XXXVALUESPLACEHOLDERXXX);";
     //Listener Classes
     private PlayerInput pi = new PlayerInput(this);
     private GuiDragStealBlock guiDragStealBlock = new GuiDragStealBlock(this);
@@ -61,9 +81,6 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
     private OnPlayerChangeWorld onPlayerChangeWorld = new OnPlayerChangeWorld(this);
     private OnPlayerDisconnect onPlayerDisconnect = new OnPlayerDisconnect(this);
     private HubMenuInventoryListener hubMenuInventoryListener = new HubMenuInventoryListener(this);
-    //private Bstats bstats = new Bstats(this);
-
-
     //Command Classes
     private Commands cmds; //not used.
     private Idea idea = new Idea(this);
@@ -73,6 +90,7 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
     private RestartTimed restartTimed = new RestartTimed(this);
     private Review review = new Review(this);
     private ServerTransfers serverTransfers = new ServerTransfers(this);
+    //private ToWorld toWorld = new ToWorld(this);
     private Tbta tbta = new Tbta(this);
     private TbTicket tbTicket = new TbTicket(this);
     private TbTicketAdmin tbTicketAdmin = new TbTicketAdmin(this);
@@ -80,34 +98,26 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
     private GetStat getStat = new GetStat(this);
     private Hub hub = new Hub(this);
     private InfoCommand infoCommand = new InfoCommand(this);
-
-
     //Tab Completers
     private TbTicketTabComplete tbTicketTabComplete = new TbTicketTabComplete(this);
     private TbtaTabComplete tbtaTabComplete = new TbtaTabComplete(this);
     private TbTicketAdminTabComplete tbTicketAdminTabComplete = new TbTicketAdminTabComplete(this);
     private ReviewTabComplete reviewTabComplete = new ReviewTabComplete(this);
     private InfoTabComplete infoTabComplete = new InfoTabComplete(this);
-
-
     //Method Classes
     private DbKeepAlive dbKeepAlive = new DbKeepAlive(this);
     private CleanupDatabase cleanupDatabase = new CleanupDatabase(this);
     private PushToLobby pushToLobby = new PushToLobby(this);
     private CreateTables createTables = new CreateTables(this);
-    //private ToWorld toWorld = new ToWorld(this);
-
+    private UpdateChecker uc;
+    private String host, database, username, password;
+    private int port;
     public TreeboTickets() {
     }
 
-    private UpdateChecker uc;
-    public BungeeChannelApi api = BungeeChannelApi.of(this);
-
-    public HashMap afkHash = new HashMap<String, Integer>();
-    public HashMap counterHash = new HashMap<String, Integer>();
-    public HashMap timerHash = new HashMap<String, Integer>();
-    public String badge = ChatColor.translateAlternateColorCodes('&', getConfig().getString("badge"));
-    public String err = badge + ChatColor.RED + "Error: " + ChatColor.RESET;
+    public static boolean isNumeric(String str) {
+        return str.matches("\\d+");
+    }
 
     @Override
     public void onEnable() {
@@ -141,6 +151,7 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         this.getCommand("review").setExecutor(review);
         this.getCommand("review").setTabCompleter(reviewTabComplete);
         this.getCommand("idea").setExecutor(idea);
+        this.getCommand("friendlyrestart").setExecutor(new FriendlyRestart(this));
         /*this.getCommand("lobby").setExecutor(serverTransfers);
         this.getCommand("survival").setExecutor(serverTransfers);
         this.getCommand("creative").setExecutor(serverTransfers);
@@ -165,7 +176,7 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         this.getCommand("restartwhenempty").setExecutor(new RestartWhenEmpty(this));
 
 
-        if(getConfig().get("bstatsIntegration") != null) {
+        if (getConfig().get("bstatsIntegration") != null) {
             if (getConfig().getBoolean("bstatsIntegration")) {
                 Metrics metrics = new Metrics(this);
             }
@@ -273,6 +284,7 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
             }
         }
         activateAfkChecker();
+        pullBack();
 
         System.out.println(badge + " Attempting to Hook PAPI");
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -289,9 +301,6 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         System.out.println("TreeboTickets Started");
     }
 
-    public String ontimetable = getConfig().getString("ontimetable");
-
-
     @Override
     public void onDisable() {
         saveConfig();
@@ -305,27 +314,15 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         pushToLobby.pushToLobby();
         */
         try {
-
             connection.close();
         } catch (SQLException e) {
             makeLog(e);
         }
+
+        purgeFiles("logs");
+        purgeFiles("deaths");
         System.out.println(badge + "TreeboTickets Stopped");
     }
-
-
-    public Connection connection;
-    public ArrayList<String> mobList = new ArrayList<>();
-    private String host, database, username, password;
-    private int port;
-    public String table = getConfig().getString("table");
-    public String unusedColumns = "ID, MODIFIED";
-    public String columns = "`UUID`, `IGNAME`, `OPENED`, `STATUS`, `STAFF`, `SERVER`,`WORLD`, `X`, `Y`, `Z`, `TYPE`, `SEVERITY`, `DESCRIPTION`, `USERSTEPS`, `STAFFSTEPS`, `ATTN`, `ACTUALCOMMAND`";
-    public String UUID, IGNAME, STATUS, STAFF, WORLD, TYPE, DESCRIPTION, USERSTEPS, STAFFSTEPS = "";
-    public Integer ID, X, Y, Z, SEVERITY = 0;
-    public String OPENED = LocalDateTime.now().toString();
-    public String baseInsert = "INSERT INTO `" + table + "`(" + columns + ") VALUES (XXXVALUESPLACEHOLDERXXX);";
-
 
     public void openConnection() throws SQLException, ClassNotFoundException {
         if (connection != null && !connection.isClosed()) {
@@ -341,7 +338,6 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         }
     }
 
-
     public void genericQuery(Player p, String query) {
         ResultSet response;
         String output = "";
@@ -354,7 +350,6 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         }
     }
 
-
     public void genericQuery(String query) {
         ResultSet response;
         String output = "";
@@ -366,13 +361,11 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         }
     }
 
-
     public String placeholderParser(String input, Player p) {
 
         return input.replace("XXXPLAYERXXX", p.getName()).
                 replace("XXXNETWORKNAMEXXX", getConfig().getString("networkName"));
     }
-
 
     public void staffReOpenTicket(Player p, int t) {
         if (p.hasPermission("tbtickets.mod.view")) {
@@ -396,7 +389,6 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         }
     }
 
-
     public void makeLog(Exception tr) {
         System.out.println("Creating new log folder - " + new File(this.getDataFolder() + File.separator + "logs").mkdir());
         String dateTimeString = LocalDateTime.now().toString().replace(":", "_").replace("T", "__");
@@ -414,21 +406,28 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
         }
     }
 
+    public void pullBack() {/*
+        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+                 if (getConfig().getConfigurationSection("pullbackPlayers") != null) {
+                    ConfigurationSection pBP = getConfig().getConfigurationSection("pullbackPlayers");
 
-    public void pullBack() {
-        if (getConfig().getString("isLobbyServer").equalsIgnoreCase("false")) {
-            for (String player : getConfig().getConfigurationSection("shutdownPlayerList").getKeys(false)) {
-                //api.sendMessage(player, "Now attempting to return you to the " + getConfig().getString("serverName") + " server");
-                // api.connectOther(player, getConfig().getString("serverName"));
-                getConfig().set("shutdownPlayerList." + player, null);
-                saveConfig();
+                    for (String playerName : pBP.getKeys(false)) {
+                        System.out.println("PULLING" + playerName);
+                        shakeSocketClient.movePlayer(playerName, getConfig().getString("serverName"));
+                        getConfig().set("pullbackPlayers." + playerName, null);
+
+                    }
+                    getConfig().set("pullbackPlayers", null);
+                    saveConfig();
+                }
+
             }
-        }
-    }
+        }, 100L);
+        */
+        new ShakeSocketSend(this).run();
 
-
-    public static boolean isNumeric(String str) {
-        return str.matches("\\d+");
     }
 
     public String getServerName(Entity e) {
@@ -592,8 +591,8 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
                             getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.vaultBal", vaultBal);
                         }
                         if (Bukkit.getPluginManager().getPlugin("NPC_Police") != null) {
-                          //  String npcpoliceTotalArrests = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_ttl_arrests%");
-                          //  getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.npcPoliceArrests", npcpoliceTotalArrests);
+                            //  String npcpoliceTotalArrests = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_ttl_arrests%");
+                            //  getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.npcPoliceArrests", npcpoliceTotalArrests);
 
                             String bounty = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_bounty%");
                             getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.bounty", bounty);
@@ -609,7 +608,7 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
 
                             String status = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_status%");
                             getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.status", status);
-                         }
+                        }
 
                         saveConfig();
                     }
@@ -617,6 +616,7 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
             }, 100L);
         }
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PapiQuitListener(PlayerQuitEvent e) {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -651,6 +651,25 @@ public final class TreeboTickets extends JavaPlugin implements Listener {
                     String status = PlaceholderAPI.setPlaceholders(e.getPlayer(), "%npcpolice_user_status%");
                     getConfig().set("playerStats." + getConfig().getString("serverName") + "." + e.getPlayer().getName() + ".papi.status", status);
                 }
+            }
+        }
+    }
+
+
+    private void purgeFiles(String folder) {
+        int i = 0;
+        File[] files = new File(this.getDataFolder() + File.separator + folder).listFiles();
+        if (files != null && files.length != 0) {
+            for (File file : files) {
+                long diff = new Date(System.currentTimeMillis()).getTime() - file.lastModified();
+
+                if (diff > 7 * 24 * 60 * 60 * 1000) {
+                    file.delete();
+                    i++;
+                }
+            }
+            if (i > 0) {
+                System.out.println(badge + "Purged " + i + " files of type " + folder);
             }
         }
     }

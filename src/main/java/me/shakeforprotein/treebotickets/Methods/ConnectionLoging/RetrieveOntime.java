@@ -26,6 +26,7 @@ public class RetrieveOntime {
         this.pl = main;
     }
 
+
     public void retrieveOntime(String p, CommandSender s, String t) {
         Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
             @Override
@@ -93,7 +94,16 @@ public class RetrieveOntime {
                             //s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "LastLeft  -  " + ChatColor.RESET + cColour + lldt + " - (" + lastOff + ")");
                             //s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Offline for - " + ChatColor.RESET + cColour + formatTime(currentTime - lastOff));
                             //s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
-                        } else if (t.equalsIgnoreCase("true")) {
+                        }
+                        else if (t.equalsIgnoreCase("personal")){
+                            s.sendMessage(pl.badge + "Retrieving data for " + currentName);
+                            s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "FirstJoin  -  " + ChatColor.RESET + "" + fjdt + " - (" + firstJoin + ")");
+                            s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "TotalOntime  -  " + ChatColor.RESET + ChatColor.GOLD + formatTime(totalOn));
+                            s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
+                            s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Adjusted On Time - " + ChatColor.RESET + cColour + formatTime(totalOn - (Integer.parseInt(timeAFK) * 60000)));
+
+                        }
+                        else if (t.equalsIgnoreCase("true")) {
                             //s.sendMessage(pl.badge + "Retrieving data for " + currentName);
                             msg.addExtra(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "User: " + cColour + ChatColor.BOLD + currentName);
                             if (cColour.equals(ChatColor.YELLOW + "") || cColour.equals(ChatColor.RED + "")) {
@@ -109,6 +119,7 @@ public class RetrieveOntime {
                                 //s.sendMessage(ChatColor.GOLD + "[X]" + ChatColor.AQUA + "" + ChatColor.BOLD + "Time AFK - " + ChatColor.RESET + cColour + formatTime(Integer.parseInt(timeAFK) * 60000));
                             s.spigot().sendMessage(msg);
                             }
+
                         } else {
 
                             s.sendMessage(pl.badge + "Retrieving data for " + currentName);
@@ -139,6 +150,8 @@ public class RetrieveOntime {
             }
         });
     }
+
+
 
 
     public static String formatTime(long millis) {

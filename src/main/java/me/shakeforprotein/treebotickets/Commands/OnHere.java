@@ -58,6 +58,9 @@ public class OnHere implements CommandExecutor {
                     }
                 }
             }
+            else{
+                retrieveOntime.retrieveOntime(sender.getName(), sender, "personal");
+            }
         }
         return true;
     }

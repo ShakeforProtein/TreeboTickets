@@ -106,6 +106,7 @@ public class TbTicket implements CommandExecutor {
                 args[0] = "open";
             }
 
+
             //capture command
             StringBuilder argsText = new StringBuilder();
             for (int i = 0; i < args.length; i++) {

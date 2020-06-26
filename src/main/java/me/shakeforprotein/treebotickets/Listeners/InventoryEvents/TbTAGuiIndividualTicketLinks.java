@@ -29,10 +29,10 @@ public class TbTAGuiIndividualTicketLinks implements Listener {
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
         String name = e.getView().getTitle();
         int slot = e.getSlot();
-        if (slot < 0) {
+        /*if (slot < 0) {
             p.closeInventory();
             return;
-        }
+        }*/
 
 
         if (name != null && name.split(" - ")[0].equalsIgnoreCase("Ticket")){

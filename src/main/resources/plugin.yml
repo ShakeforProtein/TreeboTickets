@@ -67,6 +67,9 @@ commands:
   restartwhenempty:
     permission: tbtickets.admin.restart
     description: Sets a timer to restart the server when it detects the server is empty.
+  friendlyrestart:
+    permission: tbtickets.admin.restart
+    description: Sends players to server with name hub, or creative if current server is hub, the pulls them back after restarting.
 
 permissions:
   tbtickets.staffmanager:
@@ -80,7 +83,7 @@ permissions:
     default: false
   tbtickets.admin.restart:
     description:
-    default: false
+    default: op
   tbtickets.admin.updatechecker:
     description: 'Notify user if there is an update available'
     default: op

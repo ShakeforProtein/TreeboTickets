@@ -19,7 +19,7 @@ public class TicketConversation implements Listener {
 
     public TicketConversation(TreeboTickets main) {
         pl = main;
-        this.createTicket = new CreateTicket(main);
+        this.createTicket = new CreateTicket(pl);
     }
 
     public Integer ticketState = 0;
@@ -130,7 +130,7 @@ public class TicketConversation implements Listener {
                     pl.saveConfig();
                     String discordString = "&type=" + type +"&user=" + p.getName() + "&contents=" + (description + " " + usersteps).replace("&", "AND");
 
-                    createTicket.addTicketToDB(p, ticketData, type, description + " " + usersteps);
+                    createTicket.addTicketToDB(p, ticketData, type, description + " " + usersteps, pServer);
                 }
             }
         }
