@@ -49,9 +49,6 @@ commands:
   onAll:
     description: Shows own ontime across all Treebo servers
     usage: /<command>
-  ticketNotify:
-    description: Notifies relevant online staff about tickets
-    usage: /<command> <permission node> <ticket type> <ticket id>
   getStat:
     description: pulls player stat from database. Add <tablename> if used from console.
     usage: /<command> <stat> <player>

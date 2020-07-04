@@ -48,42 +48,11 @@ public class CreateTicket {
                     //URL url = new URL(null, discordHook, new sun.net.www.protocol.https.Handler());
                     //int    postDataLength = postData.length;
 
+                    try {sendGet(discordHook, urlParameters);}
+                    catch (Exception e){
 
-                    try {
-                        URL url = new URL(null, discordHook, new sun.net.www.protocol.https.Handler());
-                        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-
-                        con.setDoOutput(true);
-                        con.setRequestMethod("POST");
-                        con.setRequestProperty("User-Agent", "Java client");
-                        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-                        try (OutputStream wr = con.getOutputStream()) {
-
-                            wr.write(urlParameters.getBytes(StandardCharsets.UTF_8));
-                            wr.flush();
-                            System.out.println(con.getResponseCode());
-                            p.sendMessage(con.getOutputStream().toString());
-                        }
-
-                        StringBuilder content;
-
-                        try (BufferedReader br = new BufferedReader(
-                                new InputStreamReader(con.getInputStream()))) {
-
-                            String line;
-                            content = new StringBuilder();
-
-                            while ((line = br.readLine()) != null) {
-                                content.append(line);
-                                content.append(System.lineSeparator());
-                            }
-                        }
-
-                        System.out.println(content.toString());
-
-                    } catch (IOException ex){
-
+                        System.out.println(e.getMessage());
+                        System.out.println(e.getCause());
                     }
 
                 }
@@ -109,5 +78,37 @@ public class CreateTicket {
     }
 
 
+    private void sendGet(String url, String urlParamaters) throws Exception {
+
+        url = url + "?" + urlParamaters;
+
+        HttpsURLConnection httpClient =
+                (HttpsURLConnection) new URL(url).openConnection();
+
+        // optional default is GET
+        httpClient.setRequestMethod("GET");
+
+        //add request header
+        httpClient.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+        int responseCode = httpClient.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(httpClient.getInputStream()))) {
+
+            StringBuilder response = new StringBuilder();
+            String line;
+
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+
+            //print result
+            System.out.println(response.toString());
+
+        }
+    }
 
 }
