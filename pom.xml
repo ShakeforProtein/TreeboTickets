@@ -6,7 +6,7 @@
 
     <groupId>me.ShakeforProtein</groupId>
     <artifactId>TreeboTickets</artifactId>
-    <version>4.0.2 - SpigMc1.16.1</version>
+    <version>4.0.2 - SpMc1.16.1</version>
     <packaging>jar</packaging>
 
     <name>TreeboTickets</name>
