@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -36,6 +37,8 @@ public class SpecificTicketGui {
                 String tOpened = "";
                 String tModified = "";
                 String tWorld = "";
+                String tType = "";
+                String tServer = "";
                 ResultSet response;
                 try {
                     response = pl.connection.createStatement().executeQuery("SELECT * FROM `" + pl.getConfig().getString("table") + "` WHERE ID='" + t + "'");
@@ -47,7 +50,7 @@ public class SpecificTicketGui {
                         tStaff = response.getString("STAFF");
                         tId = response.getInt("ID");
                         tPlayer = response.getString("IGNAME");
-
+                        tType = response.getNString("TYPE");
                         tCoords = (response.getString("X") + " " + response.getString("Y") + " " + response.getString("Z"));
                         tDesc = response.getString("DESCRIPTION");
                         tStaffS = response.getString("STAFFSTEPS");
@@ -55,6 +58,7 @@ public class SpecificTicketGui {
                         tStatus = response.getString("STATUS");
                         tOpened = response.getDate("OPENED").toString();
                         tWorld = response.getString("WORLD");
+                        tServer = response.getString("server");
 
                         String tX = response.getString("X");
                         String tY = response.getString("Y");
@@ -97,6 +101,21 @@ public class SpecificTicketGui {
                         newTicketMeta.setLore(newTicketLore);
                         newTicket.setItemMeta(newTicketMeta);
                         individualTicketGui.setItem(5, new ItemStack(newTicket));
+
+                        //Make discord push icon
+                        if(pl.getConfig().getItemStack("CustomHeads.Discord") != null) {
+                            ItemStack discordIcon = pl.getConfig().getItemStack("CustomHeads.Discord");
+                            SkullMeta discordMeta = (SkullMeta) discordIcon.getItemMeta();
+                            List<String> discordLore = new ArrayList<>();
+                            discordLore.add(tId + "");
+                            discordLore.add(tType);
+                            discordLore.add(tPlayer);
+                            discordLore.add(tDesc + " " + tUserS);
+                            discordLore.add(tServer);
+                            discordMeta.setLore(discordLore);
+                            discordIcon.setItemMeta(discordMeta);
+                            individualTicketGui.setItem(8+4+9, discordIcon);
+                        }
 
                         ItemStack claimIcon = new ItemStack(Material.NAME_TAG, 1);
                         ItemStack unclaimIcon = new ItemStack(Material.SHEARS, 1);

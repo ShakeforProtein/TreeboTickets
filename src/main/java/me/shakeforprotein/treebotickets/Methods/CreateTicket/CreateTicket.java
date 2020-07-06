@@ -78,7 +78,7 @@ public class CreateTicket {
     }
 
 
-    private void sendGet(String url, String urlParamaters) throws Exception {
+    public void sendGet(String url, String urlParamaters) throws Exception {
 
         url = url + "?" + urlParamaters;
 

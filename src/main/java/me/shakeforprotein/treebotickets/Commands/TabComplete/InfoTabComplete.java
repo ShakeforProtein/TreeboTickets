@@ -19,6 +19,7 @@ public class InfoTabComplete implements TabCompleter {
         this.pl = main;
     }
 
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("tinfo")) {

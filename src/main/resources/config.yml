@@ -33,7 +33,7 @@ serverName: 'Test'
 networkName: 'Example Network'
 
 lang:
-  title: 'XXXNETWORKNAMEXXX Ticket System'
+  title: 'Treebo Network Ticket System'
 
 players:
   doNotRemove:
@@ -41,3 +41,14 @@ players:
     type: ''
     description: ''
     usersteps: ''
+
+CustomHeads:
+  Discord:
+    ==: org.bukkit.inventory.ItemStack
+    v: 2567
+    type: PLAYER_HEAD
+    meta:
+      ==: ItemMeta
+      meta-type: SKULL
+      display-name: Re-send to Discord
+      internal: H4sIAAAAAAAAAE2PTU6DQBzF/xpNKnoHrwAWMF24aFpCIZ3BwvC5a2EaPmbahkJluurOG5h4D0/jwht4B2fp4iXv5ffe4ikACjwETc/Ya7vfVowqoEh3oG1X0eMdjDo6dH1LjwoAXI3gNlqznsIXFa6aJaVaJC7LhWPKTAKVeU59eHZ2kdjMHNPhki+m5lJM/nWNbh0bLB27ZbZb9Rseqcuxz+jC13IentJ4paMzrjCxNFynUuETJiX3yHRAsc+8ea5jOzSQjQbZNVJuadkcndG54J6N3nDdCERwlXKfZaTR5V4g4U62ifoCcA/XTiGP3Dy+f34HhXX5+JnFl/2vRH+pM7KQCgEAAA==
