@@ -1,10 +1,10 @@
 package me.shakeforprotein.treebotickets.Listeners.InventoryEvents;
 
 import me.shakeforprotein.treebotickets.TreeboTickets;
-import net.minecraft.server.v1_16_R1.NBTTagCompound;
+import net.minecraft.server.v1_16_R2.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,7 +32,7 @@ public class PlayerUseItem implements Listener {
             if (e.getItem().getType() == Material.WRITTEN_BOOK) {
                 if (e.getItem().hasItemMeta()) {
                     if (e.getItem().getItemMeta() instanceof BookMeta) {
-                        net.minecraft.server.v1_16_R1.ItemStack nmsItem = getNMSItem(e.getItem());
+                        net.minecraft.server.v1_16_R2.ItemStack nmsItem = getNMSItem(e.getItem());
                         NBTTagCompound compound = getCompound(nmsItem);
                         Set<String> compoundKeys = compound.getKeys();
                         for(String item : compoundKeys){
@@ -56,17 +56,17 @@ public class PlayerUseItem implements Listener {
         }
     }
 
-    public net.minecraft.server.v1_16_R1.ItemStack  getNMSItem(ItemStack item){
-        net.minecraft.server.v1_16_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+    public net.minecraft.server.v1_16_R2.ItemStack  getNMSItem(ItemStack item){
+        net.minecraft.server.v1_16_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
         return nmsItem;
     }
 
-    public NBTTagCompound getCompound(net.minecraft.server.v1_16_R1.ItemStack nmsItem){
+    public NBTTagCompound getCompound(net.minecraft.server.v1_16_R2.ItemStack nmsItem){
         NBTTagCompound nmsCompound = (nmsItem.hasTag()) ? nmsItem.getTag() : new NBTTagCompound();
         return nmsCompound;
     }
 
-    public ItemStack getBukkitItem(net.minecraft.server.v1_16_R1.ItemStack nmsItem){
+    public ItemStack getBukkitItem(net.minecraft.server.v1_16_R2.ItemStack nmsItem){
         ItemStack bukkitItem = CraftItemStack.asBukkitCopy(nmsItem);
         return bukkitItem;
     }
