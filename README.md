@@ -1,6 +1,11 @@
 # Treebo Tickets
 A Simple Tickets, Ideas & Review Plugin
 
+
+This Project is archived, please see new project at https://github.com/TreeboMC/TreeboTickets2/
+
+
+
 ## Permisions
 ```
 
